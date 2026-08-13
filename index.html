@@ -584,6 +584,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   <div class="mi" data-p="quote" onclick="go('quote')"><span class="ic">📄</span>견적서</div>
   <div class="mi" data-p="contract" onclick="go('contract')"><span class="ic">📜</span>계약서</div>
   <div class="mi" data-p="plan" onclick="go('plan')"><span class="ic">📊</span>진행현황</div>
+  <div class="mi" data-p="flow" onclick="openFlow()"><span class="ic">🔀</span>업무 flow</div>
   <div class="mi" data-p="progress" onclick="go('progress')"><span class="ic">📑</span>회의록</div>
   <div class="mi" data-p="settings" onclick="go('settings')"><span class="ic">⚙️</span>설정</div>
   <div class="mi" onclick="logout()"><span class="ic">🚪</span>로그아웃</div>
@@ -1668,7 +1669,7 @@ function getTopic(){ return localStorage.getItem(LS_TOPIC) || 'HC_Smart'; }
 
 /* ===== 역할(권한) ===== */
 let role = null; /* 'guest' | 'admin' */
-const PAGE_PERM = { intro:['guest','admin'], links:['admin'], design:['guest','admin'], inquiry:['guest','admin'], board:['guest','admin'], plan:['admin'], progress:['admin'], quote:['admin'], contract:['admin'], settings:['admin'] };
+const PAGE_PERM = { intro:['guest','admin'], links:['admin'], design:['guest','admin'], inquiry:['guest','admin'], board:['guest','admin'], plan:['admin'], progress:['admin'], flow:['admin'], quote:['admin'], contract:['admin'], settings:['admin'] };
 
 function applyRole(){
   document.getElementById('rolebadge').textContent = role === 'admin' ? '관리자' : 'Guest';
@@ -1681,6 +1682,13 @@ function applyRole(){
     const ok = PAGE_PERM[m.dataset.p].includes(role);
     m.classList.toggle('lock', !ok);
   });
+}
+
+/* ===== 업무 flow (별도 페이지 · 새 창) ===== */
+function openFlow(){
+  if(role !== 'admin'){ toast('관리자 로그인 후 이용할 수 있습니다'); return; }
+  toggleDrawer(false);
+  window.open('flow.html', '_blank');
 }
 
 /* ===== L4 스플래시 → 로그인 ===== */
