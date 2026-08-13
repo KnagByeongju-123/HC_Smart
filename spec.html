@@ -73,17 +73,8 @@ h1{font-size:18px;font-weight:900;letter-spacing:-.4px}
   <div class="top"><div class="lg">HC</div><h1>제작 사양 보드 <span style="font-size:11.5px;font-weight:400;color:var(--sub)">제작회의 · 관리자 전용</span></h1></div>
   <div class="sub">카드에서 세부항목을 추가·수정하며 사양을 확정합니다. 저장하면 <b style="color:var(--gold)">견적서 생성 시 자동 반영</b>됩니다.</div>
 
-  <!-- PIN -->
-  <div class="card" id="pin-box">
-    <div style="font-size:13px;font-weight:800;margin-bottom:9px">🔒 관리자 PIN</div>
-    <div style="display:flex;gap:8px">
-      <input class="tin" id="pin" type="password" inputmode="numeric" placeholder="관리자 PIN 입력" onkeydown="if(event.key==='Enter')auth()">
-      <button class="btn" style="flex:none" onclick="auth()">확인</button>
-    </div>
-  </div>
-
   <!-- 세팅 선택 -->
-  <div class="card" id="list-box" style="display:none">
+  <div class="card" id="list-box">
     <div style="display:flex;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap">
       <div style="font-size:13px;font-weight:800">📋 사양을 편집할 맞춤세팅 선택</div>
       <div style="margin-left:auto;display:flex;gap:6px">
@@ -121,10 +112,9 @@ h1{font-size:18px;font-weight:900;letter-spacing:-.4px}
 
 <script>
 /* ===== 공통 (index.html과 localStorage 키 공유 · 같은 도메인 배포 전제) ===== */
-const LS_PIN='hk_admin_pin', LS_SETUPS='hk_setups', LS_SPECS='hk_specs_local', LS_SBURL='hk_sb_url', LS_SBKEY='hk_sb_key';
+const LS_SETUPS='hk_setups', LS_SPECS='hk_specs_local', LS_SBURL='hk_sb_url', LS_SBKEY='hk_sb_key';
 const SB_DEFAULT_URL='https://pllwltojbofjaftcemvn.supabase.co';
 const SB_DEFAULT_KEY='sb_publishable_9dYJzdz472b888EcqdBBaA_Ncwk0yvT';
-const getPin=()=>localStorage.getItem(LS_PIN)||'2580';
 const getSbUrl=()=>(localStorage.getItem(LS_SBURL)||SB_DEFAULT_URL).replace(/\/+$/,'');
 const getSbKey=()=>localStorage.getItem(LS_SBKEY)||SB_DEFAULT_KEY;
 async function sb(path,opt){
@@ -436,14 +426,6 @@ const MODULE_SPEC = {
 };
 
 
-/* ===== 인증 ===== */
-function auth(){
-  if(document.getElementById('pin').value===getPin()){
-    document.getElementById('pin-box').style.display='none';
-    document.getElementById('list-box').style.display='block';
-    loadList();
-  } else toast('PIN이 올바르지 않습니다');
-}
 
 /* ===== 세팅 목록 ===== */
 let LIST=[];
@@ -630,6 +612,8 @@ function copyPrompt(){
   SPEC.memo=document.getElementById('memo').value;
   navigator.clipboard.writeText(buildPrompt()).then(()=>toast('개발 지시문이 복사되었습니다'),()=>toast('복사 실패'));
 }
+
+loadList();
 </script>
 </body>
 </html>
