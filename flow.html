@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HC_Smart 업무 흐름도</title>
+<style>
+:root{
+  --paper:#faf8f3; --ink:#1e222b; --sub:#6b7280; --line:#d8d3c6;
+  --gold:#c4922c; --goldbg:#fbf3e0;
+  --sales:#2f6fb5; --salesbg:#e9f1fa;
+  --plan:#7b4fa8; --planbg:#f2ecf8;
+  --make:#2f8a63; --makebg:#e7f4ee;
+  --client:#8a6d1f;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR',sans-serif}
+body{background:var(--paper);color:var(--ink);font-size:14px;line-height:1.6;-webkit-text-size-adjust:100%}
+.wrap{max-width:940px;margin:0 auto;padding:26px 16px 70px}
+
+/* ---------- 머리말 ---------- */
+.hd{display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--ink);padding-bottom:12px}
+.lg{width:40px;height:40px;border-radius:50%;background:var(--gold);color:#fff;font-weight:900;font-size:14px;
+    display:flex;align-items:center;justify-content:center;flex:none}
+.hd h1{font-size:21px;font-weight:900;letter-spacing:-.5px;flex:1}
+.hd h1 small{display:block;font-size:11.5px;font-weight:600;color:var(--sub);letter-spacing:0;margin-top:2px}
+.hd .rev{font-size:10.5px;color:var(--sub);text-align:right;flex:none}
+
+.lead{background:var(--goldbg);border:1px solid var(--line);border-left:4px solid var(--gold);
+      border-radius:0 8px 8px 0;padding:11px 14px;margin-top:14px;font-size:13px}
+.lead b{color:var(--client)}
+
+/* ---------- 담당 범례 ---------- */
+.legend{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 6px}
+.who{display:inline-block;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:800;border:1.5px solid;white-space:nowrap}
+.who i{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:1px}
+.w-s{color:var(--sales);border-color:var(--sales);background:var(--salesbg)}   .w-s i{background:var(--sales)}
+.w-p{color:var(--plan);border-color:var(--plan);background:var(--planbg)}      .w-p i{background:var(--plan)}
+.w-m{color:var(--make);border-color:var(--make);background:var(--makebg)}      .w-m i{background:var(--make)}
+.w-c{color:var(--client);border-color:var(--client);background:var(--goldbg)}  .w-c i{background:var(--client)}
+
+/* ---------- 단계 ---------- */
+.stage{margin-top:26px}
+.stage>h2{font-size:12px;font-weight:900;letter-spacing:2px;color:var(--sub);
+          display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.stage>h2::after{content:'';flex:1;height:1px;background:var(--line)}
+
+.step{display:flex;gap:14px;position:relative;padding-bottom:14px}
+.step::before{content:'';position:absolute;left:21px;top:44px;bottom:-2px;width:2px;background:var(--line)}
+.step:last-child::before{display:none}
+.num{width:44px;min-width:44px;height:44px;flex:none;border-radius:12px;display:flex;align-items:center;justify-content:center;
+     font-size:16px;font-weight:900;color:#fff;position:relative;z-index:1}
+.n-s{background:var(--sales)} .n-p{background:var(--plan)} .n-m{background:var(--make)} .n-c{background:var(--client)}
+
+.box{flex:1;min-width:0;border:1.5px solid var(--line);border-radius:11px;background:#fff;padding:13px 15px}
+.b-s{border-left:5px solid var(--sales)} .b-p{border-left:5px solid var(--plan)}
+.b-m{border-left:5px solid var(--make)}  .b-c{border-left:5px solid var(--client)}
+.box h3{font-size:15px;font-weight:900;margin-bottom:3px}
+.tag{display:inline-block;font-size:10.5px;font-weight:800;border-radius:5px;padding:2px 8px;margin-left:7px;vertical-align:2px}
+.t-s{color:var(--sales);background:var(--salesbg)} .t-p{color:var(--plan);background:var(--planbg)}
+.t-m{color:var(--make);background:var(--makebg)}   .t-c{color:var(--client);background:var(--goldbg)}
+.box .do{font-size:13px;color:#333;margin-top:5px}
+.box .do li{margin-left:17px;padding:1px 0}
+
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;padding-top:9px;border-top:1px dashed var(--line)}
+.chip{font-size:11.5px;color:var(--sub);background:#f5f3ee;border-radius:6px;padding:4px 9px}
+.chip b{color:var(--ink);font-weight:800}
+
+.say{margin-top:9px;background:var(--salesbg);border-radius:8px;padding:9px 12px;font-size:12.5px;color:#1f4a7a}
+.say::before{content:'영업 한마디';display:block;font-size:10px;font-weight:900;letter-spacing:1px;color:var(--sales);margin-bottom:2px}
+
+/* 인계 지점 */
+.pass{display:flex;gap:14px;margin:2px 0 16px}
+.pass .ar{width:44px;min-width:44px;flex:none;text-align:center;font-size:19px;color:var(--gold);line-height:1}
+.pass .txt{flex:1;min-width:0;background:var(--goldbg);border:1.5px dashed var(--gold);border-radius:9px;padding:9px 13px;font-size:12.5px;font-weight:700;color:var(--client)}
+.pass .txt span{display:block;font-weight:500;color:#7a6528;font-size:11.5px;margin-top:1px}
+
+/* ---------- 요약표 ---------- */
+.sum{margin-top:32px}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12.5px;background:#fff}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#f2efe7;font-size:11.5px;font-weight:800;text-align:center}
+td.c{text-align:center;font-weight:800;white-space:nowrap}
+
+.foot{margin-top:26px;font-size:11.5px;color:var(--sub);border-top:1px solid var(--line);padding-top:10px}
+
+@media (max-width:560px){
+  .wrap{padding:18px 12px 50px}
+  .hd h1{font-size:18px}
+  .step,.pass{gap:10px}
+  .num{width:36px;min-width:36px;height:36px;border-radius:10px;font-size:14px}
+  .step::before{left:17px;top:36px}
+  .pass .ar{width:36px;min-width:36px}
+  table{font-size:11.5px}
+}
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff}
+  .wrap{max-width:none;padding:0}
+  .step,.pass{break-inside:avoid;page-break-inside:avoid}
+  .box{box-shadow:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hd">
+    <div class="lg">HC</div>
+    <h1>HC_Smart 업무 흐름도<small>영업 · 기획 · 제작 3인 체계 — 누가, 언제, 무엇을 넘기는가</small></h1>
+    <div class="rev">Rev. 1.0<br>한컴 스마트사업부</div>
+  </div>
+
+  <div class="lead">
+    영업은 <b>제작 방법을 몰라도 됩니다.</b> 고객이 원하는 <b>업무(모듈)를 고르는 것</b>까지가 영업의 일이고,
+    그 뒤 “어떻게 만들지”는 기획이, “실제로 만드는 일”은 제작이 맡습니다.
+    아래 흐름에서 <b>노란 점선</b>이 일을 넘기는 지점입니다.
+  </div>
+
+  <div class="legend">
+    <span class="who w-s"><i></i>영업</span>
+    <span class="who w-p"><i></i>기획</span>
+    <span class="who w-m"><i></i>제작</span>
+    <span class="who w-c"><i></i>고객사</span>
+  </div>
+
+  <!-- ============ 1단계 ============ -->
+  <div class="stage">
+    <h2>1단계 · 상담과 구성</h2>
+
+    <div class="step">
+      <div class="num n-s">1</div>
+      <div class="box b-s">
+        <h3>고객 상담<span class="tag t-s">영업</span></h3>
+        <div class="do"><ul>
+          <li>현장에서 <b>손으로 쓰고 엑셀로 관리하는 일</b>이 뭔지 듣는다</li>
+          <li>실사용 링크로 다른 회사 시스템을 바로 보여준다</li>
+        </ul></div>
+        <div class="meta"><span class="chip"><b>도구</b> HC_Smart → 실사용 링크</span><span class="chip"><b>결과</b> 고객 요구 파악</span></div>
+        <div class="say">기술 설명은 하지 않습니다. “지금 이 업무, 종이로 하시죠?”만 물으면 됩니다.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num n-s">2</div>
+      <div class="box b-s">
+        <h3>맞춤세팅 입력<span class="tag t-s">영업</span></h3>
+        <div class="do"><ul>
+          <li>업체명 · 업종 · 화면 디자인(고객이 눈으로 고름)</li>
+          <li><b>필요한 업무 33개 중 해당되는 것만 선택</b></li>
+          <li>선택 즉시 <b>예상 금액이 화면에 뜬다</b> — 그 자리에서 안내</li>
+        </ul></div>
+        <div class="meta"><span class="chip"><b>도구</b> 맞춤세팅</span><span class="chip"><b>결과</b> 저장 · 발송</span><span class="chip"><b>소요</b> 상담 중 10~20분</span></div>
+        <div class="say">모듈 이름이 어려우면 옆의 설명 한 줄만 읽어주세요. 정확한 범위는 다음 단계에서 기획이 정리합니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pass">
+    <div class="ar">▼</div>
+    <div class="txt">영업 → 기획 인계<span>맞춤세팅 저장 시 알림이 자동 발송됩니다. 영업은 따로 전달할 자료가 없습니다.</span></div>
+  </div>
+
+  <!-- ============ 2단계 ============ -->
+  <div class="stage">
+    <h2>2단계 · 사양 확정</h2>
+
+    <div class="step">
+      <div class="num n-p">3</div>
+      <div class="box b-p">
+        <h3>제작 사양 보드 작성<span class="tag t-p">기획</span></h3>
+        <div class="do"><ul>
+          <li>선택된 모듈마다 <b>세부 기능을 ✓포함 / ?협의 / ✕제외</b>로 정리</li>
+          <li>필요한 <b>데이터 항목(마스터·일반 DB)</b>을 함께 확정</li>
+          <li>금액을 조정하면 견적서에 그대로 반영</li>
+        </ul></div>
+        <div class="meta"><span class="chip"><b>도구</b> 제작 사양 보드</span><span class="chip"><b>결과</b> 확정 사양 저장</span></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num n-p">4</div>
+      <div class="box b-p">
+        <h3>자료 요청서 만들기<span class="tag t-p">기획</span></h3>
+        <div class="do"><ul>
+          <li>버튼 하나로 <b>고객사가 준비할 자료 목록 PDF</b> 생성</li>
+          <li>항목마다 작성 예시가 들어 있어 고객이 바로 이해</li>
+          <li>회의에서 결정할 사항(?협의)도 함께 정리</li>
+        </ul></div>
+        <div class="meta"><span class="chip"><b>도구</b> 요청서 PDF</span><span class="chip"><b>결과</b> 자료 요청서 · 회신 기한 7일</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pass">
+    <div class="ar">▼</div>
+    <div class="txt">기획 → 영업 인계<span>요청서 PDF를 받아 고객사에 전달합니다. 내용은 고객 눈높이로 이미 정리되어 있습니다.</span></div>
+  </div>
+
+  <!-- ============ 3단계 ============ -->
+  <div class="stage">
+    <h2>3단계 · 자료 수집과 계약</h2>
+
+    <div class="step">
+      <div class="num n-c">5</div>
+      <div class="box b-c">
+        <h3>기초 자료 제출<span class="tag t-c">고객사</span></h3>
+        <div class="do"><ul>
+          <li>거래처 · 품목 · 직원 명단 등 <b>지금 쓰는 엑셀 그대로</b></li>
+          <li>양식을 새로 만들 필요 없음 — 정리는 우리가 함</li>
+        </ul></div>
+        <div class="meta"><span class="chip"><b>담당</b> 영업이 회수</span><span class="chip"><b>기한</b> 요청 후 7일</span></div>
+        <div class="say">여기서 늦어지면 전체 일정이 그만큼 밀립니다. 자료 회수가 영업의 가장 중요한 역할입니다.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num n-s">6</div>
+      <div class="box b-s">
+        <h3>견적서 · 계약서<span class="tag t-s">영업</span></h3>
+        <div class="do"><ul>
+          <li>확정 사양이 <b>견적서에 자동으로 채워짐</b> — 금액만 확인</li>
+          <li>계약서 발행 · 서명 (계약금 30% / 잔금 70%)</li>
+        </ul></div>
+        <div class="meta"><span class="chip"><b>도구</b> 견적서 → 계약서</span><span class="chip"><b>결과</b> 계약 체결</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pass">
+    <div class="ar">▼</div>
+    <div class="txt">계약 체결 → 제작 착수<span>기획이 사양 보드에서 개발 지시문을 뽑아 제작에 넘깁니다.</span></div>
+  </div>
+
+  <!-- ============ 4단계 ============ -->
+  <div class="stage">
+    <h2>4단계 · 제작</h2>
+
+    <div class="step">
+      <div class="num n-m">7</div>
+      <div class="box b-m">
+        <h3>시스템 구축<span class="tag t-m">제작</span></h3>
+        <div class="do"><ul>
+          <li>확정 사양대로 화면과 데이터베이스를 만든다</li>
+          <li>고객사 기초 자료를 시스템에 등록</li>
+        </ul></div>
+        <div class="meta"><span class="chip"><b>도구</b> 개발 지시문</span><span class="chip"><b>기간</b> 파일럿 2~4주</span></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num n-m">8</div>
+      <div class="box b-m">
+        <h3>배포 · 진행현황 공유<span class="tag t-m">제작</span></h3>
+        <div class="do"><ul>
+          <li>고객사 전용 주소로 배포 (설치 프로그램 없음, 링크로 접속)</li>
+          <li><b>진행현황에 단계별로 기록</b> — 영업·고객이 언제든 확인</li>
+        </ul></div>
+        <div class="meta"><span class="chip"><b>도구</b> 진행현황</span><span class="chip"><b>결과</b> 접속 주소 전달</span></div>
+        <div class="say">고객이 “어디까지 됐냐”고 물으면 진행현황 화면을 보여주면 됩니다. 제작에 물어볼 필요 없습니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pass">
+    <div class="ar">▼</div>
+    <div class="txt">제작 → 영업 인계<span>완성된 시스템을 고객에게 보여주는 자리를 영업이 만듭니다.</span></div>
+  </div>
+
+  <!-- ============ 5단계 ============ -->
+  <div class="stage">
+    <h2>5단계 · 오픈과 관리</h2>
+
+    <div class="step">
+      <div class="num n-s">9</div>
+      <div class="box b-s">
+        <h3>시연 · 검수<span class="tag t-s">영업 + 제작</span></h3>
+        <div class="do"><ul>
+          <li>현장에서 직접 써 보게 하고 수정 요청을 받는다</li>
+          <li>수정 요청은 <b>회의록에 기록</b> → 제작이 반영</li>
+        </ul></div>
+        <div class="meta"><span class="chip"><b>도구</b> 회의록</span><span class="chip"><b>결과</b> 검수 완료 · 잔금 청구</span></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num n-s">10</div>
+      <div class="box b-s">
+        <h3>오픈 · 사용 교육<span class="tag t-s">영업</span></h3>
+        <div class="do"><ul>
+          <li>현장 작업자 교육 (휴대폰 홈화면에 아이콘 설치)</li>
+          <li>안정화 기간 하자보수는 무상 · 이후 추가 모듈은 재견적</li>
+        </ul></div>
+        <div class="meta"><span class="chip"><b>결과</b> 정식 운영</span><span class="chip"><b>다음</b> 추가 모듈 영업 기회</span></div>
+        <div class="say">한 모듈로 시작해 잘 쓰이면 다음 모듈로 넓어집니다. 오픈이 끝이 아니라 다음 영업의 시작입니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 요약표 ============ -->
+  <div class="sum">
+    <h2 style="font-size:14px;font-weight:900">한 장 요약</h2>
+    <table>
+      <tr><th style="width:44px">단계</th><th style="width:150px">하는 일</th><th style="width:78px">담당</th><th>넘기는 것</th></tr>
+      <tr><td class="c">1</td><td>고객 상담</td><td class="c" style="color:var(--sales)">영업</td><td>고객 요구사항</td></tr>
+      <tr><td class="c">2</td><td>맞춤세팅 입력 · 예상금액 안내</td><td class="c" style="color:var(--sales)">영업</td><td>저장 시 기획에 자동 알림</td></tr>
+      <tr><td class="c">3</td><td>세부 사양 · 데이터 항목 확정</td><td class="c" style="color:var(--plan)">기획</td><td>확정 사양</td></tr>
+      <tr><td class="c">4</td><td>자료 요청서 PDF 생성</td><td class="c" style="color:var(--plan)">기획</td><td>요청서 → 영업</td></tr>
+      <tr><td class="c">5</td><td>기초 자료 제출</td><td class="c" style="color:var(--client)">고객사</td><td>엑셀 · 명단 (7일 내)</td></tr>
+      <tr><td class="c">6</td><td>견적서 · 계약서</td><td class="c" style="color:var(--sales)">영업</td><td>계약서 → 제작 착수</td></tr>
+      <tr><td class="c">7</td><td>시스템 구축</td><td class="c" style="color:var(--make)">제작</td><td>완성 시스템</td></tr>
+      <tr><td class="c">8</td><td>배포 · 진행현황 기록</td><td class="c" style="color:var(--make)">제작</td><td>접속 주소 → 영업</td></tr>
+      <tr><td class="c">9</td><td>시연 · 검수 · 수정</td><td class="c" style="color:var(--sales)">영업+제작</td><td>검수 완료 · 잔금</td></tr>
+      <tr><td class="c">10</td><td>오픈 · 사용 교육</td><td class="c" style="color:var(--sales)">영업</td><td>정식 운영 · 추가 영업</td></tr>
+    </table>
+  </div>
+
+  <div class="foot">
+    막히는 지점은 두 곳뿐입니다 — <b>② 맞춤세팅을 안 넣으면</b> 기획이 시작할 수 없고,
+    <b>⑤ 기초 자료가 안 오면</b> 제작이 시작할 수 없습니다. 이 둘만 챙기면 흐름은 멈추지 않습니다.
+  </div>
+
+</div>
+</body>
+</html>
