@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0f1117">
-<title>HK_Smart — 스마트 시스템 사업부</title>
+<title>HC_Smart — 스마트 시스템 사업부</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
 /* ============ T3 다크 골드 시머 테마 ============ */
@@ -105,15 +105,9 @@ header .hb{margin-left:auto;font-size:11px;font-weight:800;color:var(--gold);
 #drawer{position:fixed;top:0;left:0;bottom:0;z-index:90;width:270px;max-width:80vw;
   background:#141721;border-right:1px solid var(--line);box-shadow:6px 0 24px rgba(0,0,0,.5);
   transform:translateX(-102%);transition:transform .3s cubic-bezier(.2,.8,.3,1);
-  display:flex;flex-direction:column;padding:22px 14px}
+  display:flex;flex-direction:column;padding:22px 14px;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 #drawer.on{transform:none}
-#drawer .dscroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
-  padding-right:2px;margin-bottom:6px;overscroll-behavior:contain}
-#drawer .dscroll::-webkit-scrollbar{width:4px}
-#drawer .dscroll::-webkit-scrollbar-thumb{background:#4a5268;border-radius:2px}
-#drawer .dfix{flex-shrink:0;border-top:1px solid var(--line);padding-top:8px;
-  padding-bottom:calc(4px + env(safe-area-inset-bottom))}
-#drawer .mi.lo{color:#e08a7a}
 #drawer .dlogo{display:flex;align-items:center;gap:10px;padding:4px 8px 18px;border-bottom:1px solid var(--line);margin-bottom:12px}
 #drawer .dlogo b{width:38px;height:38px;border-radius:50%;flex-shrink:0;
   background:linear-gradient(135deg,var(--gold2),var(--gold));color:#241a05;
@@ -450,6 +444,45 @@ select.tin option{background:#12141d}
   background:rgba(226,176,74,.1);border:1px solid rgba(226,176,74,.35);border-radius:9px;padding:7px 12px;cursor:pointer;text-decoration:none}
 
 /* 진행현황 타임플랜 */
+.bdsum{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:16px 0 14px}
+.bdsum .bs{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px 10px;text-align:center}
+.bdsum .bv{font-size:21px;font-weight:900;color:var(--gold);letter-spacing:-.5px}
+.bdsum .bk{font-size:10.5px;color:var(--sub);font-weight:700;margin-top:3px}
+.bdc{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:15px 17px;margin-bottom:11px}
+.bdh{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.bdn{font-size:15px;font-weight:900;letter-spacing:-.3px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bdst{flex-shrink:0;font-size:10.5px;font-weight:800;padding:4px 10px;border-radius:11px;border:1px solid var(--line);color:var(--sub)}
+.bdst.ing{color:#e2b04a;border-color:rgba(226,176,74,.45)}
+.bdst.fin{color:#4fbf87;border-color:rgba(79,191,135,.45)}
+.bdbar{height:11px;background:#12141d;border-radius:6px;overflow:hidden;border:1px solid #232838}
+.bdfill{height:100%;background:linear-gradient(90deg,#c9932f,#e2b04a);border-radius:5px;transition:width .5s}
+.bdfill.fin{background:linear-gradient(90deg,#3d9970,#4fbf87)}
+.bdm{display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:11.5px;color:var(--sub)}
+.bdm b{color:var(--gold);font-size:13px}
+.bdstep{margin-top:11px;display:flex;flex-wrap:wrap;gap:5px}
+.bdsp{font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:10px;background:var(--bg);border:1px solid var(--line);color:var(--sub)}
+.bdsp.d{color:#4fbf87;border-color:rgba(79,191,135,.35)}
+.bdsp.i{color:#e2b04a;border-color:rgba(226,176,74,.45)}
+.bdfoot{margin-top:18px;font-size:11.5px;color:var(--sub);text-align:center;line-height:1.7}
+@media(max-width:400px){.bdsum{grid-template-columns:1fr 1fr}}
+.smat{display:flex;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.scell{flex:1;min-width:86px;text-align:center;padding:2px 4px;border-left:1px dashed var(--line)}
+.scell:first-child{border-left:0}
+.stk{font-size:11.5px;font-weight:800;line-height:1.35;min-height:32px;display:flex;align-items:center;justify-content:center;word-break:keep-all;padding:2px 2px 6px;border-bottom:1px solid var(--line)}
+.smrk{padding:9px 0 5px;min-height:34px;display:flex;align-items:center;justify-content:center}
+.smk{font-size:20px;font-weight:900;line-height:1}
+.smk.d{color:#3fc783}
+.smk.i{color:#e2b04a}
+.smk.l{color:#ef7466}
+.smk.h{color:#8b8fa3}
+.scell.cur{background:rgba(226,176,74,.06);border-radius:8px}
+.sact{display:flex;gap:4px;justify-content:center;padding-bottom:4px;min-height:22px}
+.sact button{border:1px solid var(--line);background:transparent;color:var(--sub);border-radius:7px;padding:3px 8px;font-size:10.5px;font-weight:800;font-family:inherit;cursor:pointer}
+.sact button.gold{color:var(--gold);border-color:rgba(226,176,74,.4)}
+.albtn{margin-left:auto;flex-shrink:0;border:1px solid rgba(226,176,74,.45);background:transparent;color:var(--gold);border-radius:9px;padding:5px 10px;font-size:11px;font-weight:800;font-family:inherit;cursor:pointer}
+.albtn:active{transform:scale(.94)}
+.dlbtn{flex-shrink:0;border:1px solid rgba(239,116,102,.45);background:transparent;color:#ef7466;border-radius:9px;padding:5px 10px;font-size:11px;font-weight:800;font-family:inherit;cursor:pointer}
+.dlbtn:active{transform:scale(.94)}
 .gcomp{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:16px 17px;margin-bottom:14px}
 .gcomp .gh{display:flex;align-items:center;gap:9px;margin-bottom:12px}
 .gcomp .gc{font-size:15.5px;font-weight:900;letter-spacing:-.3px}
@@ -510,8 +543,8 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
 
 <!-- ============ L4: 인트로 스플래시 ============ -->
 <div id="splash">
-  <div class="logo">HK</div>
-  <h1 class="gold-txt">HK_Smart</h1>
+  <div class="logo">HC</div>
+  <h1 class="gold-txt">HC_Smart</h1>
   <div class="sl">현장에서 태어난 스마트 시스템 사업부</div>
   <div class="pbar"><i></i></div>
   <button class="skip" onclick="closeSplash()">바로 시작 →</button>
@@ -519,8 +552,8 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
 
 <!-- ============ 로그인 선택 ============ -->
 <div id="login">
-  <div class="lgo">HK</div>
-  <h2 class="gold-txt">HK_Smart</h2>
+  <div class="lgo">HC</div>
+  <h2 class="gold-txt">HC_Smart</h2>
   <div class="ls">접속 유형을 선택하세요</div>
   <button class="rolebtn" onclick="loginGuest()">
     <span class="ri">👤</span>
@@ -545,31 +578,28 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
 <!-- ============ M5: 헤더 + 햄버거 드로어 ============ -->
 <header>
   <div class="hbtn" onclick="toggleDrawer(true)"><i></i><i></i><i></i></div>
-  <div class="ht gold-txt">HK_Smart</div>
+  <div class="ht gold-txt">HC_Smart</div>
   <div class="hb" id="rolebadge">Guest</div>
 </header>
 
 <div id="dim" onclick="toggleDrawer(false)"></div>
 <nav id="drawer">
   <div class="dlogo">
-    <b>HK</b>
-    <div><div class="n">HK_Smart</div><div class="s">Smart System Division</div></div>
+    <b>HC</b>
+    <div><div class="n">HC_Smart</div><div class="s">Smart System Division</div></div>
   </div>
-  <div class="dscroll">
   <div class="mi on" data-p="intro" onclick="go('intro')"><span class="ic">🏭</span>Smart 사업부 소개</div>
   <div class="mi" data-p="links" onclick="go('links')"><span class="ic">🔗</span>실사용 링크</div>
   <div class="mi" data-p="design" onclick="go('design')"><span class="ic">🛠️</span>맞춤세팅</div>
   <div class="mi" data-p="inquiry" onclick="go('inquiry')"><span class="ic">📮</span>문의하기</div>
-  <div class="mi" data-p="plan" onclick="go('plan')"><span class="ic">📊</span>진행현황</div>
-  <div class="mi" data-p="progress" onclick="go('progress')"><span class="ic">📑</span>회의록</div>
+  <div class="mi" data-p="board" onclick="go('board')"><span class="ic">📈</span>구축 진행률</div>
   <div class="mi" data-p="quote" onclick="go('quote')"><span class="ic">📄</span>견적서</div>
   <div class="mi" data-p="contract" onclick="go('contract')"><span class="ic">📜</span>계약서</div>
+  <div class="mi" data-p="plan" onclick="go('plan')"><span class="ic">📊</span>진행현황</div>
+  <div class="mi" data-p="progress" onclick="go('progress')"><span class="ic">📑</span>회의록</div>
   <div class="mi" data-p="settings" onclick="go('settings')"><span class="ic">⚙️</span>설정</div>
-  </div>
-  <div class="dfix">
-    <div class="mi lo" onclick="logout()"><span class="ic">🚪</span>로그아웃</div>
-    <div class="foot">HK_Smart · 저비용 클라우드 스마트팩토리<br>기존 시스템 무교체 · 모듈형 도입</div>
-  </div>
+  <div class="mi" onclick="logout()"><span class="ic">🚪</span>로그아웃</div>
+  <div class="foot">HC_Smart · 저비용 클라우드 스마트팩토리<br>기존 시스템 무교체 · 모듈형 도입</div>
 </nav>
 
 <main>
@@ -579,7 +609,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
 
   <div class="hero">
     <div class="badge">SMART SYSTEM DIVISION</div>
-    <h1 class="gold-txt">HK_Smart</h1>
+    <h1 class="gold-txt">HC_Smart</h1>
     <div class="sub">기존 시스템을 바꾸지 않고, 현장을 클라우드로 확장하다</div>
     <div class="tag">레거시 MES <b>무중단·무교체</b> 연동 · 서버 구축비 <b>0원</b>에 가까운 클라우드 아키텍처 · 현장이 직접 만들고 운영하는 <b>페이퍼리스 공장</b></div>
   </div>
@@ -591,7 +621,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
     <div class="card"><div class="ic">🔕</div><h3>이상은 늦게 알게 된다</h3><p>설비 정지, 검사 누락, 불량 발생을 몇 시간 뒤 보고서로 확인. 실시간 알림 체계가 없습니다.</p></div>
   </div>
 
-  <div class="hgroup">⚙️ HK_Smart의 방식</div>
+  <div class="hgroup">⚙️ HC_Smart의 방식</div>
   <div class="eng"><div class="ei">🛡️</div><div><div class="et">무중단 · 읽기 중심 연동</div><div class="ed">기존 MES/ERP를 걷어내지 않습니다. 사내 PC 1대의 <span class="hl-y">데이터 릴레이 엔진</span>이 레거시 DB와 클라우드를 잇고, 조회 중심 접근으로 기존 업무에 영향을 주지 않습니다.</div></div></div>
   <div class="eng"><div class="ei">💸</div><div><div class="et">저비용 클라우드 구조</div><div class="ed">정적 웹(무료 호스팅) + 클라우드 DB(Supabase) + 사내 PC 1대. <span class="hl-g">별도 서버·라이선스 없이</span> 스마트폰·태블릿·PC에서 설치 없이 바로 접속합니다.</div></div></div>
   <div class="eng"><div class="ei">📡</div><div><div class="et">초소형 IoT 실측 데이터</div><div class="ed">수만 원대 산업용 컨트롤러(ESP32)와 광센서로 생산 카운트·온습도·호출 신호를 수집. 케이스는 3D프린터 자체 제작으로 설비별 맞춤 부착.</div></div></div>
@@ -639,13 +669,13 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
 <div class="page" id="pg-links">
   <div class="sec-label">LIVE SYSTEMS</div>
   <h2 class="pt">실사용 링크</h2>
-  <div class="pd">HK_Smart 플랫폼으로 구축되어 실제 현장에서 운영 중인 시스템입니다. 각 링크는 실운영(또는 데모) 화면으로 연결됩니다.</div>
+  <div class="pd">HC_Smart 플랫폼으로 구축되어 실제 현장에서 운영 중인 시스템입니다. 각 링크는 실운영(또는 데모) 화면으로 연결됩니다.</div>
 
   <!-- 링크 주소는 각 카드의 href만 실제 배포 URL로 교체하면 됩니다 -->
   <a class="lk" href="https://knagbyeongju-123.github.io/smtec_main2/" target="_blank" rel="noopener">
     <div class="li">🏭</div>
     <div class="lb">
-      <div class="lt">ESG Smart Factory <span class="v">v3.57</span></div>
+      <div class="lt">샘플1 <span class="v">v3.57</span></div>
       <div class="ld">자동차부품 제조 · 생산모니터링 / 품질 / 점검 / LOT추적 / IoT 통합 포털</div>
     </div>
     <div class="go">열기 →</div>
@@ -654,7 +684,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   <a class="lk" href="https://knagbyeongju-123.github.io/mm_main/" target="_blank" rel="noopener">
     <div class="li">⚙️</div>
     <div class="lb">
-      <div class="lt">스마트팩토리 v2.0 <span class="v">경일</span></div>
+      <div class="lt">샘플2 <span class="v">v2.0</span></div>
       <div class="ld">설비 가동현황 · 실시간 알림(ntfy) · 클라우드 DB 연동 현장 시스템</div>
     </div>
     <div class="go">열기 →</div>
@@ -663,7 +693,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   <a class="lk" href="https://knagbyeongju-123.github.io/SW/" target="_blank" rel="noopener">
     <div class="li">🧱</div>
     <div class="lb">
-      <div class="lt">특수합금 자재관리 <span class="v">DEMO v2.9</span></div>
+      <div class="lt">샘플3 <span class="v">DEMO v2.9</span></div>
       <div class="ld">QR 기반 입출고 · 재고조회 · 다거점 자재 관리 (스마트폰 스캔 지원)</div>
     </div>
     <div class="go">열기 →</div>
@@ -672,7 +702,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   <a class="lk" href="https://knagbyeongju-123.github.io/mold_make/" target="_blank" rel="noopener">
     <div class="li">🛠️</div>
     <div class="lb">
-      <div class="lt">금형제작관리 <span class="v">사업부 전용</span></div>
+      <div class="lt">샘플4 <span class="v">사업부 전용</span></div>
       <div class="ld">발주·외주 관리 / 수리 워크플로 / 시작품 작업일지 / 4개 국어 UI</div>
     </div>
     <div class="go">열기 →</div>
@@ -681,7 +711,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   <a class="lk" href="https://knagbyeongju-123.github.io/GF/" target="_blank" rel="noopener">
     <div class="li">⛳</div>
     <div class="lb">
-      <div class="lt">호영회 · 정산CC <span class="v">모임관리</span></div>
+      <div class="lt">샘플5 <span class="v">모임관리</span></div>
       <div class="ld">모임 일정 · 참석 · 회비 정산 — 동일 플랫폼의 비제조 분야 응용 사례</div>
     </div>
     <div class="go">열기 →</div>
@@ -714,7 +744,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
     <div class="dd">시스템 명칭과 연락처에 사용됩니다</div>
     <div class="frm">
       <div class="fl">업체명 <b>*</b></div>
-      <input class="tin" id="f-company" placeholder="예) HK_Smart">
+      <input class="tin" id="f-company" placeholder="예) HC_Smart">
       <div class="frow" style="margin-top:10px">
         <div>
           <div class="fl">담당자</div>
@@ -1258,10 +1288,21 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
 </div>
 
 <!-- ==================== 진행현황 타임플랜 (관리자 전용) ==================== -->
+<!-- ==================== 구축 진행률 (전체 공개) ==================== -->
+<div class="page" id="pg-board">
+  <div class="sec-label">PROJECT BOARD</div>
+  <h2 class="pt">구축 진행률</h2>
+  <div class="pd">HC_Smart가 진행 중인 프로젝트의 도입 단계별 진행률입니다. 상세 일정과 내부 메모는 표시되지 않습니다.</div>
+
+  <div class="bdsum" id="bd-sum"></div>
+  <div id="bd-list"><div class="qempty">불러오는 중...</div></div>
+  <div class="bdfoot">진행률은 담당자가 갱신하는 즉시 반영됩니다 · 문의 (055) 714-7768</div>
+</div>
+
 <div class="page" id="pg-plan">
   <div class="sec-label">PROGRESS TIMELINE</div>
   <h2 class="pt">업체별 진행현황</h2>
-  <div class="pd">업체별 도입 단계를 타임플랜으로 관리합니다. 항목마다 기간·상태·진도(%)를 기록하면 간트차트로 표시됩니다. 서버(Supabase)에 저장됩니다.</div>
+  <div class="pd">완료한 단계를 클릭해 저장하면 단계표에 ○로 표시되고, 다음 단계는 자동으로 △ 진행중이 됩니다. '구축 진행률' 공개 화면에도 동일하게 반영됩니다. 서버(Supabase)에 저장됩니다.</div>
 
   <div class="dbwarn" id="g-dbwarn" style="display:none">
     ⚠️ 서버(Supabase)가 아직 연결되지 않았습니다. <b>설정 → 서버(Supabase) 연결</b>을 확인하세요.
@@ -1272,11 +1313,15 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
     <div class="frow">
       <div>
         <div class="fl">업체명 <b>*</b></div>
-        <input class="tin" id="g-company" placeholder="예) HK_Smart" list="g-company-list">
+        <div style="display:flex;gap:7px;align-items:center">
+          <input class="tin" id="g-company" placeholder="직접 입력 또는 우측 버튼으로 선택" list="g-company-list" style="flex:1">
+          <button class="qi-btn g" style="flex-shrink:0;padding:11px 13px;white-space:nowrap" onclick="gPickCompany()">📥 불러오기</button>
+        </div>
         <datalist id="g-company-list"></datalist>
+        <div id="g-setup-pick" style="display:none;margin-top:9px"></div>
       </div>
     </div>
-    <div class="fl" style="margin-top:12px">진행 단계 <b>*</b> <span style="font-weight:600;color:var(--sub)">— 일반적인 전산개발 순서입니다. 해당 단계를 선택하세요 (신규 등록 시 여러 개 선택하면 한 번에 등록됩니다)</span></div>
+    <div class="fl" style="margin-top:12px">완료된 단계 <b>*</b> <span style="font-weight:600;color:var(--sub)">— 완료한 단계를 모두 클릭하고 저장하세요. 선택한 단계는 ○ 완료로 기록되고, 그 다음 단계가 자동으로 △ 진행중으로 표시됩니다</span></div>
     <div class="chips2" id="g-taskchips">
       <div class="chk" data-v="상담 · 요구사항 파악">1. 상담·요구사항</div>
       <div class="chk" data-v="현장 진단">2. 현장 진단</div>
@@ -1293,45 +1338,18 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
     </div>
     <div class="fl">기타 항목 (직접 입력)</div>
     <input class="tin" id="g-task" placeholder="위 단계 외 항목이 있으면 입력 (예: IoT 센서 설치)">
-    <div class="frow" style="margin-top:10px">
-      <div>
-        <div class="fl">시작일 <b>*</b></div>
-        <input class="tin" type="date" id="g-start">
-      </div>
-      <div>
-        <div class="fl">종료일 <b>*</b></div>
-        <input class="tin" type="date" id="g-end">
-      </div>
-    </div>
-    <div class="frow" style="margin-top:10px">
-      <div>
-        <div class="fl">상태</div>
-        <select class="tin" id="g-status">
-          <option>예정</option><option>진행중</option><option>완료</option><option>지연</option><option>보류</option>
-        </select>
-      </div>
-      <div>
-        <div class="fl">진도 <span id="g-pv" style="color:var(--gold)">0%</span></div>
-        <input type="range" id="g-progress" min="0" max="100" step="5" value="0"
-          style="width:100%;margin-top:14px;accent-color:#e2b04a"
-          oninput="document.getElementById('g-pv').textContent=this.value+'%'">
-      </div>
-    </div>
+
     <div class="fl">메모</div>
     <input class="tin" id="g-memo" placeholder="참고사항 (선택)">
     <div class="frow" style="margin-top:14px">
-      <button class="copy-btn" style="width:100%;background:var(--card);border:1.5px solid var(--line);color:var(--sub);display:none" id="g-cancel" onclick="gCancelEdit()">수정 취소</button>
-      <button class="copy-btn" style="width:100%" id="g-save" onclick="savePlan()">항목 저장</button>
+      <button class="copy-btn" style="width:100%" id="g-save" onclick="savePlan()">완료 단계 저장</button>
     </div>
   </div>
 
-  <div class="hgroup">📊 업체별 타임플랜</div>
+  <div class="hgroup">📊 업체별 진행 단계표</div>
   <div class="glegend">
-    <span><i style="background:#8fa3cf"></i>예정</span>
-    <span><i style="background:#4f8cff"></i>진행중</span>
-    <span><i style="background:#3fc783"></i>완료</span>
-    <span><i style="background:#ef7466"></i>지연</span>
-    <span><i style="background:#8b8fa3"></i>보류</span>
+    <span><b style="color:#3fc783">○</b> 완료</span>
+    <span><b style="color:#e2b04a">△</b> 진행중 (다음 단계 자동 표시)</span>
   </div>
   <div class="mfilter" id="g-filter"></div>
   <div id="g-list"><div class="qempty">불러오는 중...</div></div>
@@ -1352,7 +1370,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
     <div class="frow">
       <div>
         <div class="fl">업체명 <b>*</b></div>
-        <input class="tin" id="p-company" placeholder="예) HK_Smart" list="p-company-list">
+        <input class="tin" id="p-company" placeholder="예) HC_Smart" list="p-company-list">
         <datalist id="p-company-list"></datalist>
       </div>
       <div>
@@ -1409,7 +1427,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   <div class="frm">
     <div class="fl" style="font-size:14px;color:var(--gold)">🏢 공급자 정보 <span style="font-weight:400;color:var(--sub)">(최초 1회 입력 후 저장)</span></div>
     <div class="frow">
-      <div><div class="fl">상호 <b>*</b></div><input class="tin" id="qt-s-co" placeholder="예) HK_Smart"></div>
+      <div><div class="fl">상호 <b>*</b></div><input class="tin" id="qt-s-co" placeholder="예) HC_Smart"></div>
       <div><div class="fl">대표자</div><input class="tin" id="qt-s-ceo" placeholder="대표자명"></div>
     </div>
     <div class="frow">
@@ -1588,9 +1606,9 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
     <div class="dd">맞춤세팅 요청서가 발송되는 ntfy.sh 토픽(방 이름)입니다</div>
     <div class="frm">
       <div class="fl">ntfy 토픽</div>
-      <input class="tin" id="s-topic" placeholder="예) HK_Smart">
+      <input class="tin" id="s-topic" placeholder="예) HC_Smart">
       <div style="font-size:11.5px;color:var(--sub);margin-top:8px">
-        발송 주소: <span style="color:var(--gold);font-weight:700">https://ntfy.sh/<span id="s-topic-preview">HK_Smart</span></span>
+        발송 주소: <span style="color:var(--gold);font-weight:700">https://ntfy.sh/<span id="s-topic-preview">HC_Smart</span></span>
       </div>
       <div class="frow" style="margin-top:14px">
         <button class="copy-btn" style="width:100%;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="testNtfy()">테스트 발송</button>
@@ -1622,7 +1640,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
 </main>
 
 <footer>
-  HK_Smart · Smart System Division<br>
+  HC_Smart · Smart System Division<br>
   <span style="color:rgba(255,255,255,.45)">문의: 페이지 내 문의하기 이용 · 이메일/전화는 상담 시 안내</span><br>
   Design T3 + L4 + M5
 </footer>
@@ -1643,7 +1661,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
     <div class="hd2">
       <span class="t" id="st-prev-t">미리보기</span>
       <button class="dl" onclick="stPrevDl()">⬇ 다운로드</button>
-      <button class="cl" onclick="stPrevClose()">🏠 홈으로</button>
+      <button class="cl" onclick="stPrevClose()">✕ 미리보기 닫기</button>
     </div>
     <iframe id="st-prev-frame"></iframe>
   </div>
@@ -1655,11 +1673,11 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
 /* ===== 저장소 (localStorage) ===== */
 const LS_PIN = 'hk_admin_pin', LS_TOPIC = 'hk_ntfy_topic';
 function getPin(){ return localStorage.getItem(LS_PIN) || '2580'; }
-function getTopic(){ return localStorage.getItem(LS_TOPIC) || 'HK_Smart'; }
+function getTopic(){ return localStorage.getItem(LS_TOPIC) || 'HC_Smart'; }
 
 /* ===== 역할(권한) ===== */
 let role = null; /* 'guest' | 'admin' */
-const PAGE_PERM = { intro:['guest','admin'], links:['admin'], design:['guest','admin'], inquiry:['guest','admin'], plan:['admin'], progress:['admin'], quote:['admin'], contract:['admin'], settings:['admin'] };
+const PAGE_PERM = { intro:['guest','admin'], links:['admin'], design:['guest','admin'], inquiry:['guest','admin'], board:['guest','admin'], plan:['admin'], progress:['admin'], quote:['admin'], contract:['admin'], settings:['admin'] };
 
 function applyRole(){
   document.getElementById('rolebadge').textContent = role === 'admin' ? '관리자' : 'Guest';
@@ -1724,13 +1742,20 @@ const drawer = document.getElementById('drawer');
 const dim = document.getElementById('dim');
 function toggleDrawer(on){ drawer.classList.toggle('on', on); dim.classList.toggle('on', on); }
 
-function go0(p){ /* 권한 무시 내부 전환 */
+function go0(p, fromPop){ /* 권한 무시 내부 전환 */
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('on'));
   document.getElementById('pg-'+p).classList.add('on');
   document.querySelectorAll('#drawer .mi').forEach(x=>x.classList.toggle('on', x.dataset.p===p));
   document.getElementById('sumbar').classList.toggle('on', p==='design');
   toggleDrawer(false);
   window.scrollTo({top:0});
+  if(!fromPop){
+    try{
+      const st = history.state;
+      if(!st || !st.page) history.replaceState({page:p}, '');
+      else if(st.page !== p) history.pushState({page:p}, '');
+    }catch(e){}
+  }
 }
 function go(p){
   if(!role || !PAGE_PERM[p].includes(role)){
@@ -1741,6 +1766,7 @@ function go(p){
   if(p === 'settings') loadSettings();
   if(p === 'inquiry') renderInq();
   if(p === 'progress') loadMinutes();
+  if(p === 'board') loadBoard();
   if(p === 'plan') loadPlan();
 }
 
@@ -1861,6 +1887,45 @@ const MODULE_PRICE = {
   '회비 · 모임 정산':               { p: 600000, d:'회비 납부 관리 · 모임 정산', lv:'하' },
   '일정 · 예약 · 알림 발송':        { p: 700000, d:'일정/예약 등록 · 자동 알림 발송', lv:'하' }
 };
+/* ===== 모듈별 스타터 레이아웃 템플릿 =====
+   t: dash(대시보드) / form(입력폼+목록) / list(목록+검색) / check(체크시트) / scan(스캔) / doc(결재문서)
+   c: 목록 컬럼,  f: 입력 필드,  s: 통계 카드 라벨 */
+const ST_TPL = {
+  '생산 모니터링(가동현황)':   { t:'dash', s:['가동설비','정지설비','금일생산','달성률'], c:['설비','상태','금일수량','가동률'] },
+  '생산일보 · 작업실적':       { t:'form', f:['작업일자|date','작업자|text','품번|text','지시수량|number','생산수량|number','불량수량|number','비고|text'], c:['일자','작업자','품번','생산','불량'] },
+  '디스플레이알림':            { t:'form', f:['표출제목|text','표출내용|area','표출종료|date'], c:['제목','등록자','표출기간','상태'] },
+  'IoT 센서(카운터 · 온습도)': { t:'dash', s:['연결센서','금일카운트','현재온도','현재습도'], c:['센서ID','설치위치','최근값','수신시각'] },
+  '일상 · 정기점검 체크시트':  { t:'check', f:['점검일자|date','점검자|text'], k:['설비 외관 이상 유무','윤활유 잔량 확인','안전커버 체결 상태','비상정지 버튼 작동','작업장 정리정돈'] },
+  '품질검사(외관 · 치수)':     { t:'form', f:['검사일자|date','품번|text','LOT번호|text','측정값|number','규격 상/하한|text','판정|sel:합격,불합격,재검','검사자|text'], c:['일자','품번','LOT','측정값','판정'] },
+  '불량관리 · PPM 통계':       { t:'dash', s:['금월 불량','PPM','최다유형','전월대비'], c:['일자','품번','불량유형','수량','조치'] },
+  '로트(LOT) 추적':            { t:'list', c:['LOT번호','품번','투입자재','공정','출하처'], btn:'LOT 추적 조회' },
+  '시스템 상태체크 · 감시':    { t:'dash', s:['정상','경고','오류','최근점검'], c:['대상','구분','상태','최근 응답'] },
+  '자재 · 재고관리(QR)':       { t:'list', c:['품번','품명','로케이션','현재고','안전재고'], btn:'자재 등록' },
+  '발주 · 외주관리':           { t:'list', c:['발주번호','거래처','품번','발주수량','납기'], btn:'발주서 작성' },
+  '수입검사(IQC)':             { t:'form', f:['입고일자|date','거래처|text','품번|text','입고수량|number','시료수|number','판정|sel:합격,불합격,특채','검사자|text'], c:['일자','거래처','품번','수량','판정'] },
+  '바코드 · QR 입출고':        { t:'scan', f:['구분|sel:입고,출고,이동','수량|number','로케이션|text'], c:['시각','구분','품번','수량','처리자'] },
+  '재고실사 · 마감':           { t:'form', f:['실사일자|date','품번|text','전산재고|number','실사재고|number','차이사유|text'], c:['품번','전산','실사','차이','사유'] },
+  '유통기한 · 로케이션 관리':  { t:'list', c:['품번','LOT','로케이션','입고일','유통기한'], btn:'로케이션 이동' },
+  '설비 · 치공구 자산관리':    { t:'list', c:['자산번호','자산명','구분','설치위치','상태'], btn:'자산 등록' },
+  '수리 워크플로(의뢰→완료)':  { t:'form', f:['의뢰일자|date','설비명|text','고장현상|area','긴급도|sel:긴급,보통,낮음','의뢰자|text'], c:['의뢰일','설비','현상','상태','담당'] },
+  '예방보전(PM) · 검교정':     { t:'list', c:['대상','주기','최근 실시','차기 예정','잔여일'], btn:'PM 실적 등록' },
+  '전자결재 · PDF 보고서':     { t:'doc', c:['문서번호','제목','기안자','결재선','상태'] },
+  '전자 열람확인 · 회람':      { t:'doc', c:['문서번호','제목','회람대상','열람','미열람'] },
+  'KPI · 개선활동':            { t:'dash', s:['달성 KPI','미달 KPI','진행 개선','완료 개선'], c:['지표','목표','실적','달성률'] },
+  '기준정보 · 보안 마스터':    { t:'list', c:['구분','코드','명칭','사용여부','수정일'], btn:'기준정보 등록' },
+  '견적관리':                  { t:'list', c:['견적번호','거래처','금액','작성일','상태'], btn:'견적 작성' },
+  '수주 · 납기관리':           { t:'list', c:['수주번호','거래처','품번','수량','납기'], btn:'수주 등록' },
+  '출하관리 · 납품서 발행':    { t:'list', c:['출하일','거래처','품번','수량','납품서'], btn:'출하 등록' },
+  '거래처 관리':               { t:'list', c:['거래처명','대표','담당자','연락처','구분'], btn:'거래처 등록' },
+  '클레임 접수 · 이력':        { t:'form', f:['접수일자|date','거래처|text','품번|text','클레임 내용|area','조치사항|area'], c:['접수일','거래처','내용','상태'] },
+  '근태관리':                  { t:'dash', s:['금일 출근','지각','미출근','금월 연장'], c:['사원','출근','퇴근','근무시간','비고'] },
+  '작업자 배치 · 교육이력':    { t:'list', c:['사원','부서','배치공정','자격','최근교육'], btn:'배치 변경' },
+  '단가 · 외주비 정산':        { t:'list', c:['거래처','품번','단가','수량','정산금액'], btn:'정산 마감' },
+  '매출 · 매입 집계':          { t:'dash', s:['금월 매출','금월 매입','이익','전월대비'], c:['월','매출','매입','이익','이익률'] },
+  '회비 · 모임 정산':          { t:'list', c:['회원','회차','납부액','납부일','상태'], btn:'회비 등록' },
+  '일정 · 예약 · 알림 발송':   { t:'list', c:['일자','시간','일정명','대상','알림'], btn:'일정 등록' }
+};
+
 const BASE_PLATFORM = { name:'기본 플랫폼 구축', p:1500000,
   d:'클라우드 DB(Supabase) 셋업 · PIN/권한 인증 · 공통 UI 프레임 · 모바일/PC 반응형 · PWA · 알림 기반' };
 
@@ -1976,7 +2041,7 @@ function setupToQuote(){
 }
 
 function buildReq(){
-  const lines = ['[HK_Smart 맞춤세팅 요청서]'];
+  const lines = ['[HC_Smart 맞춤세팅 요청서]'];
   lines.push('');
   lines.push('■ 업체 정보');
   lines.push('- 업체명: ' + (v('f-company') || '(미입력)'));
@@ -2038,7 +2103,7 @@ async function saveReq(){
   try{
     const r = await fetch('https://ntfy.sh/' + getTopic(), {
       method:'POST',
-      headers:{ 'Title':'HK_Smart Setup Request', 'Tags':'clipboard', 'Priority':'default' },
+      headers:{ 'Title':'HC_Smart Setup Request', 'Tags':'clipboard', 'Priority':'default' },
       body: txt
     });
     sent = r.ok;
@@ -2052,12 +2117,12 @@ async function saveReq(){
 function printReq(txt){
   const esc = t => t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const body = esc(txt)
-    .replace(/^\[HK_Smart 맞춤세팅 요청서\]$/m, '')
+    .replace(/^\[HC_Smart 맞춤세팅 요청서\]$/m, '')
     .replace(/^■ (.+)$/gm, '<h2>$1</h2>')
     .replace(/^- (.+)$/gm, '<div class="li">$1</div>')
     .replace(/\n/g, '\n');
   printHtml(`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
-<title>HK_Smart 맞춤세팅 요청서</title>
+<title>HC_Smart 맞춤세팅 요청서</title>
 <style>
 @page{size:A4;margin:18mm}
 body{font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;color:#1a1a1a;line-height:1.7;font-size:13px}
@@ -2076,34 +2141,36 @@ pre{white-space:pre-wrap;font-family:inherit;margin:0}
   background:#e2b04a;color:#241a05;font-weight:800;font-size:13px}
 </style></head><body>
 <button class="noprint" onclick="window.print()">🖨 PDF로 저장</button>
-<div class="hd"><div class="lg">HK</div><div><h1>HK_Smart 맞춤세팅 요청서</h1><div class="s">Smart System Division · Custom Setup Request</div></div></div>
+<div class="hd"><div class="lg">HC</div><div><h1>HC_Smart 맞춤세팅 요청서</h1><div class="s">Smart System Division · Custom Setup Request</div></div></div>
 <pre>${body}</pre>
-<div class="ft">HK_Smart · 본 문서는 맞춤세팅 페이지에서 자동 생성되었습니다</div>
+<div class="ft">HC_Smart · 본 문서는 맞춤세팅 페이지에서 자동 생성되었습니다</div>
 </body></html>`);
 }
 /* ===== 페이지 이탈 없는 인쇄 (숨김 iframe) ===== */
 function printHtml(html){
-  let f = document.getElementById('print-frame');
-  if(!f){
-    f = document.createElement('iframe');
-    f.id = 'print-frame';
-    f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden';
-    document.body.appendChild(f);
-  }
-  const d = f.contentWindow.document;
-  d.open(); d.write(html); d.close();
-  setTimeout(()=>{
-    try{
-      f.contentWindow.focus();
-      f.contentWindow.print();
-    }catch(e){
-      /* 폴백: 새 창 인쇄 */
-      const w = window.open('', '_blank');
-      if(!w){ toast('인쇄 창을 열 수 없습니다'); return; }
-      w.document.write(html); w.document.close();
-      setTimeout(()=>{ try{ w.print(); }catch(_){} }, 300);
-    }
-  }, 250);
+  /* srcdoc 사용: document.write는 일부 브라우저에서 히스토리 항목을 만들어
+     인쇄 후 뒤로가기 시 페이지 이탈을 유발하므로 사용하지 않음 */
+  const old = document.getElementById('print-frame');
+  if(old) old.remove();
+  const f = document.createElement('iframe');
+  f.id = 'print-frame';
+  f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden';
+  f.onload = function(){
+    setTimeout(()=>{
+      try{
+        f.contentWindow.focus();
+        f.contentWindow.print();
+      }catch(e){
+        /* 폴백: 새 창 인쇄 */
+        const w = window.open('', '_blank');
+        if(!w){ toast('인쇄 창을 열 수 없습니다'); return; }
+        w.document.write(html); w.document.close();
+        setTimeout(()=>{ try{ w.print(); }catch(_){} }, 300);
+      }
+    }, 150);
+  };
+  f.srcdoc = html;
+  document.body.appendChild(f);
 }
 
 /* ===== 견적서 ===== */
@@ -2132,7 +2199,7 @@ function qtSaveSupplier(){
 function qtLoadSupplier(){
   let s = null;
   try{ s = JSON.parse(localStorage.getItem(LS_QT_SUP)); }catch(e){}
-  /* 최초 기본값: HK(한컴) */
+  /* 최초 기본값: HC(한컴) */
   if(!s) s = { co:'한컴', ceo:'김홍우', biz:'', tel:'(055) 714-7768 / 010-5504-6417', addr:'경남 창원시 월림로 39번길 63-23' };
   document.getElementById('qt-s-co').value = s.co || '';
   document.getElementById('qt-s-ceo').value = s.ceo || '';
@@ -2353,12 +2420,12 @@ table.items tfoot td{border:1.5px solid #333;background:#f7f7f7;font-weight:900;
 </table>
 <div class="amount-kor">합계금액 : 일금 ${numKor(sums.tot)}원정 (₩${num(sums.tot)})</div>
 ${q.memo ? '<div class="memo"><div class="mt">비고</div>'+esc(q.memo)+'</div>' : ''}
-<div class="ft">${esc(sup.co)} · 본 견적서는 HK_Smart 시스템에서 발행되었습니다</div>
+<div class="ft">${esc(sup.co)} · 본 견적서는 HC_Smart 시스템에서 발행되었습니다</div>
 </body></html>`);
 }
 
 /* ===== 저장된 맞춤세팅 → 견적 생성 ===== */
-async function fetchSetups(){
+async function fetchSetups(serverOnly){
   if(sbReady()){
     try{
       const rows = await sb('hk_setups?select=*&order=created_at.desc&limit=30');
@@ -2370,9 +2437,11 @@ async function fetchSetups(){
         memo: r.memo || '', at: r.created_at, src: 'server'
       }));
     }catch(e){
+      if(serverOnly){ toast('서버 조회 실패 — ' + e.message); return []; }
       toast('서버 조회 실패 — 이 기기의 저장분을 표시합니다');
     }
   }
+  if(serverOnly) return [];
   return getSetups();
 }
 
@@ -2410,16 +2479,11 @@ function qtApplySetup(i){
 }
 
 async function qtDelSetup(i){
-  if(!confirm('이 맞춤세팅을 삭제할까요?')) return;
   const d = window._qtSetups[i];
-  if(d && d.src === 'server' && sbReady()){
-    try{ await sb('hk_setups?id=eq.' + d.id, { method:'DELETE', prefer:'return=minimal' }); }
-    catch(e){ toast('서버 삭제 실패'); return; }
-  }
-  const list = getSetups();
-  const li = list.findIndex(x => x.company === (d && d.company));
-  if(li >= 0){ list.splice(li,1); setSetups(list); }
-  qtPickSetup();
+  if(!d) return;
+  if(!d.company){ toast('업체명이 없는 항목은 삭제할 수 없습니다'); return; }
+  const ok = await confirmPurge(d.company, async ()=>{ await qtPickSetup(); });
+  if(!ok) return;
 }
 
 /* 견적 저장/목록 (서버 우선 · 로컬 폴백) */
@@ -2623,9 +2687,14 @@ function stPrevClose(fromPop){
     stPrevPushed = false;
   }
 }
-window.addEventListener('popstate', function(){
+window.addEventListener('popstate', function(e){
   const ov = document.getElementById('st-prev');
-  if(ov && ov.classList.contains('on')) stPrevClose(true);
+  if(ov && ov.classList.contains('on')){ stPrevClose(true); return; }
+  if(e.state && e.state.page){
+    const p = e.state.page;
+    if(role && PAGE_PERM[p] && PAGE_PERM[p].includes(role)) go0(p, true);
+    else go0('intro', true);
+  }
 });
 function stPrevDl(){
   if(!window._stHtml) return;
@@ -2685,6 +2754,90 @@ function stDownloadHtml(d){
   toast('스타터 index.html이 생성되었습니다');
 }
 
+/* --- 모듈 유형별 스타터 본문 생성 --- */
+function stModBody(k, i, esc){
+  const t = ST_TPL[k];
+  const NOTE = '<div class="tip">⚙ 스타터 골격 · 화면 구성 예시입니다. 실제 저장/조회 로직은 개발 단계에서 구현됩니다.</div>';
+  if(!t){
+    return '<div class="card"><b>스타터 골격</b><br>이 화면에 '+esc(k)+' 기능을 구현하세요.</div>';
+  }
+  const P = 'm'+i;
+  const th = a => '<tr>' + a.map(c=>'<th>'+esc(c)+'</th>').join('') + '</tr>';
+  const sample = (cols, n) => {
+    let r = '';
+    for(let x=0; x<n; x++){
+      r += '<tr>' + cols.map((c,ci)=>'<td>'+(ci===0?'—':'·')+'</td>').join('') + '</tr>';
+    }
+    return r;
+  };
+  const table = (cols) => '<div class="tw"><table class="tb"><thead>'+th(cols)+'</thead><tbody>'
+      + sample(cols, 3) + '</tbody></table></div><div class="empty">데이터가 없습니다 · 개발 시 목록 연동</div>';
+
+  /* 입력 필드 렌더 */
+  const fields = (fs) => fs.map((f,fi)=>{
+    const [lb, tp] = f.split('|');
+    const id = P+'-f'+fi;
+    if(tp === 'area') return '<label class="lb">'+esc(lb)+'</label><textarea class="tin ta" id="'+id+'" placeholder="'+esc(lb)+'"></textarea>';
+    if((tp||'').indexOf('sel:') === 0){
+      const opts = tp.slice(4).split(',').map(o=>'<option>'+esc(o)+'</option>').join('');
+      return '<label class="lb">'+esc(lb)+'</label><select class="tin" id="'+id+'">'+opts+'</select>';
+    }
+    return '<label class="lb">'+esc(lb)+'</label><input class="tin" id="'+id+'" type="'+(tp||'text')+'" placeholder="'+esc(lb)+'">';
+  }).join('');
+
+  if(t.t === 'dash'){
+    const stats = '<div class="stats4">' + (t.s||[]).map(x=>
+      '<div class="stat"><div class="v">0</div><div class="k">'+esc(x)+'</div></div>').join('') + '</div>';
+    const chart = '<div class="card"><b>추이 차트</b><div class="chz">차트 영역 (개발 시 구현)</div></div>';
+    return NOTE + stats + chart + '<div class="card"><b>상세 현황</b>' + table(t.c||['항목','값']) + '</div>';
+  }
+
+  if(t.t === 'form'){
+    return NOTE
+      + '<div class="card"><b>＋ 신규 등록</b><div class="fg">' + fields(t.f||[]) + '</div>'
+      + '<button class="btn" onclick="toast(\'등록 기능을 구현하세요\')">등록</button></div>'
+      + '<div class="card"><b>최근 등록 내역</b>' + table(t.c||['항목']) + '</div>';
+  }
+
+  if(t.t === 'list'){
+    return NOTE
+      + '<div class="card"><div class="srow"><input class="tin sin" placeholder="검색어 입력">'
+      + '<button class="btn sbtn" onclick="toast(\'검색 기능을 구현하세요\')">검색</button></div>'
+      + '<div class="chips"><span class="cp on">전체</span><span class="cp">진행</span><span class="cp">완료</span></div></div>'
+      + '<div class="card"><div class="chd"><b>목록</b><button class="mini" onclick="toast(\'' + esc(t.btn||'등록') + ' 기능을 구현하세요\')">＋ ' + esc(t.btn||'등록') + '</button></div>'
+      + table(t.c||['항목']) + '</div>';
+  }
+
+  if(t.t === 'check'){
+    const head = '<div class="card"><b>점검 정보</b><div class="fg">' + fields(t.f||[]) + '</div></div>';
+    const items = (t.k||[]).map((x,xi)=>
+      '<div class="ck"><span class="cn">'+esc(x)+'</span>'
+      + '<span class="cb"><i class="ok" onclick="ckPick(this)">양호</i><i class="ng" onclick="ckPick(this)">불량</i></span></div>').join('');
+    return NOTE + head
+      + '<div class="card"><b>점검 항목</b>' + items
+      + '<div class="fg" style="margin-top:10px"><label class="lb">특이사항</label><textarea class="tin ta" placeholder="특이사항 입력"></textarea></div>'
+      + '<button class="btn" onclick="toast(\'점검 저장 기능을 구현하세요\')">점검 저장</button></div>';
+  }
+
+  if(t.t === 'scan'){
+    return NOTE
+      + '<div class="card sc"><div class="scz" onclick="toast(\'카메라 스캔 기능을 구현하세요\')">📷<br><b>QR · 바코드 스캔</b><span>탭하여 스캔 시작</span></div>'
+      + '<div class="fg"><label class="lb">품번 (스캔 결과)</label><input class="tin" placeholder="스캔 시 자동 입력">' + fields(t.f||[]) + '</div>'
+      + '<button class="btn" onclick="toast(\'처리 기능을 구현하세요\')">처리</button></div>'
+      + '<div class="card"><b>금일 처리 이력</b>' + table(t.c||['항목']) + '</div>';
+  }
+
+  if(t.t === 'doc'){
+    return NOTE
+      + '<div class="card"><div class="chd"><b>결재 대기</b><button class="mini" onclick="toast(\'기안 기능을 구현하세요\')">＋ 기안 작성</button></div>'
+      + '<div class="aline"><span class="ap">기안</span><span class="ar">›</span><span class="ap">검토</span><span class="ar">›</span><span class="ap">승인</span><span class="ar">›</span><span class="ap">완료</span></div>'
+      + table(t.c||['항목']) + '</div>'
+      + '<div class="card"><b>출력</b><br><button class="btn" onclick="toast(\'PDF 출력 기능을 구현하세요\')">🖨 PDF 출력</button></div>';
+  }
+
+  return '<div class="card"><b>스타터 골격</b><br>이 화면에 '+esc(k)+' 기능을 구현하세요.</div>';
+}
+
 function stBuildHtml(d){
   const p = stParseDesign(d.design);
   const th = ST_THEMES[p.T] || ST_THEMES.T3;
@@ -2695,10 +2848,11 @@ function stBuildHtml(d){
   if(d.scEtc) mods.push(d.scEtc);
   const SCT = '<' + '/scr' + 'ipt>';
 
-  /* 모듈 페이지 */
+  /* 모듈 페이지 — 유형별 기본 레이아웃 적용 */
   const modPages = mods.map((k,i)=>{
     const m = MODULE_PRICE[k];
-    return '<div class="page" id="pg-m'+i+'"><h2>'+esc(k)+'</h2><div class="pd">'+esc(m ? m.d : '기능 준비 중')+'</div><div class="card"><b>스타터 골격</b><br>이 화면에 '+esc(k)+' 기능을 구현하세요.</div></div>';
+    return '<div class="page" id="pg-m'+i+'"><h2>'+esc(k)+'</h2><div class="pd">'+esc(m ? m.d : '기능 준비 중')+'</div>'
+      + stModBody(k, i, esc) + '</div>';
   }).join('\n');
 
   /* 설정 페이지 (마스터 변경 + 사원 PIN 등록) */
@@ -2788,6 +2942,8 @@ function stBuildHtml(d){
     "  window.scrollTo(0,0);",
     "}",
     "var tmr; function toast(m){ var t=document.getElementById('toast'); t.textContent=m; t.classList.add('on'); clearTimeout(tmr); tmr=setTimeout(function(){t.classList.remove('on')},1800); }",
+    "function ckPick(el){ var box=el.parentNode; box.querySelectorAll('i').forEach(function(x){ x.classList.remove('on'); }); el.classList.add('on'); }",
+    "document.addEventListener('click', function(e){ var c=e.target.closest && e.target.closest('.cp'); if(!c) return; c.parentNode.querySelectorAll('.cp').forEach(function(x){ x.classList.remove('on'); }); c.classList.add('on'); });",
     "function mpSave(){",
     "  var cur=document.getElementById('set-cur').value.trim();",
     "  var nm=document.getElementById('set-m').value.trim();",
@@ -2843,6 +2999,8 @@ function stBuildHtml(d){
 'body{font-family:Pretendard,-apple-system,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.55;padding-bottom:86px}',
 'header{position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--line);padding:14px 16px;font-size:17px;font-weight:800}',
 '.rbd{float:right;font-size:11px;font-weight:800;padding:3px 10px;border-radius:10px;background:var(--card);border:1px solid var(--line);color:var(--pt)}',
+'.hbd{float:right;font-size:11px;font-weight:800;padding:3px 10px;border-radius:10px;background:var(--card);border:1px solid var(--line);color:var(--ink);margin-right:6px;cursor:pointer}',
+'.hbd:active{transform:scale(.94)}',
 '.ham{margin-right:8px;cursor:pointer}',
 '.gban{padding:7px 16px;font-size:11.5px;color:var(--sub);background:var(--card);border-bottom:1px solid var(--line)}',
 'main{max-width:760px;margin:0 auto;padding:16px 14px}',
@@ -2871,7 +3029,7 @@ function stBuildHtml(d){
 '.sheet{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--card);border-radius:16px 16px 0 0;border-top:1px solid var(--line);padding:12px 14px calc(16px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .25s;max-height:70vh;overflow-y:auto}',
 '.sheet.on{transform:none}.grip{width:36px;height:4px;border-radius:2px;background:var(--sub);opacity:.5;margin:0 auto 12px}',
 '.mi{padding:12px 10px;border-bottom:1px solid var(--line);font-weight:700;cursor:pointer}.mi.on{color:var(--pt)}',
-'.drawer{position:fixed;top:0;left:0;bottom:0;z-index:60;width:240px;background:var(--card);border-right:1.5px solid var(--line);padding:60px 12px 12px;transform:translateX(-105%);transition:transform .25s;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}',
+'.drawer{position:fixed;top:0;left:0;bottom:0;z-index:60;width:240px;background:var(--card);border-right:1px solid var(--line);padding:60px 12px 12px;transform:translateX(-105%);transition:transform .25s;overflow-y:auto}',
 '.drawer.on{transform:none}',
 '.dim{position:fixed;inset:0;z-index:55;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .25s}',
 '.dim.on{opacity:1;pointer-events:auto}',
@@ -2879,6 +3037,40 @@ function stBuildHtml(d){
 '.pt2{flex-shrink:0;font-size:12.5px;font-weight:800;padding:7px 14px;border-radius:16px;background:var(--card);border:1.5px solid var(--line);color:var(--sub);cursor:pointer}',
 '.pt2.on{background:var(--pt);color:'+btnInk+';border-color:transparent}',
 '.acc{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:9px;font-weight:800;display:flex;justify-content:space-between;cursor:pointer}',
+'.tip{font-size:11.5px;color:var(--sub);background:var(--card);border:1px dashed var(--line);border-radius:10px;padding:8px 11px;margin-bottom:10px}',
+'.stats4{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}',
+'@media(min-width:560px){.stats4{grid-template-columns:repeat(4,1fr)}}',
+'.chz{height:118px;border:1px dashed var(--line);border-radius:10px;margin-top:9px;display:flex;align-items:center;justify-content:center;font-size:11.5px;color:var(--sub)}',
+'.tw{overflow-x:auto;margin-top:9px;-webkit-overflow-scrolling:touch}',
+'.tb{width:100%;border-collapse:collapse;font-size:12px;min-width:100%}',
+'.tb th{background:var(--bg);color:var(--sub);font-size:11px;font-weight:800;padding:8px 9px;text-align:left;white-space:nowrap;border-bottom:1.5px solid var(--line)}',
+'.tb td{padding:9px;border-bottom:1px solid var(--line);color:var(--sub);white-space:nowrap}',
+'.empty{text-align:center;font-size:11.5px;color:var(--sub);padding:12px 0 2px}',
+'.fg{margin-top:10px}',
+'.lb{display:block;font-size:11.5px;font-weight:700;color:var(--sub);margin:9px 0 2px}',
+'.ta{min-height:70px;resize:vertical;line-height:1.5}',
+'select.tin{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--sub) 50%),linear-gradient(135deg,var(--sub) 50%,transparent 50%);background-position:calc(100% - 16px) 50%,calc(100% - 11px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}',
+'.srow{display:flex;gap:8px;align-items:center}',
+'.sin{flex:1;max-width:none;margin:0}',
+'.sbtn{width:auto;max-width:none;margin:0;padding:12px 18px;flex-shrink:0}',
+'.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}',
+'.cp{font-size:11.5px;font-weight:800;padding:5px 12px;border-radius:14px;background:var(--bg);border:1.5px solid var(--line);color:var(--sub);cursor:pointer}',
+'.cp.on{background:var(--pt);color:'+btnInk+';border-color:transparent}',
+'.chd{display:flex;align-items:center;justify-content:space-between;gap:8px}',
+'.mini{border:1.5px solid var(--line);background:var(--bg);color:var(--pt);border-radius:9px;padding:6px 11px;font-size:11.5px;font-weight:800;font-family:inherit;cursor:pointer}',
+'.mini:active{transform:scale(.94)}',
+'.ck{display:flex;align-items:center;gap:8px;padding:11px 0;border-bottom:1px solid var(--line)}',
+'.cn{flex:1;font-size:13px;font-weight:600}',
+'.cb{display:flex;gap:5px;flex-shrink:0}',
+'.cb i{font-style:normal;font-size:11.5px;font-weight:800;padding:6px 12px;border-radius:9px;border:1.5px solid var(--line);color:var(--sub);cursor:pointer}',
+'.cb i.on{background:var(--pt);color:'+btnInk+';border-color:transparent}',
+'.cb i.ng.on{background:#e05a5a;color:#fff}',
+'.scz{border:2px dashed var(--line);border-radius:13px;padding:26px 14px;text-align:center;font-size:30px;line-height:1.35;cursor:pointer;color:var(--pt)}',
+'.scz b{display:block;font-size:14px;margin-top:6px;color:var(--ink)}',
+'.scz span{display:block;font-size:11.5px;color:var(--sub);font-weight:600}',
+'.aline{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:10px}',
+'.ap{font-size:11px;font-weight:800;padding:5px 11px;border-radius:14px;background:var(--bg);border:1.5px solid var(--line);color:var(--sub)}',
+'.ar{color:var(--sub);font-size:11px}',
 '.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}',
 '.tile{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:22px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;text-align:center}',
 '.tile b{width:34px;height:34px;border-radius:10px;background:var(--pt)}.tile span{font-size:12.5px;font-weight:800}',
@@ -2888,7 +3080,7 @@ function stBuildHtml(d){
 '</head>',
 '<body>',
 lockHtml,
-'<header>'+headerExtra+esc(co)+'<span id="rolebd" class="rbd"></span></header>',
+'<header>'+headerExtra+esc(co)+'<span id="rolebd" class="rbd"></span><span class="hbd" onclick="go(&quot;home&quot;)">🏠 홈</span></header>',
 guestBanner,
 (p.M === 'M3' ? navHtml : ''),
 '<main>',
@@ -3278,7 +3470,7 @@ async function sendInquiry(){
   if(!document.getElementById('q-agree').checked){ toast('개인정보 수집·이용에 동의해 주세요'); return; }
 
   const when = new Date();
-  const txt = ['[HK_Smart 문의 접수]', '',
+  const txt = ['[HC_Smart 문의 접수]', '',
     '작성자: ' + name + (tel ? ' (' + tel + ')' : ''),
     '제목: ' + title, '',
     body, '',
@@ -3288,7 +3480,7 @@ async function sendInquiry(){
   try{
     const r = await fetch('https://ntfy.sh/' + getTopic(), {
       method:'POST',
-      headers:{ 'Title':'HK_Smart Inquiry', 'Tags':'incoming_envelope', 'Priority':'high' },
+      headers:{ 'Title':'HC_Smart Inquiry', 'Tags':'incoming_envelope', 'Priority':'high' },
       body: txt
     });
     sent = r.ok;
@@ -3364,7 +3556,7 @@ const CREATE_SQL = `create table if not exists hk_minutes (
   created_at timestamptz default now()
 );
 alter table hk_minutes enable row level security;
-create policy "hk_minutes_all" on hk_minutes for all using (true) with check (true);\nalter table hk_minutes add column if not exists files jsonb default \u0027[]\u0027::jsonb;\n\ncreate table if not exists hk_progress (\n  id bigint generated always as identity primary key,\n  company text not null,\n  task text not null,\n  start_date date not null,\n  end_date date not null,\n  status text default \u0027예정\u0027,\n  progress int default 0,\n  memo text default \u0027\u0027,\n  created_at timestamptz default now()\n);\nalter table hk_progress enable row level security;\ncreate policy \"hk_progress_all\" on hk_progress for all using (true) with check (true);\n\ncreate table if not exists hk_setups (\n  id bigint generated always as identity primary key,\n  company text default \u0027\u0027,\n  name text default \u0027\u0027,\n  tel text default \u0027\u0027,\n  ind text default \u0027\u0027,\n  design text default \u0027\u0027,\n  sc jsonb default \u0027[]\u0027::jsonb,\n  sc_etc text default \u0027\u0027,\n  domain text default \u0027\u0027,\n  domain_name text default \u0027\u0027,\n  memo text default \u0027\u0027,\n  created_at timestamptz default now()\n);\nalter table hk_setups enable row level security;\ncreate policy \"hk_setups_all\" on hk_setups for all using (true) with check (true);\n\ncreate table if not exists hk_quotes (\n  id bigint generated always as identity primary key,\n  qno text default \u0027\u0027,\n  to_co text default \u0027\u0027,\n  to_name text default \u0027\u0027,\n  qdate date,\n  valid text default \u0027\u0027,\n  vat text default \u0027sep\u0027,\n  due text default \u0027\u0027,\n  place text default \u0027\u0027,\n  pay text default \u0027\u0027,\n  memo text default \u0027\u0027,\n  rows jsonb default \u0027[]\u0027::jsonb,\n  tot bigint default 0,\n  created_at timestamptz default now()\n);\nalter table hk_quotes enable row level security;\ncreate policy \"hk_quotes_all\" on hk_quotes for all using (true) with check (true);\n\ncreate table if not exists hk_contracts (\n  id bigint generated always as identity primary key,\n  title text default \u0027\u0027,\n  cdate date,\n  amt bigint default 0,\n  a_co text default \u0027\u0027, a_ceo text default \u0027\u0027, a_addr text default \u0027\u0027,\n  b_co text default \u0027\u0027, b_ceo text default \u0027\u0027, b_addr text default \u0027\u0027,\n  start_date date, end_date date,\n  pay text default \u0027\u0027,\n  domain text default \u0027\u0027,\n  stab text default \u0027\u0027,\n  warranty text default \u0027\u0027,\n  etc text default \u0027\u0027,\n  created_at timestamptz default now()\n);\nalter table hk_contracts enable row level security;\ncreate policy \"hk_contracts_all\" on hk_contracts for all using (true) with check (true);\nalter table hk_contracts add column if not exists quote_id bigint;\nalter table hk_contracts add column if not exists quote_no text default \u0027\u0027;`;
+create policy "hk_minutes_all" on hk_minutes for all using (true) with check (true);\nalter table hk_minutes add column if not exists files jsonb default \u0027[]\u0027::jsonb;\n\ncreate table if not exists hk_progress (\n  id bigint generated always as identity primary key,\n  company text not null,\n  task text not null,\n  start_date date not null,\n  end_date date not null,\n  status text default \u0027예정\u0027,\n  progress int default 0,\n  memo text default \u0027\u0027,\n  created_at timestamptz default now()\n);\nalter table hk_progress enable row level security;\ncreate policy \"hk_progress_all\" on hk_progress for all using (true) with check (true);\nalter table hk_progress add column if not exists display_name text default \u0027\u0027;\n\ncreate table if not exists hk_setups (\n  id bigint generated always as identity primary key,\n  company text default \u0027\u0027,\n  name text default \u0027\u0027,\n  tel text default \u0027\u0027,\n  ind text default \u0027\u0027,\n  design text default \u0027\u0027,\n  sc jsonb default \u0027[]\u0027::jsonb,\n  sc_etc text default \u0027\u0027,\n  domain text default \u0027\u0027,\n  domain_name text default \u0027\u0027,\n  memo text default \u0027\u0027,\n  created_at timestamptz default now()\n);\nalter table hk_setups enable row level security;\ncreate policy \"hk_setups_all\" on hk_setups for all using (true) with check (true);\n\ncreate table if not exists hk_quotes (\n  id bigint generated always as identity primary key,\n  qno text default \u0027\u0027,\n  to_co text default \u0027\u0027,\n  to_name text default \u0027\u0027,\n  qdate date,\n  valid text default \u0027\u0027,\n  vat text default \u0027sep\u0027,\n  due text default \u0027\u0027,\n  place text default \u0027\u0027,\n  pay text default \u0027\u0027,\n  memo text default \u0027\u0027,\n  rows jsonb default \u0027[]\u0027::jsonb,\n  tot bigint default 0,\n  created_at timestamptz default now()\n);\nalter table hk_quotes enable row level security;\ncreate policy \"hk_quotes_all\" on hk_quotes for all using (true) with check (true);\n\ncreate table if not exists hk_contracts (\n  id bigint generated always as identity primary key,\n  title text default \u0027\u0027,\n  cdate date,\n  amt bigint default 0,\n  a_co text default \u0027\u0027, a_ceo text default \u0027\u0027, a_addr text default \u0027\u0027,\n  b_co text default \u0027\u0027, b_ceo text default \u0027\u0027, b_addr text default \u0027\u0027,\n  start_date date, end_date date,\n  pay text default \u0027\u0027,\n  domain text default \u0027\u0027,\n  stab text default \u0027\u0027,\n  warranty text default \u0027\u0027,\n  etc text default \u0027\u0027,\n  created_at timestamptz default now()\n);\nalter table hk_contracts enable row level security;\ncreate policy \"hk_contracts_all\" on hk_contracts for all using (true) with check (true);\nalter table hk_contracts add column if not exists quote_id bigint;\nalter table hk_contracts add column if not exists quote_no text default \u0027\u0027;`;
 
 function copySql(){
   if(navigator.clipboard && navigator.clipboard.writeText){
@@ -3395,7 +3587,121 @@ async function testSb(){
 }
 
 /* ===== 진행현황 타임플랜 ===== */
-let gEditId = null, gCompanyFilter = '전체', gCache = [];
+let gCompanyFilter = '', gCache = [];
+
+/* ===== 구축 진행률 보드 (Guest 공개) ===== */
+async function loadBoard(){
+  const box = document.getElementById('bd-list');
+  const sum = document.getElementById('bd-sum');
+  if(!sbReady()){
+    sum.innerHTML = '';
+    box.innerHTML = '<div class="qempty">서버에 연결할 수 없습니다</div>';
+    return;
+  }
+  box.innerHTML = '<div class="qempty">불러오는 중...</div>';
+  let rows;
+  try{
+    rows = await sb('hk_progress?select=company,display_name,task,status,progress&order=company.asc,start_date.asc,id.asc');
+  }catch(e){
+    sum.innerHTML = '';
+    box.innerHTML = '<div class="qempty">불러오기 실패 — ' + e.message + '</div>';
+    return;
+  }
+  if(!rows || !rows.length){
+    sum.innerHTML = '';
+    box.innerHTML = '<div class="qempty">진행 중인 프로젝트가 없습니다</div>';
+    return;
+  }
+
+  const esc = t => (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const g = {};
+  rows.forEach(r=>{ (g[r.company] = g[r.company] || []).push(r); });
+
+  const cos = Object.keys(g).map(co=>{
+    const a = g[co];
+    const cols = stepCols(a);
+    const done = cols.filter(c=>c.done).length;
+    const rate = Math.round(done / cols.length * 100);
+    const cur = cols.find(c=>c.mark==='i');
+    const fin = done === cols.length;
+    const disp = (a.find(r=>r.display_name) || {}).display_name || co;
+    return { co, disp, cols, rate, done, cur, fin };
+  }).sort((x,y)=> (x.fin - y.fin) || (y.rate - x.rate));
+
+  const allRate = Math.round(cos.reduce((x,c)=>x+c.rate,0) / cos.length);
+  document.getElementById('bd-sum').innerHTML =
+    [['진행 프로젝트', cos.filter(c=>!c.fin).length],['구축 완료', cos.filter(c=>c.fin).length],['평균 진행률', allRate+'%']]
+      .map(x=>'<div class="bs"><div class="bv">'+x[1]+'</div><div class="bk">'+x[0]+'</div></div>').join('');
+
+  box.innerHTML = cos.map(c=>{
+    const st = c.fin ? '<span class="bdst fin">구축 완료</span>'
+                     : '<span class="bdst ing">진행중</span>';
+    const cells = c.cols.map(x=>
+      '<div class="scell'+(x.mark==='i'?' cur':'')+'"><div class="stk">'+esc(x.task)+'</div><div class="smrk">'+stepMark(x.mark)+'</div></div>').join('');
+    return '<div class="bdc">'
+      + '<div class="bdh"><span class="bdn">'+esc(c.disp)+'</span>'+st+'</div>'
+      + '<div class="bdbar"><div class="bdfill'+(c.fin?' fin':'')+'" style="width:'+c.rate+'%"></div></div>'
+      + '<div class="bdm"><span>'+(c.fin ? '전체 단계 완료' : '현재 단계 · ' + esc(c.cur ? c.cur.task : '-'))+'</span>'
+      + '<b>'+c.rate+'%</b></div>'
+      + '<div class="smat" style="margin-top:10px">'+cells+'</div>'
+      + '<div class="bdm" style="margin-top:6px"><span>단계 '+c.cols.length+'개 · 완료 '+c.done+'개</span>'
+      + '<span><b style="color:#3fc783;font-size:11.5px">○</b> 완료 · <b style="color:#e2b04a;font-size:11.5px">△</b> 진행중</span></div>'
+      + '</div>';
+  }).join('');
+}
+
+/* --- 업체명: 맞춤세팅/기존 진행현황에서 선택 --- */
+async function gPickCompany(){
+  const box = document.getElementById('g-setup-pick');
+  if(box.style.display === 'block'){ box.style.display = 'none'; return; }
+  box.style.display = 'block';
+  box.innerHTML = '<div class="qempty">불러오는 중...</div>';
+  const esc = t => (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+
+  if(!sbReady()){
+    box.innerHTML = '<div class="qempty">서버(Supabase)가 연결되지 않았습니다 — 설정에서 연결하세요</div>'
+      + '<button class="qi-btn" style="width:100%;padding:9px;margin-top:8px" onclick="document.getElementById(\'g-setup-pick\').style.display=\'none\'">닫기</button>';
+    return;
+  }
+  let setups = [];
+  try{ setups = await fetchSetups(true); }catch(e){}
+  const planCos = [...new Set((gCache||[]).map(r=>r.company).filter(Boolean))];
+  const setupCos = setups.map(d=>d.company).filter(Boolean);
+  const onlyPlan = planCos.filter(c => !setupCos.includes(c));
+
+  if(!setups.length && !onlyPlan.length){
+    box.innerHTML = '<div class="qempty">서버에 저장된 맞춤세팅이 없습니다 — 맞춤세팅에서 저장·발송을 먼저 하세요</div>'
+      + '<button class="qi-btn" style="width:100%;padding:9px;margin-top:8px" onclick="document.getElementById(\'g-setup-pick\').style.display=\'none\'">닫기</button>';
+    return;
+  }
+
+  let h = '';
+  if(setups.length){
+    h += '<div class="fl" style="margin:0 0 7px">서버 저장 맞춤세팅 (' + setups.length + '건)</div>';
+    h += setups.map(d=>{
+      const co = d.company || '(업체명 미입력)';
+      const dz = ['T','L','M','B'].map(k=>d.design && d.design[k]).filter(Boolean).join('+');
+      return '<div class="qt-item" style="cursor:pointer" onclick="gSetCompany(\'' + esc(co).replace(/'/g,"\\'") + '\')">'
+        + '<div class="qi-b"><div class="qi-t">' + esc(co) + '</div>'
+        + '<div class="qi-s">' + new Date(d.at).toLocaleDateString('ko-KR') + ' · 모듈 ' + ((d.sc||[]).length) + '개'
+        + (dz ? ' · ' + esc(dz) : '') + '</div></div>'
+        + '<button class="qi-btn g" onclick="event.stopPropagation();gSetCompany(\'' + esc(co).replace(/'/g,"\\'") + '\')">선택</button></div>';
+    }).join('');
+  }
+  if(onlyPlan.length){
+    h += '<div class="fl" style="margin:12px 0 7px">기존 진행현황 업체</div>';
+    h += '<div class="chips2">' + onlyPlan.map(c =>
+      '<div class="chk" onclick="gSetCompany(\'' + esc(c).replace(/'/g,"\\'") + '\')">' + esc(c) + '</div>').join('') + '</div>';
+  }
+  h += '<button class="qi-btn" style="width:100%;padding:9px;margin-top:9px" onclick="document.getElementById(\'g-setup-pick\').style.display=\'none\'">닫기</button>';
+  box.innerHTML = h;
+}
+
+function gSetCompany(co){
+  document.getElementById('g-company').value = co;
+  document.getElementById('g-setup-pick').style.display = 'none';
+  toast(co + ' 선택됨');
+}
 
 async function loadPlan(){
   const warn = document.getElementById('g-dbwarn');
@@ -3414,22 +3720,18 @@ async function loadPlan(){
   }catch(e){
     list.innerHTML = '<div class="qempty">불러오기 실패 — ' + e.message + '</div>';
   }
-  if(!document.getElementById('g-start').value){
-    const today = new Date().toISOString().slice(0,10);
-    document.getElementById('g-start').value = today;
-    document.getElementById('g-end').value = today;
-  }
 }
 
 function renderPlan(){
   const esc = t => (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  const comps = ['전체', ...new Set(gCache.map(r=>r.company))];
+  const comps = [...new Set(gCache.map(r=>r.company))];
+  if(!comps.includes(gCompanyFilter)) gCompanyFilter = comps[0] || '';
   document.getElementById('g-filter').innerHTML = comps.map(c=>
     `<span class="fc${c===gCompanyFilter?' on':''}" onclick="setGFilter('${esc(c).replace(/'/g,"\\'")}')">${esc(c)}</span>`).join('');
   document.getElementById('g-company-list').innerHTML =
-    [...new Set(gCache.map(r=>r.company))].map(c=>`<option value="${esc(c)}">`).join('');
+    comps.map(c=>`<option value="${esc(c)}">`).join('');
 
-  const rows = gCache.filter(r => gCompanyFilter==='전체' || r.company===gCompanyFilter);
+  const rows = gCache.filter(r => r.company===gCompanyFilter);
   const box = document.getElementById('g-list');
   if(!rows.length){ box.innerHTML = '<div class="qempty">진행항목이 없습니다</div>'; return; }
 
@@ -3437,47 +3739,132 @@ function renderPlan(){
   const groups = {};
   rows.forEach(r=>{ (groups[r.company] = groups[r.company] || []).push(r); });
 
-  const fmt = d => (d||'').slice(5).replace('-','/');
-  const DAY = 86400000;
-  const todayT = new Date(new Date().toISOString().slice(0,10)).getTime();
+  box.innerHTML = buildSteps(groups, true);
+}
 
-  box.innerHTML = Object.keys(groups).map(comp=>{
+/* --- 단계 매트릭스 HTML 생성 (관리자/고객 공용) ---
+   표준 12단계 + 기타 항목을 열로 표시. 저장된 단계 = ○ 완료, 그 다음 첫 미완료 단계 = △ 진행중 (자동) */
+const GSTEPS = ['상담 · 요구사항 파악','현장 진단','견적 · 계약','화면 설계(디자인)','DB · 시스템 설계','개발 · 구축','파일럿(시범 적용)','테스트 · 검수','데이터 이관','사용자 교육','오픈(운영 시작)','안정화 · 유지보수'];
+
+/* 업체 행 목록 → 열 배열 [{task, row(완료행|null), mark:'d'|'i'|''}] */
+function stepCols(g){
+  const byTask = {};
+  g.forEach(r=>{ byTask[r.task] = r; }); /* 같은 단계 중복 시 마지막 행 기준 */
+  const custom = g.map(r=>r.task).filter(t=>!GSTEPS.includes(t))
+    .filter((t,i,a)=>a.indexOf(t)===i);
+  const cols = GSTEPS.concat(custom).map(t=>{
+    const r = byTask[t] || null;
+    return { task: t, row: r, done: !!(r && r.status === '완료') };
+  });
+  /* 자동 진행중: 첫 미완료 열 (전체 완료면 없음) */
+  const cur = cols.find(c=>!c.done);
+  cols.forEach(c=>{ c.mark = c.done ? 'd' : (c === cur ? 'i' : ''); });
+  return cols;
+}
+function stepMark(mk){
+  if(mk === 'd') return '<span class="smk d">○</span>';
+  if(mk === 'i') return '<span class="smk i">△</span>';
+  return '<span class="smk"></span>';
+}
+function buildSteps(groups, withActions){
+  const esc = t => (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return Object.keys(groups).map(comp=>{
     const g = groups[comp];
-    let min = Math.min(...g.map(r=>new Date(r.start_date).getTime()));
-    let max = Math.max(...g.map(r=>new Date(r.end_date).getTime()));
-    if(max <= min) max = min + DAY;
-    const pad = Math.max((max-min)*0.04, DAY);
-    min -= pad; max += pad;
-    const span = max - min;
-    const pct = t => Math.min(100, Math.max(0, (t-min)/span*100));
-    const done = g.filter(r=>r.status==='완료').length;
-    const todayIn = todayT >= min && todayT <= max;
-
+    const cols = stepCols(g);
+    const done = cols.filter(c=>c.done).length;
+    const alias = (g.find(r=>r.display_name) || {}).display_name || '';
+    const cells = cols.map(c=>`
+        <div class="scell${c.mark==='i'?' cur':''}">
+          <div class="stk">${esc(c.task)}</div>
+          <div class="smrk">${stepMark(c.mark)}</div>
+          ${withActions && c.done ? `<div class="sact">
+            <button onclick="gDel(${c.row.id})">해제</button>
+          </div>` : (withActions ? '<div class="sact"></div>' : '')}
+        </div>`).join('');
+    const memos = withActions ? g.filter(r=>r.memo).map(r=>
+      `<div class="gmemo">💬 <b>${esc(r.task)}</b> — ${esc(r.memo)}</div>`).join('') : '';
     return `<div class="gcomp">
       <div class="gh"><span class="gc">${esc(comp)}</span>
-        <span class="gn">${g.length}개 항목 · 완료 ${done}</span></div>
-      <div class="gaxis"><span>${new Date(min+pad).toISOString().slice(0,10)}</span><span>${new Date(max-pad).toISOString().slice(0,10)}</span></div>
-      ${g.map(r=>{
-        const s0 = new Date(r.start_date).getTime(), e0 = new Date(r.end_date).getTime() + DAY;
-        const left = pct(s0), width = Math.max(pct(e0)-left, 1.5);
-        return `<div class="grow">
-          <span class="gt2">${esc(r.task)}<span class="gp">${fmt(r.start_date)}~${fmt(r.end_date)}</span></span>
-          <div class="gtrack">
-            ${todayIn?`<div class="gtoday" style="left:${pct(todayT)}%"></div>`:''}
-            <div class="gbar gs-${esc(r.status)}" style="left:${left}%;width:${width}%">
-              <div class="gfill" style="width:${r.progress||0}%"></div>
-              <div class="gpct">${r.progress||0}%</div>
-            </div>
-          </div>
-          <span class="gact">
-            <button class="gold" onclick="gEdit(${r.id})">수정</button>
-            <button onclick="gDel(${r.id})">삭제</button>
-          </span>
-        </div>${r.memo?`<div class="gmemo">💬 ${esc(r.memo)}</div>`:''}`;
-      }).join('')}
+        <span class="gn">${cols.length}단계 · 완료 ${done}${alias?' · 공개명 '+esc(alias):''}</span>
+        ${withActions?`<button class="albtn" onclick="gAlias('${esc(comp).replace(/'/g,"\\\\'")}')">🏷 공개 표시명</button>
+        <button class="dlbtn" onclick="gDelCompany('${esc(comp).replace(/'/g,"\\\\'")}')">🗑 업체 삭제</button>`:''}</div>
+      <div class="smat">${cells}</div>
+      ${memos}
     </div>`;
   }).join('');
 }
+/* ===== 업체 데이터 일괄 삭제 (진행현황·맞춤세팅·견적서·계약서·회의록) ===== */
+const PURGE_MAP = [
+  { t:'hk_progress',  k:'company', n:'진행현황' },
+  { t:'hk_setups',    k:'company', n:'맞춤세팅' },
+  { t:'hk_quotes',    k:'to_co',   n:'견적서'   },
+  { t:'hk_contracts', k:'b_co',    n:'계약서'   },
+  { t:'hk_minutes',   k:'company', n:'회의록'   }
+];
+
+async function companyFootprint(co){
+  const q = encodeURIComponent(co);
+  const out = [];
+  for(const m of PURGE_MAP){
+    try{
+      const r = await sb(m.t + '?select=id&' + m.k + '=eq.' + q);
+      out.push({ n:m.n, c:(r||[]).length });
+    }catch(e){ out.push({ n:m.n, c:0, err:true }); }
+  }
+  return out;
+}
+
+async function purgeCompany(co){
+  const q = encodeURIComponent(co);
+  let fail = [];
+  for(const m of PURGE_MAP){
+    try{ await sb(m.t + '?' + m.k + '=eq.' + q, { method:'DELETE', prefer:'return=minimal' }); }
+    catch(e){ fail.push(m.n); }
+  }
+  try{ setSetups(getSetups().filter(x=>x.company !== co)); }catch(e){}
+  try{ qtSetList(qtGetList().filter(x=>x.to !== co)); }catch(e){}
+  try{ ctSetLocal(ctGetLocal().filter(x=>(x.b_co || x.bCo) !== co)); }catch(e){}
+  return { fail };
+}
+
+async function confirmPurge(co, after){
+  if(!sbReady()){ toast('먼저 설정에서 서버를 연결하세요'); return false; }
+  toast('데이터 확인 중...');
+  const fp = await companyFootprint(co);
+  const total = fp.reduce((a,x)=>a+x.c, 0);
+  const detail = fp.map(x=>'· ' + x.n + ' ' + x.c + '건').join('\n');
+  if(!confirm("'" + co + "' 업체의 모든 데이터를 삭제합니다.\n\n" + detail +
+      "\n\n총 " + total + "건이 서버에서 영구 삭제되며 복구할 수 없습니다.\n계속할까요?")) return false;
+  if(total > 0 && !confirm('정말 삭제하시겠습니까?\n\n' + co + ' · 총 ' + total + '건')) return false;
+  const r = await purgeCompany(co);
+  if(r.fail.length) toast('일부 삭제 실패 — ' + r.fail.join(', '));
+  else toast("'" + co + "' 데이터 " + total + '건이 삭제되었습니다');
+  if(typeof after === 'function') await after();
+  return true;
+}
+
+async function gDelCompany(co){
+  await confirmPurge(co, async ()=>{
+    if(gCompanyFilter === co) gCompanyFilter = '';
+    await loadPlan();
+  });
+}
+
+/* --- 공개 표시명 설정: 구축 진행률 화면에 노출할 업체명 --- */
+async function gAlias(co){
+  const cur = (gCache.find(r=>r.company===co && r.display_name) || {}).display_name || '';
+  const v = prompt("'" + co + "'의 공개 표시명을 입력하세요.\n구축 진행률(전체 공개) 화면에 이 이름으로 표시됩니다.\n비우면 실제 업체명이 그대로 표시됩니다.", cur);
+  if(v === null) return;
+  try{
+    await sb('hk_progress?company=eq.' + encodeURIComponent(co),
+      { method:'PATCH', body:{ display_name: v.trim() }, prefer:'return=minimal' });
+    toast(v.trim() ? "공개 표시명이 '" + v.trim() + "'(으)로 설정되었습니다" : '공개 표시명이 해제되었습니다');
+    await loadPlan();
+  }catch(e){
+    toast('설정 실패 — ' + e.message + ' (설정의 테이블 생성 SQL을 다시 실행했는지 확인하세요)');
+  }
+}
+
 function setGFilter(c){ gCompanyFilter = c; renderPlan(); }
 
 function gTasks(){
@@ -3489,71 +3876,49 @@ function gTasks(){
 async function savePlan(){
   if(!sbReady()){ toast('먼저 설정에서 서버를 연결하세요'); return; }
   const g = id => document.getElementById(id).value.trim();
-  const base = {
-    company: g('g-company'),
-    start_date: g('g-start'), end_date: g('g-end'),
-    status: g('g-status'), progress: parseInt(document.getElementById('g-progress').value)||0,
-    memo: g('g-memo')
-  };
+  const today = new Date().toISOString().slice(0,10);
+  const company = g('g-company');
+  const memo = g('g-memo');
   const tasks = gTasks();
-  if(!base.company || !tasks.length || !base.start_date || !base.end_date){ toast('업체명·진행단계·기간은 필수입니다'); return; }
-  if(base.end_date < base.start_date){ toast('종료일이 시작일보다 빠릅니다'); return; }
+  if(!company || !tasks.length){ toast('업체명과 완료 단계를 선택하세요'); return; }
   try{
-    if(gEditId){
-      if(tasks.length > 1){ toast('수정 시에는 단계를 1개만 선택하세요'); return; }
-      await sb('hk_progress?id=eq.' + gEditId, { method:'PATCH', body: Object.assign({task:tasks[0]}, base) });
-      toast('항목이 수정되었습니다');
-    }else{
-      await sb('hk_progress', { method:'POST', body: tasks.map(t=>Object.assign({task:t}, base)) });
-      toast(tasks.length + '개 항목이 저장되었습니다');
+    const mine = gCache.filter(r=>r.company===company);
+    const alias = (mine.find(r=>r.display_name) || {}).display_name || '';
+    const upd = [], ins = [];
+    tasks.forEach(t=>{
+      const ex = mine.find(r=>r.task===t);
+      if(ex){ if(ex.status !== '완료' || (memo && ex.memo !== memo)) upd.push(ex); }
+      else ins.push(t);
+    });
+    for(const r of upd){
+      await sb('hk_progress?id=eq.' + r.id,
+        { method:'PATCH', body:{ status:'완료', progress:100, memo: memo || r.memo || '' }, prefer:'return=minimal' });
     }
-    gCancelEdit();
+    if(ins.length){
+      await sb('hk_progress', { method:'POST', prefer:'return=minimal', body: ins.map(t=>({
+        company, task:t, status:'완료', progress:100, memo,
+        start_date: today, end_date: today,
+        display_name: alias
+      })) });
+    }
+    const n = upd.length + ins.length;
+    toast(n ? n + '개 단계가 완료로 기록되었습니다' : '변경된 내용이 없습니다');
+    gReset();
+    gCompanyFilter = company;
     await loadPlan();
   }catch(e){ toast('저장 실패 — ' + e.message); }
 }
 
-function gEdit(id){
-  const r = gCache.find(x=>x.id===id);
-  if(!r) return;
-  gEditId = id;
-  document.getElementById('g-company').value = r.company;
-  let matched = false;
-  document.querySelectorAll('#g-taskchips .chk').forEach(c=>{
-    const on = c.dataset.v === r.task;
-    c.classList.toggle('on', on);
-    if(on) matched = true;
-  });
-  document.getElementById('g-task').value = matched ? '' : r.task;
-  document.getElementById('g-start').value = r.start_date;
-  document.getElementById('g-end').value = r.end_date;
-  document.getElementById('g-status').value = r.status;
-  document.getElementById('g-progress').value = r.progress || 0;
-  document.getElementById('g-pv').textContent = (r.progress||0) + '%';
-  document.getElementById('g-memo').value = r.memo || '';
-  document.getElementById('g-form-title').textContent = '✏ 진행항목 수정 중 (#' + id + ')';
-  document.getElementById('g-save').textContent = '수정 저장';
-  document.getElementById('g-cancel').style.display = 'block';
-  document.getElementById('g-form').scrollIntoView({behavior:'smooth'});
-}
-function gCancelEdit(){
-  gEditId = null;
-  ['g-company','g-task','g-memo'].forEach(id=>document.getElementById(id).value='');
+function gReset(){
+  ['g-task','g-memo'].forEach(id=>document.getElementById(id).value='');
   document.querySelectorAll('#g-taskchips .chk').forEach(c=>c.classList.remove('on'));
-  const today = new Date().toISOString().slice(0,10);
-  document.getElementById('g-start').value = today;
-  document.getElementById('g-end').value = today;
-  document.getElementById('g-status').value = '예정';
-  document.getElementById('g-progress').value = 0;
-  document.getElementById('g-pv').textContent = '0%';
-  document.getElementById('g-form-title').textContent = '✍ 진행항목 등록';
-  document.getElementById('g-save').textContent = '항목 저장';
-  document.getElementById('g-cancel').style.display = 'none';
 }
+
 async function gDel(id){
-  if(!confirm('이 진행항목을 삭제할까요?')) return;
+  if(!confirm('이 단계의 완료 기록을 해제할까요?')) return;
   try{
     await sb('hk_progress?id=eq.' + id, { method:'DELETE', prefer:'return=minimal' });
-    toast('삭제되었습니다');
+    toast('완료 기록이 해제되었습니다');
     await loadPlan();
   }catch(e){ toast('삭제 실패 — ' + e.message); }
 }
@@ -3781,8 +4146,8 @@ async function testNtfy(){
   try{
     const r = await fetch('https://ntfy.sh/' + t, {
       method:'POST',
-      headers:{ 'Title':'HK_Smart Test', 'Tags':'white_check_mark' },
-      body:'HK_Smart 설정 테스트 발송입니다. (' + new Date().toLocaleString('ko-KR') + ')'
+      headers:{ 'Title':'HC_Smart Test', 'Tags':'white_check_mark' },
+      body:'HC_Smart 설정 테스트 발송입니다. (' + new Date().toLocaleString('ko-KR') + ')'
     });
     toast(r.ok ? '테스트 발송 완료 — ntfy 앱을 확인하세요' : '발송 실패: ' + r.status);
   }catch(e){ toast('발송 실패 — 네트워크를 확인하세요'); }
