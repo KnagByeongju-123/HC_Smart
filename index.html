@@ -3615,7 +3615,7 @@ async function testSb(){
 }
 
 /* ===== 진행현황 타임플랜 ===== */
-let gEditId = null, gCompanyFilter = '전체', gCache = [];
+let gEditId = null, gCompanyFilter = '', gCache = [];
 
 /* ===== 구축 진행률 보드 (Guest 공개) ===== */
 async function loadBoard(){
@@ -3643,7 +3643,12 @@ async function loadBoard(){
 
   const esc = t => (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const g = {};
-  rows.forEach(r=>{ (g[r.company] = g[r.company] || []).push(r); });
+  rows.forEach(r=>{
+    const a = g[r.company] = g[r.company] || [];
+    const i = a.findIndex(x=>x.task===r.task);
+    if(i >= 0) a[i] = r; /* 같은 단계가 중복이면 최신 등록분만 표시 */
+    else a.push(r);
+  });
 
   const cos = Object.keys(g).map(co=>{
     const a = g[co];
@@ -3756,13 +3761,14 @@ async function loadPlan(){
 
 function renderPlan(){
   const esc = t => (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  const comps = ['전체', ...new Set(gCache.map(r=>r.company))];
+  const comps = [...new Set(gCache.map(r=>r.company))];
+  if(!comps.includes(gCompanyFilter)) gCompanyFilter = comps[0] || '';
   document.getElementById('g-filter').innerHTML = comps.map(c=>
     `<span class="fc${c===gCompanyFilter?' on':''}" onclick="setGFilter('${esc(c).replace(/'/g,"\\'")}')">${esc(c)}</span>`).join('');
   document.getElementById('g-company-list').innerHTML =
-    [...new Set(gCache.map(r=>r.company))].map(c=>`<option value="${esc(c)}">`).join('');
+    comps.map(c=>`<option value="${esc(c)}">`).join('');
 
-  const rows = gCache.filter(r => gCompanyFilter==='전체' || r.company===gCompanyFilter);
+  const rows = gCache.filter(r => r.company===gCompanyFilter);
   const box = document.getElementById('g-list');
   if(!rows.length){ box.innerHTML = '<div class="qempty">진행항목이 없습니다</div>'; return; }
 
@@ -3846,13 +3852,20 @@ async function savePlan(){
   try{
     if(gEditId){
       if(tasks.length > 1){ toast('수정 시에는 단계를 1개만 선택하세요'); return; }
+      const clash = gCache.find(r=>r.company===base.company && r.task===tasks[0] && r.id!==gEditId);
+      if(clash){ toast("'" + tasks[0] + "' 단계는 이미 등록되어 있습니다"); return; }
       await sb('hk_progress?id=eq.' + gEditId, { method:'PATCH', body: Object.assign({task:tasks[0]}, base) });
       toast('항목이 수정되었습니다');
     }else{
+      /* 같은 업체에 이미 있는 단계는 중복 등록하지 않음 */
+      const exist = new Set(gCache.filter(r=>r.company===base.company).map(r=>r.task));
+      const fresh = tasks.filter(t=>!exist.has(t));
+      const dup = tasks.length - fresh.length;
+      if(!fresh.length){ toast('선택한 단계는 모두 이미 등록되어 있습니다'); return; }
       const alias = (gCache.find(r=>r.company===base.company && r.display_name) || {}).display_name || '';
       if(alias) base.display_name = alias;
-      await sb('hk_progress', { method:'POST', body: tasks.map(t=>Object.assign({task:t}, base)) });
-      toast(tasks.length + '개 항목이 저장되었습니다');
+      await sb('hk_progress', { method:'POST', body: fresh.map(t=>Object.assign({task:t}, base)) });
+      toast(fresh.length + '개 항목이 저장되었습니다' + (dup ? ' (중복 ' + dup + '개 제외)' : ''));
     }
     gCancelEdit();
     await loadPlan();
