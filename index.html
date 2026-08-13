@@ -731,11 +731,13 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
 
   <div class="dtabs" id="dtabs">
     <span class="dtab on" data-t="1" onclick="dgo(1)">① 기본정보</span>
-    <span class="dtab" data-t="2" onclick="dgo(2)">② 디자인</span>
-    <span class="dtab" data-t="3" onclick="dgo(3)">③ 전산화 범위</span>
-    <span class="dtab" data-t="4" onclick="dgo(4)">④ 도메인·요청</span>
-    <span class="dtab" data-t="5" onclick="dgo(5)">⑤ 예상 비용</span>
-    <span class="dtab" data-t="6" id="dtab-admin" style="display:none" onclick="dgo(6)">🧩 스타터</span>
+    <span class="dtab" data-t="2" onclick="dgo(2)">② 색상 테마</span>
+    <span class="dtab" data-t="3" onclick="dgo(3)">③ 인증 진입</span>
+    <span class="dtab" data-t="4" onclick="dgo(4)">④ 메뉴 배치</span>
+    <span class="dtab" data-t="5" onclick="dgo(5)">⑤ 전산화 범위</span>
+    <span class="dtab" data-t="6" onclick="dgo(6)">⑥ 도메인·요청</span>
+    <span class="dtab" data-t="7" onclick="dgo(7)">⑦ 예상 비용</span>
+    <span class="dtab" data-t="8" id="dtab-admin" style="display:none" onclick="dgo(8)">🧩 스타터</span>
   </div>
 
   <!-- ---------- ① 업체 정보 ---------- -->
@@ -776,7 +778,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
       <div class="fl">기타 업종 (직접 입력)</div>
       <input class="tin" id="f-ind-etc" placeholder="예) 목재가공, 농산물 유통 ...">
     </div>
-  <div class="dnav"><button class="copy-btn" style="flex:1.4" onclick="dgo(2)">② 디자인 선택 →</button></div>
+  <div class="dnav"><button class="copy-btn" style="flex:1.4" onclick="dgo(2)">② 색상 테마 →</button></div>
   </div>
 
   <!-- ---------- 1. 색상 테마 ---------- -->
@@ -840,10 +842,11 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
       </div>
 
     </div>
+  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(1)">← 기본정보</button><button class="copy-btn" style="flex:1.4" onclick="dgo(3)">③ 인증 진입 →</button></div>
   </div>
 
   <!-- ---------- ③-2 첫화면 ---------- -->
-  <div class="dsec" data-dtab="2">
+  <div class="dsec" data-dtab="3">
     <div class="dh"><span class="no">3-2</span><h3>디자인 · 첫화면 유형 (인증·진입)</h3></div>
     <div class="dd">앱 실행 직후 만나는 화면 (색상은 예시)</div>
     <div class="dgrid" data-g="L">
@@ -925,10 +928,11 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
       </div>
 
     </div>
+  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(2)">← 색상 테마</button><button class="copy-btn" style="flex:1.4" onclick="dgo(4)">④ 메뉴 배치 →</button></div>
   </div>
 
   <!-- ---------- 3. 메인화면 ---------- -->
-  <div class="dsec" data-dtab="2">
+  <div class="dsec" data-dtab="4">
     <div class="dh"><span class="no">3-3</span><h3>디자인 · 메인화면 유형 (메뉴·배치)</h3></div>
     <div class="dd">주 메뉴 위치와 콘텐츠 배치 방식 (색상은 예시)</div>
     <div class="dgrid" data-g="M">
@@ -1054,7 +1058,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   </div>
 
   <!-- ---------- 3-4. 게시판 ---------- -->
-  <div class="dsec" data-dtab="2">
+  <div class="dsec" data-dtab="4">
     <div class="dh"><span class="no">3-4</span><h3>디자인 · 게시판 (선택)</h3></div>
     <div class="dd">공지·자료 공유용 게시판이 필요하면 유형을 선택하세요 (선택 항목을 다시 누르면 해제)</div>
     <div class="dgrid" data-g="B">
@@ -1129,11 +1133,11 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
       </div>
 
     </div>
-  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(1)">← 기본정보</button><button class="copy-btn" style="flex:1.4" onclick="dgo(3)">③ 전산화 범위 →</button></div>
+  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(3)">← 인증 진입</button><button class="copy-btn" style="flex:1.4" onclick="dgo(5)">⑤ 전산화 범위 →</button></div>
   </div>
 
   <!-- ---------- ④ 전산화 범위 ---------- -->
-  <div class="dsec" data-dtab="3">
+  <div class="dsec" data-dtab="5">
     <div class="dh"><span class="no">4</span><h3>전산화 범위</h3></div>
     <div class="dd">도입을 원하는 업무 모듈을 모두 선택하세요 (복수 선택 가능 · 이후 단계 확장 가능)</div>
     <div class="frm">
@@ -1194,11 +1198,11 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
       <div class="fl">기타 필요 기능 (직접 입력)</div>
       <input class="tin" id="f-sc-etc" placeholder="예) 출하관리, 근태연동, 다국어 UI ...">
     </div>
-  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(2)">← 디자인</button><button class="copy-btn" style="flex:1.4" onclick="dgo(4)">④ 도메인·요청 →</button></div>
+  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(4)">← 메뉴 배치</button><button class="copy-btn" style="flex:1.4" onclick="dgo(6)">⑥ 도메인·요청 →</button></div>
   </div>
 
   <!-- ---------- ⑤ 도메인 ---------- -->
-  <div class="dsec" data-dtab="4">
+  <div class="dsec" data-dtab="6">
     <div class="dh"><span class="no">5</span><h3>도메인 (접속 주소)</h3></div>
     <div class="dd">시스템 접속 주소 방식을 선택하세요 (1개 선택)</div>
     <div class="frm">
@@ -1214,17 +1218,17 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   </div>
 
   <!-- ---------- ⑥ 추가 요청 ---------- -->
-  <div class="dsec" data-dtab="4">
+  <div class="dsec" data-dtab="6">
     <div class="dh"><span class="no">6</span><h3>추가 요청사항</h3></div>
     <div class="dd">기존 시스템(MES/ERP) 유무, 사용 인원, 일정 등 참고사항을 자유롭게 적어주세요</div>
     <div class="frm">
       <textarea class="tin" id="f-memo" placeholder="예) 기존 Oracle MES 사용 중, 현장 인원 30명, 스마트폰 위주 사용 희망 ..."></textarea>
     </div>
-  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(3)">← 전산화 범위</button><button class="copy-btn" style="flex:1.4" onclick="dgo(5)">⑤ 예상 비용 확인 →</button></div>
+  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(5)">← 전산화 범위</button><button class="copy-btn" style="flex:1.4" onclick="dgo(7)">⑦ 예상 비용 확인 →</button></div>
   </div>
 
   <!-- ---------- ⑦ 예상 비용 ---------- -->
-  <div class="dsec" data-dtab="5">
+  <div class="dsec" data-dtab="7">
     <div class="dh"><span class="no">7</span><h3>예상 비용 (자동 산정)</h3></div>
     <div class="dd">선택한 모듈·도메인 기준가가 실시간으로 합산됩니다. 기준가이며 협의 후 확정됩니다.</div>
     <div class="qt-sum" style="margin:0 0 10px">
@@ -1233,11 +1237,11 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
       <div class="sr" style="padding-top:6px"><span style="font-size:11.5px">※ IoT 하드웨어·도메인 등록비는 실비 별도 · '협의' 항목은 합계 미포함</span><b></b></div>
     </div>
     <button class="copy-btn" style="width:100%;margin-bottom:10px;background:var(--card);border:1.5px solid rgba(226,176,74,.5);color:var(--gold)" onclick="stPreviewSelf()">👁 내 선택 조합 미리보기</button>
-  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(4)">← 도메인·요청</button></div>
+  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(6)">← 도메인·요청</button></div>
   </div>
 
   <!-- ---------- ⑧ 스타터 페이지 (관리자) ---------- -->
-  <div class="dsec" data-dtab="6" id="setup-admin-tools">
+  <div class="dsec" data-dtab="8" id="setup-admin-tools">
     <div class="dh"><span class="no">8</span><h3>스타터 페이지 생성 <span style="font-size:12px;font-weight:400;color:var(--sub)">관리자 전용</span></h3></div>
     <div class="dd">저장된 맞춤세팅을 선택하면 테마·첫화면·메뉴 골격이 적용된 기본 index.html을 만들거나, Claude용 개발 지시문을 복사할 수 있습니다.</div>
     <div class="frm">
@@ -1245,7 +1249,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
         <button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid rgba(226,176,74,.5);color:var(--gold)" onclick="stPick('html')">🧩 스타터 HTML 생성</button>
         <button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="stPick('prompt')">🤖 개발 지시문 복사</button>
       </div>
-      <button class="copy-btn" style="width:100%;margin-top:8px;background:var(--card);border:1.5px solid rgba(79,140,255,.55);color:#8ab2ff" onclick="window.open('spec.html','_blank')">📐 제작 사양서 (제작회의용 · 별도 페이지)</button>
+      <button class="copy-btn" style="width:100%;margin-top:8px;background:var(--card);border:1.5px solid rgba(79,140,255,.55);color:#8ab2ff" onclick="window.open('spec.html','_blank')">📐 제작 사양 보드 (제작회의 · 세부항목 편집 → 견적 반영)</button>
       <div id="st-pick" style="display:none;margin-top:10px"></div>
     </div>
   </div>
@@ -1818,7 +1822,7 @@ document.querySelectorAll('#g-domain .chk').forEach(c=>{
 /* ===== 맞춤세팅 탭 ===== */
 function dgo(n){
   n = String(n);
-  if(n === '6' && role !== 'admin'){ toast('관리자 전용 탭입니다'); return; }
+  if(n === '8' && role !== 'admin'){ toast('관리자 전용 탭입니다'); return; }
   document.querySelectorAll('#pg-design .dsec').forEach(d=>d.classList.toggle('on', d.dataset.dtab === n));
   document.querySelectorAll('#dtabs .dtab').forEach(c=>c.classList.toggle('on', c.dataset.t === n));
   window.scrollTo({top:0});
@@ -2014,14 +2018,40 @@ function buildQuoteRows(d){
   return rows;
 }
 
+/* ===== 제작 사양(spec.html에서 저장) 조회 · 사양 기반 견적 행 ===== */
+async function fetchSpecFor(company){
+  if(!company) return null;
+  if(sbReady()){
+    try{
+      const r = await sb('hk_specs?company=eq.' + encodeURIComponent(company) + '&select=data&limit=1');
+      if(r && r.length && r[0].data && r[0].data.mods) return r[0].data;
+    }catch(e){}
+  }
+  try{
+    const loc = JSON.parse(localStorage.getItem('hk_specs_local')) || {};
+    if(loc[company] && loc[company].mods) return loc[company];
+  }catch(e){}
+  return null;
+}
+function buildQuoteRowsFromSpec(sp){
+  const one = m => {
+    const lines = (m.items||[]).filter(it=>it.st!=='out').flatMap(it=>
+      ['· ' + it.t + (it.st==='ask' ? ' (협의)' : '')]
+      .concat((it.ch||[]).filter(c=>c.st!=='out').map(c=>'  - ' + c.t + (c.st==='ask' ? ' (협의)' : ''))));
+    return { name: m.name, spec: m.lv ? '난이도 ' + m.lv : '', detail: lines.join('\n'), qty:1, price: +m.price||0 };
+  };
+  return [one(sp.base)].concat((sp.mods||[]).map(one));
+}
+
 /* 현재 화면 기준 (실시간 예상비용용) */
 function buildQuoteFromSetup(){
   return buildQuoteRows(collectSetup());
 }
 
-/* 세팅 데이터를 견적서 폼에 적용 */
-function applySetupToQuote(d){
-  const rows = buildQuoteRows(d);
+/* 세팅 데이터를 견적서 폼에 적용 (제작 사양이 저장돼 있으면 사양 우선) */
+async function applySetupToQuote(d){
+  const sp = await fetchSpecFor(d.company);
+  const rows = sp ? buildQuoteRowsFromSpec(sp) : buildQuoteRows(d);
   if(rows.length <= 1 && !d.company) return false;
   document.getElementById('qt-to').value = d.company || '';
   document.getElementById('qt-to-name').value = d.name || '';
@@ -2034,11 +2064,11 @@ function applySetupToQuote(d){
   rows.forEach(r=>qtAddRow(r));
   qtCalc();
   if(typeof qtEditId !== 'undefined') qtEditId = null; /* 새 견적 모드 */
-  return true;
+  return sp ? 'spec' : true;
 }
 
-function setupToQuote(){
-  return applySetupToQuote(collectSetup());
+async function setupToQuote(){
+  return await applySetupToQuote(collectSetup());
 }
 
 function buildReq(){
@@ -2097,7 +2127,7 @@ async function saveReq(){
 
   /* 0) 맞춤세팅 저장(서버+로컬) + 견적서 초안 자동 생성 */
   await saveSetup();
-  const made = setupToQuote();
+  const made = await setupToQuote();
 
   /* 1) ntfy 발송 */
   let sent = false;
@@ -2470,12 +2500,12 @@ async function qtPickSetup(){
   box.style.display = 'block';
 }
 
-function qtApplySetup(i){
+async function qtApplySetup(i){
   const d = window._qtSetups[i];
   if(!d) return;
-  applySetupToQuote(d);
+  const res = await applySetupToQuote(d);
   document.getElementById('qt-setup-pick').style.display = 'none';
-  toast('맞춤세팅 기준 견적이 생성되었습니다 — 수정 가능');
+  toast(res === 'spec' ? '제작 사양(확정본) 기준 견적이 생성되었습니다 — 수정 가능' : '맞춤세팅 기준 견적이 생성되었습니다 — 수정 가능');
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
@@ -2661,7 +2691,7 @@ function stRun(i){
 /* 현재 화면 선택 기준 미리보기 (Guest 허용 · 다운로드는 관리자만) */
 function stPreviewSelf(){
   const d = collectSetup();
-  if(!d.sc.length){ toast('③ 전산화 범위에서 모듈을 1개 이상 선택하세요'); return; }
+  if(!d.sc.length){ toast('⑤ 전산화 범위에서 모듈을 1개 이상 선택하세요'); return; }
   stPreview(d);
 }
 
