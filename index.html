@@ -49,7 +49,6 @@ a{color:inherit;text-decoration:none}
 #splash .skip{position:relative;z-index:1;margin-top:14px;font-size:12px;color:var(--sub);
   border:1px solid var(--line);border-radius:16px;padding:6px 18px;cursor:pointer;background:none;font-family:inherit}
 
-
 /* ============ 로그인 선택 ============ */
 #login{position:fixed;inset:0;z-index:900;background:var(--bg);display:none;
   flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px}
@@ -296,7 +295,6 @@ h2.pt{font-size:25px;font-weight:900;letter-spacing:-.6px;margin:6px 0 6px}
 .gban{padding:3px 7px;font-size:6px;font-weight:700;color:var(--sb);
   background:color-mix(in srgb,var(--sb) 14%,transparent);border-bottom:1px solid var(--ln)}
 
-
 /* 게시판 목업 */
 .brow{background:var(--c);border:1px solid var(--ln);border-radius:6px;padding:5px 7px;display:flex;align-items:center;gap:4px}
 .brow .bt{font-size:7.5px;font-weight:800;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -331,7 +329,6 @@ h2.pt{font-size:25px;font-weight:900;letter-spacing:-.6px;margin:6px 0 6px}
   background:rgba(0,0,0,.88);color:#fff;padding:8px 18px;border-radius:16px;font-size:12.5px;
   font-weight:700;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.on{opacity:1}
-
 
 /* ============ 견적서 ============ */
 .qt-row{background:#161925;border:1.5px solid #4a5268;border-radius:12px;padding:10px;margin-bottom:8px}
@@ -1671,6 +1668,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
 
 <div class="toast" id="toast">요청서가 복사되었습니다</div>
 
+<script src="modules.js"></script>
 <script>
 /* ===== 저장소 (localStorage) ===== */
 const LS_PIN = 'hk_admin_pin', LS_TOPIC = 'hk_ntfy_topic';
@@ -1853,42 +1851,6 @@ function renderEstimate(){
   document.getElementById('est-tot').textContent = tot.toLocaleString('ko-KR')+'원';
 }
 
-/* ===== 모듈별 기준가 (난이도 산정 · 견적서에서 수정 가능) ===== */
-const MODULE_PRICE = {
-  '생산 모니터링(가동현황)':        { p:1800000, d:'실시간 가동현황 보드 · 설비별 상태 · 시간대별 실적 집계', lv:'상' },
-  '생산일보 · 작업실적':            { p:1200000, d:'작업자 실적 입력 · 일보 자동 집계 · 관리자 승인', lv:'중' },
-  '디스플레이알림':                 { p: 600000, d:'현장 대형 디스플레이 호출 · 공지 표출', lv:'하' },
-  'IoT 센서(카운터 · 온습도)':      { p:2000000, d:'ESP32 컨트롤러 연동 · 생산카운트/온습도 수집 · 이상 알림 (HW 실비 별도)', lv:'상' },
-  '일상 · 정기점검 체크시트':       { p:1000000, d:'모바일 체크시트 · 사진 첨부 · 미실시 알림', lv:'중' },
-  '품질검사(외관 · 치수)':          { p:1400000, d:'검사 기준서 연동 · 측정값 입력 · 성적서 PDF 출력', lv:'중상' },
-  '불량관리 · PPM 통계':            { p:1200000, d:'불량 등록 · 유형별 집계 · PPM 추이 차트', lv:'중' },
-  '로트(LOT) 추적':                 { p:1800000, d:'자재→공정→출하 LOT 연결 · 정/역방향 추적', lv:'상' },
-  '시스템 상태체크 · 감시':         { p: 600000, d:'연동/센서 상태 감시 · 이상 시 알림 발송', lv:'하' },
-  '자재 · 재고관리(QR)':            { p:1600000, d:'QR 라벨 발행 · 입출고 스캔 · 재고 현황/부족 알림', lv:'상' },
-  '발주 · 외주관리':                { p:1200000, d:'발주서 발행 · 입고 대비 · 외주 진행 관리', lv:'중' },
-  '수입검사(IQC)':                  { p:1000000, d:'입고 검사 등록 · 합/불 판정 · 성적 이력', lv:'중' },
-  '바코드 · QR 입출고':             { p:1000000, d:'스마트폰 카메라 스캔 입출고 처리', lv:'중' },
-  '재고실사 · 마감':                { p: 900000, d:'실사 입력 · 전산 대비 차이 분석 · 월 마감', lv:'중' },
-  '유통기한 · 로케이션 관리':       { p: 900000, d:'유통기한 경고 · 창고 위치(로케이션) 관리', lv:'중' },
-  '설비 · 치공구 자산관리':         { p:1000000, d:'자산 대장 · QR 부착 · 이력 관리', lv:'중' },
-  '수리 워크플로(의뢰→완료)':       { p:1100000, d:'수리 의뢰→접수→완료 흐름 · 알림 · 이력', lv:'중' },
-  '예방보전(PM) · 검교정':          { p:1300000, d:'PM 주기 스케줄 · 검교정 만료 알림 · 실적 기록', lv:'중상' },
-  '전자결재 · PDF 보고서':          { p:1400000, d:'단계 결재선 · 서명 · PDF 자동 생성/보관', lv:'중상' },
-  '전자 열람확인 · 회람':           { p: 700000, d:'문서 회람 · 열람 확인(날인 대체) 기록', lv:'하' },
-  'KPI · 개선활동':                 { p:1000000, d:'KPI 대시보드 · 개선활동 등록/추적', lv:'중' },
-  '기준정보 · 보안 마스터':         { p: 800000, d:'품목/거래처/사용자 마스터 · 권한 관리', lv:'중' },
-  '견적관리':                       { p: 900000, d:'견적 작성 · 표준 양식 출력 · 이력 관리', lv:'중' },
-  '수주 · 납기관리':                { p:1100000, d:'수주 등록 · 납기 캘린더 · 지연 알림', lv:'중' },
-  '출하관리 · 납품서 발행':         { p:1100000, d:'출하 등록 · 거래명세서/납품서 출력', lv:'중' },
-  '거래처 관리':                    { p: 600000, d:'거래처 대장 · 담당자/이력 관리', lv:'하' },
-  '클레임 접수 · 이력':             { p: 700000, d:'클레임 접수 · 조치 이력 · 재발 방지 기록', lv:'하' },
-  '근태관리':                       { p:1000000, d:'출퇴근 기록 · 월별 집계', lv:'중' },
-  '작업자 배치 · 교육이력':         { p: 900000, d:'배치 현황 · 교육/자격 이력 관리', lv:'중' },
-  '단가 · 외주비 정산':             { p:1300000, d:'단가 마스터 · 외주비 자동 정산 · 명세 출력', lv:'중상' },
-  '매출 · 매입 집계':               { p:1100000, d:'월별 매출/매입 집계 · 차트 리포트', lv:'중' },
-  '회비 · 모임 정산':               { p: 600000, d:'회비 납부 관리 · 모임 정산', lv:'하' },
-  '일정 · 예약 · 알림 발송':        { p: 700000, d:'일정/예약 등록 · 자동 알림 발송', lv:'하' }
-};
 /* ===== 모듈별 스타터 레이아웃 템플릿 =====
    t: dash(대시보드) / form(입력폼+목록) / list(목록+검색) / check(체크시트) / scan(스캔) / doc(결재문서)
    c: 목록 컬럼,  f: 입력 필드,  s: 통계 카드 라벨 */
@@ -1927,9 +1889,6 @@ const ST_TPL = {
   '회비 · 모임 정산':          { t:'list', c:['회원','회차','납부액','납부일','상태'], btn:'회비 등록' },
   '일정 · 예약 · 알림 발송':   { t:'list', c:['일자','시간','일정명','대상','알림'], btn:'일정 등록' }
 };
-
-const BASE_PLATFORM = { name:'기본 플랫폼 구축', p:1500000,
-  d:'클라우드 DB(Supabase) 셋업 · PIN/권한 인증 · 공통 UI 프레임 · 모바일/PC 반응형 · PWA · 알림 기반' };
 
 /* ===== 맞춤세팅 저장소 ===== */
 const LS_SETUPS = 'hk_setups';
@@ -3090,7 +3049,6 @@ SCT,
 '</html>'
   ].join('\n');
 }
-
 
 /* ===== 계약서 ===== */
 function ctInit(){
