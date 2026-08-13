@@ -1243,12 +1243,9 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   <!-- ---------- ⑧ 스타터 페이지 (관리자) ---------- -->
   <div class="dsec" data-dtab="8" id="setup-admin-tools">
     <div class="dh"><span class="no">8</span><h3>스타터 페이지 생성 <span style="font-size:12px;font-weight:400;color:var(--sub)">관리자 전용</span></h3></div>
-    <div class="dd">저장된 맞춤세팅을 선택하면 테마·첫화면·메뉴 골격이 적용된 기본 index.html을 만들거나, Claude용 개발 지시문을 복사할 수 있습니다.</div>
+    <div class="dd">저장된 맞춤세팅을 선택하면 테마·첫화면·메뉴 골격이 적용된 기본 index.html을 만들 수 있습니다. 개발 지시문은 제작 사양 보드에서 확정 사양 기준으로 복사하세요.</div>
     <div class="frm">
-      <div style="display:flex;gap:8px">
-        <button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid rgba(226,176,74,.5);color:var(--gold)" onclick="stPick('html')">🧩 스타터 HTML 생성</button>
-        <button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="stPick('prompt')">🤖 개발 지시문 복사</button>
-      </div>
+      <button class="copy-btn" style="width:100%;background:var(--card);border:1.5px solid rgba(226,176,74,.5);color:var(--gold)" onclick="stPick()">🧩 스타터 HTML 생성</button>
       <button class="copy-btn" style="width:100%;margin-top:8px;background:var(--card);border:1.5px solid rgba(79,140,255,.55);color:#8ab2ff" onclick="window.open('spec.html','_blank')">📐 제작 사양 보드 (제작회의 · 세부항목 편집 → 견적 반영)</button>
       <div id="st-pick" style="display:none;margin-top:10px"></div>
     </div>
@@ -2666,16 +2663,16 @@ function stParseDesign(x){
 }
 function stDesignStr(d){ const p = stParseDesign(d.design); return p.T+'+'+p.L+'+'+p.M; }
 
-async function stPick(mode){
+async function stPick(){
   if(role !== 'admin'){ toast('관리자 전용 기능입니다'); return; }
   const box = document.getElementById('st-pick');
   box.style.display = 'block';
   box.innerHTML = '<div class="qempty">불러오는 중...</div>';
   const list = await fetchSetups();
   if(!list.length){ box.style.display='none'; toast('저장된 맞춤세팅이 없습니다'); return; }
-  window._stList = list; window._stMode = mode;
+  window._stList = list;
   const esc = t => (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
-  box.innerHTML = '<div class="fl" style="margin:0 0 8px">' + (mode==='html' ? '스타터 HTML을 만들 세팅 선택' : '지시문을 만들 세팅 선택') + '</div>' +
+  box.innerHTML = '<div class="fl" style="margin:0 0 8px">스타터 HTML을 만들 세팅 선택</div>' +
     list.map((d,i)=>'\n    <div class="qt-item" style="cursor:pointer" onclick="stRun('+i+')">\n      <div class="qi-b">\n        <div class="qi-t">'+(esc(d.company) || '(업체명 미입력)')+'</div>\n        <div class="qi-s">'+new Date(d.at).toLocaleDateString('ko-KR')+' · '+esc(stDesignStr(d))+' · 모듈 '+((d.sc||[]).length)+'개</div>\n      </div>\n      <button class="qi-btn g" onclick="event.stopPropagation();stRun('+i+')">선택</button>\n    </div>').join('') +
     '<button class="qi-btn" style="width:100%;padding:9px" onclick="document.getElementById(&quot;st-pick&quot;).style.display=&quot;none&quot;">닫기</button>';
 }
@@ -2684,8 +2681,7 @@ function stRun(i){
   const d = window._stList[i];
   if(!d) return;
   document.getElementById('st-pick').style.display = 'none';
-  if(window._stMode === 'prompt') stCopyPrompt(d);
-  else stPreview(d);
+  stPreview(d);
 }
 
 /* 현재 화면 선택 기준 미리보기 (Guest 허용 · 다운로드는 관리자만) */
@@ -2739,40 +2735,6 @@ function stPrevDl(){
 }
 
 /* --- Claude 개발 지시문 --- */
-function stCopyPrompt(d){
-  const p = stParseDesign(d.design);
-  const th = ST_THEMES[p.T] || ST_THEMES.T3;
-  const L = [];
-  L.push('아래 사양으로 모바일 우선 단일 index.html 웹앱을 만들어줘.');
-  L.push('');
-  L.push('[기본]');
-  L.push('- 업체명: ' + (d.company || '(미정)'));
-  if(d.ind && d.ind.length) L.push('- 업종: ' + d.ind.join(', '));
-  L.push('- 배포: GitHub Pages (외부 파일 없이 index.html 하나, 빌드 도구 금지)');
-  L.push('');
-  L.push('[디자인 ' + p.T + '+' + p.L + '+' + p.M + ']');
-  L.push('- 색상테마 ' + p.T + ' ' + th.n + ': 배경 ' + th.bg + ' / 카드 ' + th.card + ' / 라인 ' + th.line + ' / 글자 ' + th.ink + ' / 보조 ' + th.sub + ' / 포인트 ' + th.pt + ' / 액센트 ' + th.ac);
-  L.push('- 첫화면 ' + p.L + ': ' + (ST_LOCK[p.L] || ST_LOCK.L1));
-  L.push('- 메인화면 ' + p.M + ': ' + (ST_MAIN[p.M] || ST_MAIN.M2));
-  L.push('- 폰트 Pretendard(CDN), :active scale(0.97) 터치 피드백, safe-area 대응');
-  L.push('');
-  L.push('[기능 모듈 — 각 모듈을 메뉴/페이지로 구성]');
-  (d.sc || []).forEach(k=>{
-    const m = MODULE_PRICE[k];
-    L.push('- ' + k + (m ? ': ' + m.d : ''));
-  });
-  if(d.scEtc) L.push('- ' + d.scEtc + ' (협의 항목)');
-  L.push('');
-  L.push('[도메인/기타]');
-  L.push('- 도메인: ' + (d.domain || '무료 기본주소') + (d.domainName ? ' (' + d.domainName + ')' : ''));
-  if(d.memo) L.push('- 참고: ' + d.memo);
-  L.push('- 데이터 저장이 필요한 화면은 Supabase REST(fetch 직접 호출) 방식, 테이블 생성 SQL은 별도 제시');
-  const txt = L.join('\n');
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(txt).then(()=>toast('개발 지시문이 복사되었습니다 — Claude에 붙여넣으세요'), ()=>toast('복사 실패'));
-  }else{ toast('복사를 지원하지 않는 브라우저입니다'); }
-}
-
 /* --- 스타터 HTML 다운로드 --- */
 function stDownloadHtml(d){
   const html = stBuildHtml(d);
