@@ -41,13 +41,6 @@ a{color:inherit;text-decoration:none}
 #splash h1{position:relative;z-index:1;font-size:30px;font-weight:900;letter-spacing:-.5px;animation:fadeup .9s .25s both}
 #splash .sl{position:relative;z-index:1;font-size:13.5px;color:var(--sub);animation:fadeup .9s .45s both}
 @keyframes fadeup{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-#splash .pbar{position:relative;z-index:1;width:160px;height:4px;border-radius:2px;background:var(--line);
-  overflow:hidden;margin-top:8px;animation:fadeup .9s .6s both}
-#splash .pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold2),var(--gold));
-  border-radius:2px;animation:load 2s .7s ease-out forwards}
-@keyframes load{to{width:100%}}
-#splash .skip{position:relative;z-index:1;margin-top:14px;font-size:12px;color:var(--sub);
-  border:1px solid var(--line);border-radius:16px;padding:6px 18px;cursor:pointer;background:none;font-family:inherit}
 
 /* ============ 로그인 선택 ============ */
 #login{position:fixed;inset:0;z-index:900;background:var(--bg);display:none;
@@ -543,8 +536,6 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   <div class="logo">HC</div>
   <h1 class="gold-txt">HC_Smart</h1>
   <div class="sl">현장에서 태어난 스마트 시스템 사업부</div>
-  <div class="pbar"><i></i></div>
-  <button class="skip" onclick="closeSplash()">바로 시작 →</button>
 </div>
 
 <!-- ============ 로그인 선택 ============ -->
@@ -1697,7 +1688,7 @@ function closeSplash(){
   document.getElementById('splash').classList.add('hide');
   if(!role) document.getElementById('login').classList.add('on');
 }
-setTimeout(closeSplash, 3000);
+closeSplash(); /* 즉시 진입 (스플래시는 장식용이었음) */
 
 /* ===== 로그인 ===== */
 function loginGuest(){
@@ -2843,7 +2834,7 @@ function stBuildHtml(d){
   let lockHtml = '', lockJs = '';
   if(p.L === 'L4'){
     lockHtml = '<div id="splash" class="lock" style="z-index:110"><div class="logo">'+esc(co.charAt(0))+'</div><div class="lt">'+esc(co)+'</div><div class="ls">시스템을 준비하고 있습니다</div></div>' + pinLockHtml;
-    lockJs = "setTimeout(function(){document.getElementById('splash').classList.add('hide')}, 2200);\n" + pinCore;
+    lockJs = "setTimeout(function(){document.getElementById('splash').classList.add('hide')}, 600);\n" + pinCore;
   }else if(p.L === 'L5'){
     lockHtml = ''; lockJs = "var role='guest';";
   }else if(p.L === 'L3'){
