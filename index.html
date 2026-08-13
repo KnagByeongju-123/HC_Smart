@@ -480,6 +480,8 @@ select.tin option{background:#12141d}
 .sact button.gold{color:var(--gold);border-color:rgba(226,176,74,.4)}
 .albtn{margin-left:auto;flex-shrink:0;border:1px solid rgba(226,176,74,.45);background:transparent;color:var(--gold);border-radius:9px;padding:5px 10px;font-size:11px;font-weight:800;font-family:inherit;cursor:pointer}
 .albtn:active{transform:scale(.94)}
+.dlbtn{flex-shrink:0;border:1px solid rgba(239,116,102,.45);background:transparent;color:#ef7466;border-radius:9px;padding:5px 10px;font-size:11px;font-weight:800;font-family:inherit;cursor:pointer}
+.dlbtn:active{transform:scale(.94)}
 .gcomp{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:16px 17px;margin-bottom:14px}
 .gcomp .gh{display:flex;align-items:center;gap:9px;margin-bottom:12px}
 .gcomp .gc{font-size:15.5px;font-weight:900;letter-spacing:-.3px}
@@ -2476,16 +2478,11 @@ function qtApplySetup(i){
 }
 
 async function qtDelSetup(i){
-  if(!confirm('이 맞춤세팅을 삭제할까요?')) return;
   const d = window._qtSetups[i];
-  if(d && d.src === 'server' && sbReady()){
-    try{ await sb('hk_setups?id=eq.' + d.id, { method:'DELETE', prefer:'return=minimal' }); }
-    catch(e){ toast('서버 삭제 실패'); return; }
-  }
-  const list = getSetups();
-  const li = list.findIndex(x => x.company === (d && d.company));
-  if(li >= 0){ list.splice(li,1); setSetups(list); }
-  qtPickSetup();
+  if(!d) return;
+  if(!d.company){ toast('업체명이 없는 항목은 삭제할 수 없습니다'); return; }
+  const ok = await confirmPurge(d.company, async ()=>{ await qtPickSetup(); });
+  if(!ok) return;
 }
 
 /* 견적 저장/목록 (서버 우선 · 로컬 폴백) */
@@ -3788,12 +3785,70 @@ function buildSteps(groups, withActions){
     return `<div class="gcomp">
       <div class="gh"><span class="gc">${esc(comp)}</span>
         <span class="gn">${cols.length}단계 · 완료 ${done}${alias?' · 공개명 '+esc(alias):''}</span>
-        ${withActions?`<button class="albtn" onclick="gAlias('${esc(comp).replace(/'/g,"\\\\'")}')">🏷 공개 표시명</button>`:''}</div>
+        ${withActions?`<button class="albtn" onclick="gAlias('${esc(comp).replace(/'/g,"\\\\'")}')">🏷 공개 표시명</button>
+        <button class="dlbtn" onclick="gDelCompany('${esc(comp).replace(/'/g,"\\\\'")}')">🗑 업체 삭제</button>`:''}</div>
       <div class="smat">${cells}</div>
       ${memos}
     </div>`;
   }).join('');
 }
+/* ===== 업체 데이터 일괄 삭제 (진행현황·맞춤세팅·견적서·계약서·회의록) ===== */
+const PURGE_MAP = [
+  { t:'hk_progress',  k:'company', n:'진행현황' },
+  { t:'hk_setups',    k:'company', n:'맞춤세팅' },
+  { t:'hk_quotes',    k:'to_co',   n:'견적서'   },
+  { t:'hk_contracts', k:'b_co',    n:'계약서'   },
+  { t:'hk_minutes',   k:'company', n:'회의록'   }
+];
+
+async function companyFootprint(co){
+  const q = encodeURIComponent(co);
+  const out = [];
+  for(const m of PURGE_MAP){
+    try{
+      const r = await sb(m.t + '?select=id&' + m.k + '=eq.' + q);
+      out.push({ n:m.n, c:(r||[]).length });
+    }catch(e){ out.push({ n:m.n, c:0, err:true }); }
+  }
+  return out;
+}
+
+async function purgeCompany(co){
+  const q = encodeURIComponent(co);
+  let fail = [];
+  for(const m of PURGE_MAP){
+    try{ await sb(m.t + '?' + m.k + '=eq.' + q, { method:'DELETE', prefer:'return=minimal' }); }
+    catch(e){ fail.push(m.n); }
+  }
+  try{ setSetups(getSetups().filter(x=>x.company !== co)); }catch(e){}
+  try{ qtSetList(qtGetList().filter(x=>x.to !== co)); }catch(e){}
+  try{ ctSetLocal(ctGetLocal().filter(x=>(x.b_co || x.bCo) !== co)); }catch(e){}
+  return { fail };
+}
+
+async function confirmPurge(co, after){
+  if(!sbReady()){ toast('먼저 설정에서 서버를 연결하세요'); return false; }
+  toast('데이터 확인 중...');
+  const fp = await companyFootprint(co);
+  const total = fp.reduce((a,x)=>a+x.c, 0);
+  const detail = fp.map(x=>'· ' + x.n + ' ' + x.c + '건').join('\n');
+  if(!confirm("'" + co + "' 업체의 모든 데이터를 삭제합니다.\n\n" + detail +
+      "\n\n총 " + total + "건이 서버에서 영구 삭제되며 복구할 수 없습니다.\n계속할까요?")) return false;
+  if(total > 0 && !confirm('정말 삭제하시겠습니까?\n\n' + co + ' · 총 ' + total + '건')) return false;
+  const r = await purgeCompany(co);
+  if(r.fail.length) toast('일부 삭제 실패 — ' + r.fail.join(', '));
+  else toast("'" + co + "' 데이터 " + total + '건이 삭제되었습니다');
+  if(typeof after === 'function') await after();
+  return true;
+}
+
+async function gDelCompany(co){
+  await confirmPurge(co, async ()=>{
+    if(gCompanyFilter === co) gCompanyFilter = '';
+    await loadPlan();
+  });
+}
+
 /* --- 공개 표시명 설정: 구축 진행률 화면에 노출할 업체명 --- */
 async function gAlias(co){
   const cur = (gCache.find(r=>r.company===co && r.display_name) || {}).display_name || '';
