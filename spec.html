@@ -815,6 +815,44 @@ function copyPrompt(){
    포함(✓) 마스터 DB → 업체가 준비할 기초 자료 목록 (동일 테이블은 모듈 통합)
    협의(?) 상태 항목·DB → 회의에서 결정할 사항 목록 */
 let CUR=null;
+/* ===== 요청 자료별 작성 예시 (업체 안내용) ===== */
+const DB_EXAMPLE = {
+  users:'김철수 · 생산팀 · 반장 · PIN 1234 · 일반  /  이영희 · 품질팀 · 대리 · PIN 5678 · 관리자',
+  code:'공정 · P01 · 프레스 · 사용  /  불량유형 · D01 · 스크래치 · 사용',
+  settings:'관리자PIN·알림채널 등 — 초기값은 저희가 설정해 드립니다 (변경 희망값만 기재)',
+  item:'A-1001 · 브라켓 · SPCC t2.0 · EA · 안전재고 500',
+  vendor:'(주)대한금속 · 123-45-67890 · 김담당 010-1234-5678 · 구매처',
+  equip:'PR-01 · 200T 프레스 · 1라인  /  CNC-03 · 머시닝센터 · 2라인',
+  stop_code:'S01 금형교체 · S02 자재대기 · S03 설비고장',
+  iot_device:'CNT-01 · 카운터 · 1라인 프레스  /  TH-02 · 온습도 · 원자재창고 · 기준 10~35℃',
+  check_master:'프레스 PR-01 · 유압유 누유 점검 · 일일 · 육안(양호/불량)',
+  insp_std:'A-1001 · 외경 25.0 ±0.05 · 캘리퍼스  /  두께 2.0 +0.1/-0',
+  defect_code:'D01 스크래치 · D02 변형 · D03 치수불량',
+  lot_rule:'접두 LOT- · 일자 YYMMDD · 순번 3자리 → LOT-260814-001',
+  watch_target:'온습도센서 TH-02 · 10분 주기 · 30분 무응답 시 이상 알림',
+  location:'1창고-A구역-01셀 / 2창고-B구역-03셀 (현재 쓰는 위치 명칭 그대로)',
+  iqc_std:'원자재 코일 · 외관+두께 측정 · 샘플 5EA · 관련 규격서 첨부',
+  asset:'AS-0001 · 토크렌치 · 2023-05 구입 · 공구실 · 담당 홍길동',
+  pm_master:'프레스 PR-01 · 급유 월 1회  /  구동벨트 교체 6개월',
+  gauge:'버니어캘리퍼스 VC-01 · 검교정주기 1년 · 유효기한 2026-12',
+  doc_form:'구매품의서 · 지출결의서 · 작업표준 변경품의 (현재 쓰는 양식 사본)',
+  appr_line:'구매품의: 기안(작성자) → 검토(팀장) → 승인(공장장)',
+  kpi_master:'불량률 · 품질팀 · 목표 0.5%  /  설비가동률 · 생산팀 · 목표 85%',
+  price:'A-1001 · 프레스 공정 · 120원/EA · 2026-01-01 적용',
+  member:'홍길동 · 010-1234-5678 · 정상 (현재 회원 명부 그대로)',
+  fee_rule:'연회비 120,000원 · 회계연도 7월 시작',
+  worker:'김철수 · 생산1팀 · 프레스 담당 · 2020-03 입사',
+  claim_code:'C01 외관 · C02 치수 · C03 납기',
+  std:'항목 온도 · 기준 10~35℃  /  외경 25.0 ±0.05',
+  seq_rule:'접두 PO- · 일자 YYMM · 순번 3자리 → PO-2608-001'
+};
+function dbEx(name){
+  if(DB_EXAMPLE[name]) return DB_EXAMPLE[name];
+  /* 'item · location' 같은 복합 표기는 첫 토큰으로 매칭 */
+  const first=(name||'').split('·')[0].trim();
+  if(DB_EXAMPLE[first]) return DB_EXAMPLE[first];
+  return '현재 사용 중인 목록·엑셀·양식 그대로 제출';
+}
 function gatherRequest(){
   const seen={};
   allCards().forEach(m=>{
@@ -854,6 +892,7 @@ function buildRequest(){
   if(!g.masters.length) L.push('- (해당 없음)');
   g.masters.forEach(e=>{
     L.push('- '+e.t);
+    L.push('  작성 예) '+dbEx(dbName(e.t)));
     L.push('  (사용 모듈: '+e.mods.join(', ')+')');
   });
   L.push('');
@@ -879,7 +918,11 @@ function buildRequestHtml(){
   const mrows = g.masters.length
     ? g.masters.map((e,i)=>{
         const p=e.t.split(' — ');
-        return '<tr><td class="c">'+(i+1)+'</td><td><b>'+esc(p[0])+'</b>'+(p[1]?'<div class="s">'+esc(p.slice(1).join(' — '))+'</div>':'')+'</td><td class="s">'+esc(e.mods.join(', '))+'</td><td class="in"></td></tr>';
+        const nm=dbName(e.t);
+        return '<tr><td class="c">'+(i+1)+'</td><td><b>'+esc(p[0])+'</b>'
+          +(p[1]?'<div class="s">'+esc(p.slice(1).join(' — '))+'</div>':'')
+          +'<div class="ex">✏ 작성 예) '+esc(dbEx(nm))+'</div>'
+          +'</td><td class="s">'+esc(e.mods.join(', '))+'</td><td class="in"></td></tr>';
       }).join('')
     : '<tr><td colspan="4" class="c s">해당 없음</td></tr>';
   const arows = g.asks.length
@@ -898,6 +941,7 @@ function buildRequestHtml(){
     +'th{background:#f0ecdf;font-size:11.5px;text-align:center}'
     +'.ov th{width:88px;background:#f0ecdf}'
     +'.c{text-align:center}.s{font-size:11px;color:#555}.in{width:80px}'
+    +'.ex{font-size:10.5px;color:#8a6d1f;background:#faf6ea;border-radius:4px;padding:3px 7px;margin-top:4px}'
     +'h2{font-size:13.5px;margin-top:18px;padding-left:8px;border-left:4px solid #e2b04a}'
     +'.note{font-size:11px;color:#555;margin-top:6px}'
     +'.memo{border:1px solid #999;min-height:56px;padding:8px;margin-top:8px;white-space:pre-wrap}'
