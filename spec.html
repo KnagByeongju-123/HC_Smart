@@ -63,6 +63,12 @@ h1{font-size:18px;font-weight:900;letter-spacing:-.4px}
 .addrow{display:flex;gap:7px;margin-top:7px}
 .addrow .tin{padding:8px 11px;font-size:12.5px}
 .addrow .btn{padding:8px 13px;font-size:12px}
+.dbh{font-size:11px;font-weight:800;color:var(--sub);letter-spacing:.3px;margin:12px 0 3px;padding-top:9px;border-top:1px dashed var(--line)}
+.it.dbit .tx{font-size:12.5px;color:#c9d4ea}
+.dbnone{font-size:11.5px;color:var(--sub);padding:3px 0 3px 33px}
+.addrow.db{margin-top:4px}
+.addrow.db .tin{padding:6px 10px;font-size:11.5px}
+.addrow.db .btn{padding:6px 11px;font-size:12px}
 #memo{min-height:74px;resize:vertical}
 @media (max-width:520px){ .mh .pr{width:92px} .it.child{margin-left:22px} }
 </style>
@@ -98,7 +104,7 @@ h1{font-size:18px;font-weight:900;letter-spacing:-.4px}
         <button class="btn g" onclick="addMod()">＋ 모듈 카드 추가</button>
         <button class="btn g" onclick="backToList()">← 목록</button>
       </div>
-      <div class="legend">항목 상태 클릭 순환: <b style="color:var(--grn)">✓ 포함</b> → <b style="color:var(--gold)">? 협의</b> → <b style="color:var(--red)">✕ 제외</b> · 텍스트는 바로 수정 · <b>⌵</b>=하위 가지 추가 · 제외 항목은 견적·지시문에서 빠집니다</div>
+      <div class="legend">항목 상태 클릭 순환: <b style="color:var(--grn)">✓ 포함</b> → <b style="color:var(--gold)">? 협의</b> → <b style="color:var(--red)">✕ 제외</b> · 텍스트는 바로 수정 · <b>⌵</b>=하위 가지 추가 · 제외 항목은 견적·지시문에서 빠집니다 · 카드 하단 <b>🗂 마스터 / 📄 일반 DB</b>는 모듈별 필요 테이블 정의(지시문 포함)</div>
     </div>
     <div id="mods"></div>
     <div class="mod">
@@ -389,6 +395,142 @@ const MODULE_SPEC = {
   ]
 };
 
+/* ===== 모듈별 필요 DB 테이블 (m=마스터/기준정보 · x=일반/트랜잭션)
+   기존 배포 시스템(신우 sw_stock·sw_receipts, 태진 문서·불량, 금형제작 공정,
+   호영회 회원·회비, HC hk_quotes 등) 테이블 구조를 참조해 정의.
+   테이블명 접두어(hk_·sw_ 등)는 프로젝트 코드에 맞춰 통일한다. ===== */
+const BASE_DB = {
+  m:[ 'users — 이름·부서·직위·PIN·권한(관리자/일반/Guest)',
+      'code — 공통코드 (구분·코드·명칭·사용여부)',
+      'settings — 시스템 설정 (관리자PIN·ntfy토픽 등)' ],
+  x:[ 'notify_log — 알림 발송 이력 (일시·구분·수신대상·내용)' ]
+};
+const MODULE_DB = {
+  '생산 모니터링(가동현황)': {
+    m:[ 'equip — 설비 마스터 (설비코드·설비명·라인·표시순서)',
+        'stop_code — 정지사유 코드 (코드·사유명)' ],
+    x:[ 'prod_count — 시간대별 생산실적 (설비·일시·수량)',
+        'equip_status — 설비 상태 로그 (설비·상태·시작/종료·정지사유)' ] },
+  '생산일보 · 작업실적': {
+    m:[ 'item — 품목 마스터 (품번·품명·규격·단위)' ],
+    x:[ 'work_report — 작업실적 (일자·작업자·품번·지시/생산/불량수량·비고·승인상태)' ] },
+  '디스플레이알림': {
+    m:[],
+    x:[ 'display_notice — 표출 알림 (제목·내용·표출시작/종료·등록자)' ] },
+  'IoT 센서(카운터 · 온습도)': {
+    m:[ 'iot_device — 장치 마스터 (장치ID·종류·설치위치·상/하한 기준·업로드주기)' ],
+    x:[ 'iot_data — 수신 데이터 (장치·시각·카운트/온도/습도)',
+        'iot_alert — 기준 이탈 알림 이력 (장치·시각·항목·측정값)' ] },
+  '일상 · 정기점검 체크시트': {
+    m:[ 'check_master — 점검항목 마스터 (설비·항목·주기·판정기준)' ],
+    x:[ 'check_result — 점검 결과 (일자·설비·항목·판정·측정값·사진·점검자)' ] },
+  '품질검사(외관 · 치수)': {
+    m:[ 'insp_std — 품번별 검사 기준서 (항목·규격·상/하한 공차)' ],
+    x:[ 'insp_result — 검사 이력 (로트·품번·측정값·판정·검사자·일자)' ] },
+  '불량관리 · PPM 통계': {
+    m:[ 'defect_code — 불량 유형 코드 (코드·유형명)' ],
+    x:[ 'defect — 불량 등록 (일자·품번·공정·유형·수량·사진) ※ PPM 분모는 work_report 참조' ] },
+  '로트(LOT) 추적': {
+    m:[ 'item — 품목 마스터 (공용)', 'lot_rule — 채번 규칙 설정 (접두·일자형식·순번자리)' ],
+    x:[ 'lot — 로트 대장 (LOT번호·품번·구분(자재/공정/완제품)·생성일)',
+        'lot_link — 로트 연결 (상위LOT·하위LOT·공정·수량)' ] },
+  '시스템 상태체크 · 감시': {
+    m:[ 'watch_target — 감시 대상 (이름·종류·점검주기·판정기준)' ],
+    x:[ 'watch_log — 상태 이력 (대상·시각·상태·응답시간)' ] },
+  '자재 · 재고관리(QR)': {
+    m:[ 'item — 품목 마스터 (품번·품명·규격·단위·안전재고·QR코드)',
+        'location — 창고/위치 마스터 (범위 협의)' ],
+    x:[ 'stock_io — 입출고 이력 (일시·품번·입/출 구분·수량·작업자) ※ 신우 sw_receipts 참조',
+        'stock — 현재고 (품번·위치·수량) ※ 신우 sw_stock 참조' ] },
+  '발주 · 외주관리': {
+    m:[ 'vendor — 거래처 마스터 (공용)' ],
+    x:[ 'po — 발주 (발주번호·거래처·품번·수량·납기·상태)',
+        'po_recv — 발주 대비 입고 (발주·입고수량·입고일·부분입고)' ] },
+  '수입검사(IQC)': {
+    m:[ 'iqc_std — 검사 항목·판정 기준 (정의 협의)' ],
+    x:[ 'iqc_result — 입고 검사 (입고건·샘플수·판정·처리(반품/특채)·검사자) ※ 신우 insp_status 참조' ] },
+  '바코드 · QR 입출고': {
+    m:[ 'item — 품목 마스터 (QR/바코드 매핑 포함)' ],
+    x:[ 'scan_log — 스캔 이력 (시각·작업자·품번·입/출 구분·수량·취소여부)' ] },
+  '재고실사 · 마감': {
+    m:[ 'item · location — 품목/위치 마스터 (공용)' ],
+    x:[ 'audit_result — 실사 결과 (실사회차·품번·실사수량·전산재고·차이·조정승인·사유)',
+        'stock_close — 월 마감 (마감월·처리자·잠금여부)' ] },
+  '유통기한 · 로케이션 관리': {
+    m:[ 'location — 로케이션 체계 (창고·구역·셀)' ],
+    x:[ 'stock_lot — 재고 로트 (품번·로트·유통기한·로케이션·수량)',
+        'move_log — 이동 처리 이력 (로트·이전/이후 위치·일시·작업자)' ] },
+  '설비 · 치공구 자산관리': {
+    m:[ 'asset — 자산 대장 (자산번호·품명·구입일·위치·담당·QR)' ],
+    x:[ 'asset_log — 자산 이력 (자산·구분(이동/수리/폐기)·일자·내용·사진)' ] },
+  '수리 워크플로(의뢰→완료)': {
+    m:[ 'equip — 설비 마스터 (공용)' ],
+    x:[ 'repair — 수리 의뢰 (의뢰일·설비·내용·사진·상태(접수/진행/완료)·담당·완료일) ※ 경일 금형수리 참조' ] },
+  '예방보전(PM) · 검교정': {
+    m:[ 'pm_master — PM 대상·주기 (설비·항목·주기·차기예정일)',
+        'gauge — 계측기 대장 (관리번호·검교정주기·유효기간)' ],
+    x:[ 'pm_result — PM 실시 결과 (일자·설비·항목·결과·실시자)',
+        'calib_log — 검교정 이력 (계측기·검교정일·성적서 첨부·차기예정일)' ] },
+  '전자결재 · PDF 보고서': {
+    m:[ 'doc_form — 문서 양식 (양식 정의 협의)', 'appr_line — 결재선 (양식·단계·승인자)' ],
+    x:[ 'doc — 결재 문서 (문서번호·기안자·제목·본문·상태)',
+        'appr_log — 승인/반려 이력 (문서·단계·승인자·의견·시각)' ] },
+  '전자 열람확인 · 회람': {
+    m:[],
+    x:[ 'circ_doc — 회람 문서 (문서번호·제목·파일·회람대상·마감일) ※ 태진 문서관리 참조',
+        'circ_read — 열람 기록 (문서·사용자·열람시각)' ] },
+  'KPI · 개선활동': {
+    m:[ 'kpi_master — KPI 항목 (지표·부서·목표치·단위)' ],
+    x:[ 'kpi_actual — 월별 실적 (지표·월·실적)',
+        'improve — 개선활동 (제안·실행·효과·상태·담당)' ] },
+  '기준정보 · 보안 마스터': {
+    m:[ 'item — 품목 마스터', 'vendor — 거래처 마스터',
+        'users — 사용자 (PIN·권한)', 'code — 공통코드 (공정·불량유형 등)' ],
+    x:[ 'master_log — 변경 이력 (테이블·대상·변경내용·변경자·시각)' ] },
+  '견적관리': {
+    m:[ 'vendor — 거래처 마스터 (공용)' ],
+    x:[ 'quote — 견적 (견적번호·거래처·합계·상태·작성일) ※ HC hk_quotes 참조',
+        'quote_item — 견적 품목 라인 (견적·품명·규격·수량·단가)' ] },
+  '수주 · 납기관리': {
+    m:[ 'item · vendor — 품목/거래처 마스터 (공용)' ],
+    x:[ 'sales_order — 수주 (수주번호·거래처·품번·수량·납기·상태)' ] },
+  '출하관리 · 납품서 발행': {
+    m:[ 'vendor — 거래처 마스터 (공용)' ],
+    x:[ 'ship — 출하 (출하일·거래처·수주연계·비고) ※ 신우 거래명세서 참조',
+        'ship_item — 출하 품목 (출하·품번·수량·단가)' ] },
+  '거래처 관리': {
+    m:[ 'vendor — 거래처 대장 (사업자정보·담당자·연락처·구매/판매 구분)' ],
+    x:[ 'vendor_memo — 메모·첨부 (거래처·내용·파일·작성자)' ] },
+  '클레임 접수 · 이력': {
+    m:[ 'claim_code — 클레임 유형 코드 (범위 협의)' ],
+    x:[ 'claim — 클레임 접수 (접수일·거래처·품번·내용·사진·상태)',
+        'claim_act — 조치 (클레임·원인·대책·완료일)' ] },
+  '근태관리': {
+    m:[ 'users — 사용자 마스터 (공용)' ],
+    x:[ 'attend — 출퇴근 기록 (사원·일자·출근/퇴근시각·구분)',
+        'leave — 휴가 신청/승인 (포함 여부 협의)' ] },
+  '작업자 배치 · 교육이력': {
+    m:[ 'worker — 작업자 마스터 (부서·직무·입사일)' ],
+    x:[ 'assign — 공정별 배치 이력 (작업자·공정·시작/종료)',
+        'edu_log — 교육·자격 이력 (작업자·과정/자격·취득일·만료일)' ] },
+  '단가 · 외주비 정산': {
+    m:[ 'price — 단가 마스터 (품번·공정·단가·적용시작/종료)' ],
+    x:[ 'settle — 월별 정산 (업체·월·실적수량·금액·확정여부)',
+        'price_log — 단가 변경 이력 (품번·이전/이후 단가·변경일·변경자)' ] },
+  '매출 · 매입 집계': {
+    m:[ 'vendor — 거래처 마스터 (공용)' ],
+    x:[ 'sales — 매출 등록 (일자·거래처·품목·금액) ※ 출하 연계 여부 협의',
+        'purchase — 매입 등록 (일자·거래처·품목·금액) ※ 발주 연계 여부 협의' ] },
+  '회비 · 모임 정산': {
+    m:[ 'member — 회원 명부 (이름·연락처·상태) ※ 호영회 참조',
+        'fee_rule — 회비 기준 (연회비·월회비·회계연도)' ],
+    x:[ 'fee_pay — 납부 (회원·회차·금액·납부일)',
+        'event_settle — 모임 지출·정산 (행사·항목·금액·영수증)' ] },
+  '일정 · 예약 · 알림 발송': {
+    m:[],
+    x:[ 'schedule — 일정/예약 (일자·시간·일정명·대상·알림설정·응답)' ] }
+};
+
 /* ===== 세팅 목록 ===== */
 let LIST=[];
 async function loadList(){
@@ -411,16 +553,23 @@ async function loadList(){
 /* ===== 사양 데이터 ===== */
 let SPEC=null;   /* { company, base:{...}, mods:[{name,lv,price,items:[{t,st,ch:[{t,st}]}]}], memo } */
 const seedItems=a=>(a||[]).map(t=>({t,st:t.indexOf('협의')>=0?'ask':'in',ch:[]}));
+const seedDb=src=>({ m:seedItems((src||{}).m), x:seedItems((src||{}).x) });
 function seedSpec(d){
   return {
     company:d.company||'',
-    base:{name:BASE_PLATFORM.name,lv:'공통',price:BASE_PLATFORM.p,items:seedItems(BASE_SPEC)},
+    base:{name:BASE_PLATFORM.name,lv:'공통',price:BASE_PLATFORM.p,items:seedItems(BASE_SPEC),db:seedDb(BASE_DB)},
     mods:(d.sc||[]).map(k=>{
       const m=MODULE_PRICE[k]||{p:0,lv:'협의'};
-      return {name:k,lv:m.lv,price:m.p,items:seedItems(MODULE_SPEC[k]||['세부 기능 범위 회의에서 정의'])};
-    }).concat(d.scEtc?[{name:d.scEtc,lv:'협의',price:0,items:seedItems(['요구사항 청취 · 범위 정의 (협의)'])}]:[]),
+      return {name:k,lv:m.lv,price:m.p,items:seedItems(MODULE_SPEC[k]||['세부 기능 범위 회의에서 정의']),db:seedDb(MODULE_DB[k])};
+    }).concat(d.scEtc?[{name:d.scEtc,lv:'협의',price:0,items:seedItems(['요구사항 청취 · 범위 정의 (협의)']),db:seedDb(null)}]:[]),
     memo:d.memo||''
   };
+}
+/* 이전에 저장된 사양(DB 필드 없음)을 열 때 모듈명 기준으로 DB 정의 보충 */
+function ensureDb(sp){
+  if(!sp) return;
+  if(!sp.base.db) sp.base.db=seedDb(BASE_DB);
+  (sp.mods||[]).forEach(m=>{ if(!m.db) m.db=seedDb(MODULE_DB[m.name]); });
 }
 async function openSpec(i){
   const d=LIST[i]; if(!d) return;
@@ -437,6 +586,7 @@ async function openSpec(i){
     }catch(e){}
   }
   if(!SPEC) SPEC=seedSpec(d);
+  ensureDb(SPEC);
   SPEC.company=d.company;
   document.getElementById('list-box').style.display='none';
   document.getElementById('board').style.display='block';
@@ -475,12 +625,41 @@ function render(){
       +'</div>'
       +m.items.map((it,ii)=>itRow(mi,ii,-1,it)+(it.ch||[]).map((c,ci)=>itRow(mi,ii,ci,c)).join('')).join('')
       +'<div class="addrow"><input class="tin" id="ai-'+mi+'" placeholder="세부항목 추가" onkeydown="if(event.key===\'Enter\')addIt('+mi+')"><button class="btn g" onclick="addIt('+mi+')">＋ 추가</button></div>'
+      +dbSection(mi,m)
       +'</div>';
   }).join('');
   document.getElementById('b-est').textContent='기준가 합계 '+won(estTotal())+' (VAT 별도)';
 }
 const card=mi=>mi<0?SPEC.base:SPEC.mods[mi];
 const node=(mi,ii,ci)=>ci<0?card(mi).items[ii]:card(mi).items[ii].ch[ci];
+
+/* ===== DB 섹션 (m=마스터 · x=일반) ===== */
+function dbRow(mi,g,di,it){
+  return '<div class="it dbit'+(it.st==='out'?' stout':'')+'">'
+    +'<button class="st '+it.st+'" onclick="cycDb('+mi+',\''+g+'\','+di+')" title="포함/협의/제외">'+stSym(it.st)+'</button>'
+    +'<input class="tx" value="'+esc(it.t)+'" oninput="edDb('+mi+',\''+g+'\','+di+',this.value)">'
+    +'<span class="iact"><button onclick="delDb('+mi+',\''+g+'\','+di+')" title="삭제">✕</button></span></div>';
+}
+function dbSection(mi,m){
+  const db=m.db||{m:[],x:[]};
+  return '<div class="dbh">🗂 마스터 DB (기준정보)</div>'
+    +(db.m.length?db.m.map((it,di)=>dbRow(mi,'m',di,it)).join(''):'<div class="dbnone">공통 마스터 사용 (별도 테이블 없음)</div>')
+    +'<div class="addrow db"><input class="tin" id="db-'+mi+'-m" placeholder="마스터 테이블 추가 (예: item — 품번·품명·규격)" onkeydown="if(event.key===\'Enter\')addDb('+mi+',\'m\')"><button class="btn g" onclick="addDb('+mi+',\'m\')">＋</button></div>'
+    +'<div class="dbh">📄 일반 DB (트랜잭션)</div>'
+    +(db.x.length?db.x.map((it,di)=>dbRow(mi,'x',di,it)).join(''):'<div class="dbnone">등록된 테이블 없음</div>')
+    +'<div class="addrow db"><input class="tin" id="db-'+mi+'-x" placeholder="일반 테이블 추가 (예: work_report — 일자·작업자·수량)" onkeydown="if(event.key===\'Enter\')addDb('+mi+',\'x\')"><button class="btn g" onclick="addDb('+mi+',\'x\')">＋</button></div>';
+}
+const dbList=(mi,g)=>{ const c=card(mi); if(!c.db) c.db={m:[],x:[]}; return c.db[g]; };
+function cycDb(mi,g,di){ const n=dbList(mi,g)[di]; n.st=n.st==='in'?'ask':n.st==='ask'?'out':'in'; render(); }
+function edDb(mi,g,di,v){ dbList(mi,g)[di].t=v; }
+function delDb(mi,g,di){ dbList(mi,g).splice(di,1); render(); }
+function addDb(mi,g){
+  const el=document.getElementById('db-'+mi+'-'+g);
+  const t=el.value.trim(); if(!t){ el.focus(); return; }
+  dbList(mi,g).push({t,st:'in',ch:[]});
+  render();
+  const ne=document.getElementById('db-'+mi+'-'+g); if(ne) ne.focus();
+}
 
 /* ===== 편집 ===== */
 function ed(mi,ii,ci,v){ node(mi,ii,ci).t=v; }
@@ -554,6 +733,7 @@ function buildPrompt(){
   const L=['[HC_Smart 제작 사양 — '+SPEC.company+']',''];
   L.push('아래 사양대로 단일 index.html(모바일 우선, Supabase REST 직접 fetch, GitHub Pages 배포)을 구현한다.');
   L.push('상태 표기: (협의) = 범위 미확정, 구현 전 확인 필요. 표기 없는 항목은 확정 사양.');
+  L.push('[DB] 표기는 모듈별 필요 테이블(마스터=기준정보 · 일반=트랜잭션)과 주요 컬럼 정의다. 테이블명 접두어는 프로젝트 코드로 통일하고, 생성 SQL(RLS 정책 포함)을 별도 제시한다.');
   allCards().forEach((m,x)=>{
     const items=m.items.filter(it=>it.st!=='out');
     if(x>0 && !items.length) return;
@@ -563,6 +743,13 @@ function buildPrompt(){
       L.push('- '+it.t+(it.st==='ask'?' (협의)':''));
       (it.ch||[]).filter(c=>c.st!=='out').forEach(c=>L.push('  · '+c.t+(c.st==='ask'?' (협의)':'')));
     });
+    const db=m.db||{m:[],x:[]};
+    const dm=(db.m||[]).filter(t=>t.st!=='out'), dx=(db.x||[]).filter(t=>t.st!=='out');
+    if(dm.length||dx.length){
+      L.push('  [DB]');
+      dm.forEach(t=>L.push('  · 마스터: '+t.t+(t.st==='ask'?' (협의)':'')));
+      dx.forEach(t=>L.push('  · 일반: '+t.t+(t.st==='ask'?' (협의)':'')));
+    }
   });
   if(SPEC.memo&&SPEC.memo.trim()){ L.push(''); L.push('■ 회의 메모 · 추가 요청'); L.push(SPEC.memo.trim()); }
   L.push('');
