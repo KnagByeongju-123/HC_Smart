@@ -474,7 +474,8 @@ select.tin option{background:#12141d}
 .smk.i{color:#e2b04a}
 .smk.l{color:#ef7466}
 .smk.h{color:#8b8fa3}
-.sact{display:flex;gap:4px;justify-content:center;padding-bottom:4px}
+.scell.cur{background:rgba(226,176,74,.06);border-radius:8px}
+.sact{display:flex;gap:4px;justify-content:center;padding-bottom:4px;min-height:22px}
 .sact button{border:1px solid var(--line);background:transparent;color:var(--sub);border-radius:7px;padding:3px 8px;font-size:10.5px;font-weight:800;font-family:inherit;cursor:pointer}
 .sact button.gold{color:var(--gold);border-color:rgba(226,176,74,.4)}
 .albtn{margin-left:auto;flex-shrink:0;border:1px solid rgba(226,176,74,.45);background:transparent;color:var(--gold);border-radius:9px;padding:5px 10px;font-size:11px;font-weight:800;font-family:inherit;cursor:pointer}
@@ -1298,7 +1299,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
 <div class="page" id="pg-plan">
   <div class="sec-label">PROGRESS TIMELINE</div>
   <h2 class="pt">업체별 진행현황</h2>
-  <div class="pd">업체별 도입 단계를 관리합니다. 항목마다 상태·진도(%)를 기록하면 단계표로 표시되며, 진도는 '구축 진행률' 공개 화면의 진행률 계산에 사용됩니다. 서버(Supabase)에 저장됩니다.</div>
+  <div class="pd">완료한 단계를 클릭해 저장하면 단계표에 ○로 표시되고, 다음 단계는 자동으로 △ 진행중이 됩니다. '구축 진행률' 공개 화면에도 동일하게 반영됩니다. 서버(Supabase)에 저장됩니다.</div>
 
   <div class="dbwarn" id="g-dbwarn" style="display:none">
     ⚠️ 서버(Supabase)가 아직 연결되지 않았습니다. <b>설정 → 서버(Supabase) 연결</b>을 확인하세요.
@@ -1317,7 +1318,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
         <div id="g-setup-pick" style="display:none;margin-top:9px"></div>
       </div>
     </div>
-    <div class="fl" style="margin-top:12px">진행 단계 <b>*</b> <span style="font-weight:600;color:var(--sub)">— 일반적인 전산개발 순서입니다. 해당 단계를 선택하세요 (신규 등록 시 여러 개 선택하면 한 번에 등록됩니다)</span></div>
+    <div class="fl" style="margin-top:12px">완료된 단계 <b>*</b> <span style="font-weight:600;color:var(--sub)">— 완료한 단계를 모두 클릭하고 저장하세요. 선택한 단계는 ○ 완료로 기록되고, 그 다음 단계가 자동으로 △ 진행중으로 표시됩니다</span></div>
     <div class="chips2" id="g-taskchips">
       <div class="chk" data-v="상담 · 요구사항 파악">1. 상담·요구사항</div>
       <div class="chk" data-v="현장 진단">2. 현장 진단</div>
@@ -1334,23 +1335,18 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
     </div>
     <div class="fl">기타 항목 (직접 입력)</div>
     <input class="tin" id="g-task" placeholder="위 단계 외 항목이 있으면 입력 (예: IoT 센서 설치)">
-    <div class="fl" style="margin-top:12px">상태</div>
-    <div class="chips2" id="g-stchips">
-      <div class="chk on" data-v="진행중" onclick="gStPick(this)">△ 진행중</div>
-      <div class="chk" data-v="완료" onclick="gStPick(this)">○ 완료</div>
-    </div>
+
     <div class="fl">메모</div>
     <input class="tin" id="g-memo" placeholder="참고사항 (선택)">
     <div class="frow" style="margin-top:14px">
-      <button class="copy-btn" style="width:100%;background:var(--card);border:1.5px solid var(--line);color:var(--sub);display:none" id="g-cancel" onclick="gCancelEdit()">수정 취소</button>
-      <button class="copy-btn" style="width:100%" id="g-save" onclick="savePlan()">항목 저장</button>
+      <button class="copy-btn" style="width:100%" id="g-save" onclick="savePlan()">완료 단계 저장</button>
     </div>
   </div>
 
   <div class="hgroup">📊 업체별 진행 단계표</div>
   <div class="glegend">
     <span><b style="color:#3fc783">○</b> 완료</span>
-    <span><b style="color:#e2b04a">△</b> 진행중</span>
+    <span><b style="color:#e2b04a">△</b> 진행중 (다음 단계 자동 표시)</span>
   </div>
   <div class="mfilter" id="g-filter"></div>
   <div id="g-list"><div class="qempty">불러오는 중...</div></div>
@@ -3593,7 +3589,7 @@ async function testSb(){
 }
 
 /* ===== 진행현황 타임플랜 ===== */
-let gEditId = null, gCompanyFilter = '', gCache = [];
+let gCompanyFilter = '', gCache = [];
 
 /* ===== 구축 진행률 보드 (Guest 공개) ===== */
 async function loadBoard(){
@@ -3621,21 +3617,17 @@ async function loadBoard(){
 
   const esc = t => (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const g = {};
-  rows.forEach(r=>{
-    const a = g[r.company] = g[r.company] || [];
-    const i = a.findIndex(x=>x.task===r.task);
-    if(i >= 0) a[i] = r; /* 같은 단계가 중복이면 최신 등록분만 표시 */
-    else a.push(r);
-  });
+  rows.forEach(r=>{ (g[r.company] = g[r.company] || []).push(r); });
 
   const cos = Object.keys(g).map(co=>{
     const a = g[co];
-    const rate = Math.round(a.reduce((x,r)=>x+(r.progress||0),0) / a.length);
-    const done = a.filter(r=>r.status==='완료').length;
-    const cur = a.find(r=>r.status==='진행중') || a.find(r=>r.status!=='완료') || a[a.length-1];
-    const fin = done === a.length;
+    const cols = stepCols(a);
+    const done = cols.filter(c=>c.done).length;
+    const rate = Math.round(done / cols.length * 100);
+    const cur = cols.find(c=>c.mark==='i');
+    const fin = done === cols.length;
     const disp = (a.find(r=>r.display_name) || {}).display_name || co;
-    return { co, disp, a, rate, done, cur, fin };
+    return { co, disp, cols, rate, done, cur, fin };
   }).sort((x,y)=> (x.fin - y.fin) || (y.rate - x.rate));
 
   const allRate = Math.round(cos.reduce((x,c)=>x+c.rate,0) / cos.length);
@@ -3646,15 +3638,15 @@ async function loadBoard(){
   box.innerHTML = cos.map(c=>{
     const st = c.fin ? '<span class="bdst fin">구축 완료</span>'
                      : '<span class="bdst ing">진행중</span>';
-    const cells = c.a.map(r=>
-      '<div class="scell"><div class="stk">'+esc(r.task)+'</div><div class="smrk">'+stepMark(r.status)+'</div></div>').join('');
+    const cells = c.cols.map(x=>
+      '<div class="scell'+(x.mark==='i'?' cur':'')+'"><div class="stk">'+esc(x.task)+'</div><div class="smrk">'+stepMark(x.mark)+'</div></div>').join('');
     return '<div class="bdc">'
       + '<div class="bdh"><span class="bdn">'+esc(c.disp)+'</span>'+st+'</div>'
       + '<div class="bdbar"><div class="bdfill'+(c.fin?' fin':'')+'" style="width:'+c.rate+'%"></div></div>'
       + '<div class="bdm"><span>'+(c.fin ? '전체 단계 완료' : '현재 단계 · ' + esc(c.cur ? c.cur.task : '-'))+'</span>'
       + '<b>'+c.rate+'%</b></div>'
       + '<div class="smat" style="margin-top:10px">'+cells+'</div>'
-      + '<div class="bdm" style="margin-top:6px"><span>단계 '+c.a.length+'개 · 완료 '+c.done+'개</span>'
+      + '<div class="bdm" style="margin-top:6px"><span>단계 '+c.cols.length+'개 · 완료 '+c.done+'개</span>'
       + '<span><b style="color:#3fc783;font-size:11.5px">○</b> 완료 · <b style="color:#e2b04a;font-size:11.5px">△</b> 진행중</span></div>'
       + '</div>';
   }).join('');
@@ -3753,34 +3745,49 @@ function renderPlan(){
 }
 
 /* --- 단계 매트릭스 HTML 생성 (관리자/고객 공용) ---
-   1행: 진행항목, 2행: 표시 (완료 ○ · 진행중 △ · 지연 △빨강 · 보류 ─ · 예정 빈칸) */
-function stepMark(st){
-  if(st === '완료')   return '<span class="smk d">○</span>';
-  if(st === '진행중') return '<span class="smk i">△</span>';
-  if(st === '지연')   return '<span class="smk l">△</span>';
-  if(st === '보류')   return '<span class="smk h">─</span>';
+   표준 12단계 + 기타 항목을 열로 표시. 저장된 단계 = ○ 완료, 그 다음 첫 미완료 단계 = △ 진행중 (자동) */
+const GSTEPS = ['상담 · 요구사항 파악','현장 진단','견적 · 계약','화면 설계(디자인)','DB · 시스템 설계','개발 · 구축','파일럿(시범 적용)','테스트 · 검수','데이터 이관','사용자 교육','오픈(운영 시작)','안정화 · 유지보수'];
+
+/* 업체 행 목록 → 열 배열 [{task, row(완료행|null), mark:'d'|'i'|''}] */
+function stepCols(g){
+  const byTask = {};
+  g.forEach(r=>{ byTask[r.task] = r; }); /* 같은 단계 중복 시 마지막 행 기준 */
+  const custom = g.map(r=>r.task).filter(t=>!GSTEPS.includes(t))
+    .filter((t,i,a)=>a.indexOf(t)===i);
+  const cols = GSTEPS.concat(custom).map(t=>{
+    const r = byTask[t] || null;
+    return { task: t, row: r, done: !!(r && r.status === '완료') };
+  });
+  /* 자동 진행중: 첫 미완료 열 (전체 완료면 없음) */
+  const cur = cols.find(c=>!c.done);
+  cols.forEach(c=>{ c.mark = c.done ? 'd' : (c === cur ? 'i' : ''); });
+  return cols;
+}
+function stepMark(mk){
+  if(mk === 'd') return '<span class="smk d">○</span>';
+  if(mk === 'i') return '<span class="smk i">△</span>';
   return '<span class="smk"></span>';
 }
 function buildSteps(groups, withActions){
   const esc = t => (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   return Object.keys(groups).map(comp=>{
     const g = groups[comp];
-    const done = g.filter(r=>r.status==='완료').length;
+    const cols = stepCols(g);
+    const done = cols.filter(c=>c.done).length;
     const alias = (g.find(r=>r.display_name) || {}).display_name || '';
-    const cells = g.map(r=>`
-        <div class="scell">
-          <div class="stk">${esc(r.task)}</div>
-          <div class="smrk">${stepMark(r.status)}</div>
-          ${withActions?`<div class="sact">
-            <button class="gold" onclick="gEdit(${r.id})">수정</button>
-            <button onclick="gDel(${r.id})">삭제</button>
-          </div>`:''}
+    const cells = cols.map(c=>`
+        <div class="scell${c.mark==='i'?' cur':''}">
+          <div class="stk">${esc(c.task)}</div>
+          <div class="smrk">${stepMark(c.mark)}</div>
+          ${withActions && c.done ? `<div class="sact">
+            <button onclick="gDel(${c.row.id})">해제</button>
+          </div>` : (withActions ? '<div class="sact"></div>' : '')}
         </div>`).join('');
     const memos = withActions ? g.filter(r=>r.memo).map(r=>
       `<div class="gmemo">💬 <b>${esc(r.task)}</b> — ${esc(r.memo)}</div>`).join('') : '';
     return `<div class="gcomp">
       <div class="gh"><span class="gc">${esc(comp)}</span>
-        <span class="gn">${g.length}개 항목 · 완료 ${done}${alias?' · 공개명 '+esc(alias):''}</span>
+        <span class="gn">${cols.length}단계 · 완료 ${done}${alias?' · 공개명 '+esc(alias):''}</span>
         ${withActions?`<button class="albtn" onclick="gAlias('${esc(comp).replace(/'/g,"\\\\'")}')">🏷 공개 표시명</button>`:''}</div>
       <div class="smat">${cells}</div>
       ${memos}
@@ -3802,14 +3809,6 @@ async function gAlias(co){
   }
 }
 
-function gStPick(el){
-  document.querySelectorAll('#g-stchips .chk').forEach(c=>c.classList.remove('on'));
-  el.classList.add('on');
-}
-function gStVal(){
-  const on = document.querySelector('#g-stchips .chk.on');
-  return on ? on.dataset.v : '진행중';
-}
 function setGFilter(c){ gCompanyFilter = c; renderPlan(); }
 
 function gTasks(){
@@ -3822,72 +3821,48 @@ async function savePlan(){
   if(!sbReady()){ toast('먼저 설정에서 서버를 연결하세요'); return; }
   const g = id => document.getElementById(id).value.trim();
   const today = new Date().toISOString().slice(0,10);
-  const st = gStVal();
-  const base = {
-    company: g('g-company'),
-    status: st, progress: st === '완료' ? 100 : 50,
-    memo: g('g-memo')
-  };
+  const company = g('g-company');
+  const memo = g('g-memo');
   const tasks = gTasks();
-  if(!base.company || !tasks.length){ toast('업체명·진행단계는 필수입니다'); return; }
+  if(!company || !tasks.length){ toast('업체명과 완료 단계를 선택하세요'); return; }
   try{
-    if(gEditId){
-      if(tasks.length > 1){ toast('수정 시에는 단계를 1개만 선택하세요'); return; }
-      const clash = gCache.find(r=>r.company===base.company && r.task===tasks[0] && r.id!==gEditId);
-      if(clash){ toast("'" + tasks[0] + "' 단계는 이미 등록되어 있습니다"); return; }
-      await sb('hk_progress?id=eq.' + gEditId, { method:'PATCH', body: Object.assign({task:tasks[0]}, base) });
-      toast('항목이 수정되었습니다');
-    }else{
-      /* 같은 업체에 이미 있는 단계는 중복 등록하지 않음 */
-      const exist = new Set(gCache.filter(r=>r.company===base.company).map(r=>r.task));
-      const fresh = tasks.filter(t=>!exist.has(t));
-      const dup = tasks.length - fresh.length;
-      if(!fresh.length){ toast('선택한 단계는 모두 이미 등록되어 있습니다'); return; }
-      const alias = (gCache.find(r=>r.company===base.company && r.display_name) || {}).display_name || '';
-      if(alias) base.display_name = alias;
-      await sb('hk_progress', { method:'POST', body: fresh.map(t=>Object.assign({task:t, start_date:today, end_date:today}, base)) });
-      toast(fresh.length + '개 항목이 저장되었습니다' + (dup ? ' (중복 ' + dup + '개 제외)' : ''));
+    const mine = gCache.filter(r=>r.company===company);
+    const alias = (mine.find(r=>r.display_name) || {}).display_name || '';
+    const upd = [], ins = [];
+    tasks.forEach(t=>{
+      const ex = mine.find(r=>r.task===t);
+      if(ex){ if(ex.status !== '완료' || (memo && ex.memo !== memo)) upd.push(ex); }
+      else ins.push(t);
+    });
+    for(const r of upd){
+      await sb('hk_progress?id=eq.' + r.id,
+        { method:'PATCH', body:{ status:'완료', progress:100, memo: memo || r.memo || '' }, prefer:'return=minimal' });
     }
-    gCancelEdit();
+    if(ins.length){
+      await sb('hk_progress', { method:'POST', prefer:'return=minimal', body: ins.map(t=>({
+        company, task:t, status:'완료', progress:100, memo,
+        start_date: today, end_date: today,
+        display_name: alias
+      })) });
+    }
+    const n = upd.length + ins.length;
+    toast(n ? n + '개 단계가 완료로 기록되었습니다' : '변경된 내용이 없습니다');
+    gReset();
+    gCompanyFilter = company;
     await loadPlan();
   }catch(e){ toast('저장 실패 — ' + e.message); }
 }
 
-function gEdit(id){
-  const r = gCache.find(x=>x.id===id);
-  if(!r) return;
-  gEditId = id;
-  document.getElementById('g-company').value = r.company;
-  let matched = false;
-  document.querySelectorAll('#g-taskchips .chk').forEach(c=>{
-    const on = c.dataset.v === r.task;
-    c.classList.toggle('on', on);
-    if(on) matched = true;
-  });
-  document.getElementById('g-task').value = matched ? '' : r.task;
-  document.querySelectorAll('#g-stchips .chk').forEach(c=>
-    c.classList.toggle('on', c.dataset.v === (r.status === '완료' ? '완료' : '진행중')));
-  document.getElementById('g-memo').value = r.memo || '';
-  document.getElementById('g-form-title').textContent = '✏ 진행항목 수정 중 (#' + id + ')';
-  document.getElementById('g-save').textContent = '수정 저장';
-  document.getElementById('g-cancel').style.display = 'block';
-  document.getElementById('g-form').scrollIntoView({behavior:'smooth'});
-}
-function gCancelEdit(){
-  gEditId = null;
-  ['g-company','g-task','g-memo'].forEach(id=>document.getElementById(id).value='');
+function gReset(){
+  ['g-task','g-memo'].forEach(id=>document.getElementById(id).value='');
   document.querySelectorAll('#g-taskchips .chk').forEach(c=>c.classList.remove('on'));
-  document.querySelectorAll('#g-stchips .chk').forEach(c=>
-    c.classList.toggle('on', c.dataset.v === '진행중'));
-  document.getElementById('g-form-title').textContent = '✍ 진행항목 등록';
-  document.getElementById('g-save').textContent = '항목 저장';
-  document.getElementById('g-cancel').style.display = 'none';
 }
+
 async function gDel(id){
-  if(!confirm('이 진행항목을 삭제할까요?')) return;
+  if(!confirm('이 단계의 완료 기록을 해제할까요?')) return;
   try{
     await sb('hk_progress?id=eq.' + id, { method:'DELETE', prefer:'return=minimal' });
-    toast('삭제되었습니다');
+    toast('완료 기록이 해제되었습니다');
     await loadPlan();
   }catch(e){ toast('삭제 실패 — ' + e.message); }
 }
