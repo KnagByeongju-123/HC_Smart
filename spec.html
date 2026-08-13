@@ -64,7 +64,7 @@ h1{font-size:18px;font-weight:900;letter-spacing:-.4px}
 .addrow .tin{padding:8px 11px;font-size:12.5px}
 .addrow .btn{padding:8px 13px;font-size:12px}
 .dbh{font-size:11px;font-weight:800;color:var(--sub);letter-spacing:.3px;margin:12px 0 3px;padding-top:9px;border-top:1px dashed var(--line)}
-.it.dbit .tx{font-size:12.5px;color:#c9d4ea}
+.it.dbit .tx{font-size:12.5px;color:#c9d4ea;resize:none;overflow:hidden;line-height:1.5;font-family:inherit;background:transparent;white-space:pre-wrap;word-break:break-all}
 .ab{flex:none;font-size:9.5px;font-weight:800;color:var(--blue);border:1px solid rgba(79,140,255,.5);border-radius:4px;padding:1px 5px;align-self:center}
 .dbnone{font-size:11.5px;color:var(--sub);padding:3px 0 3px 33px}
 .addrow.db{margin-top:4px}
@@ -631,6 +631,7 @@ function render(){
       +'</div>';
   }).join('');
   document.getElementById('b-est').textContent='기준가 합계 '+won(estTotal())+' (VAT 별도)';
+  fitAllTx();
 }
 const card=mi=>mi<0?SPEC.base:SPEC.mods[mi];
 const node=(mi,ii,ci)=>ci<0?card(mi).items[ii]:card(mi).items[ii].ch[ci];
@@ -639,10 +640,12 @@ const node=(mi,ii,ci)=>ci<0?card(mi).items[ii]:card(mi).items[ii].ch[ci];
 function dbRow(mi,g,di,it){
   return '<div class="it dbit'+(it.st==='out'?' stout':'')+'">'
     +'<button class="st '+it.st+'" onclick="cycDb('+mi+',\''+g+'\','+di+')" title="포함/협의/제외">'+stSym(it.st)+'</button>'
-    +'<input class="tx" value="'+esc(it.t)+'" oninput="edDb('+mi+',\''+g+'\','+di+',this.value)">'
+    +'<textarea class="tx" rows="1" oninput="edDb('+mi+',\''+g+'\','+di+',this.value);fitTx(this)">'+esc(it.t)+'</textarea>'
     +(it.a?'<span class="ab" title="항목 문구에서 자동 도출 — 관련 문구가 사라지면 자동 제거됩니다">자동</span>':'')
     +'<span class="iact"><button onclick="delDb('+mi+',\''+g+'\','+di+')" title="삭제">✕</button></span></div>';
 }
+function fitTx(el){ el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
+function fitAllTx(){ document.querySelectorAll('.dbit .tx').forEach(fitTx); }
 function dbSection(mi,m){
   const db=m.db||{m:[],x:[]};
   return '<div class="dbh">🗂 마스터 DB (기준정보)</div>'
