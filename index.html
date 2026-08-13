@@ -1857,6 +1857,45 @@ const MODULE_PRICE = {
   '회비 · 모임 정산':               { p: 600000, d:'회비 납부 관리 · 모임 정산', lv:'하' },
   '일정 · 예약 · 알림 발송':        { p: 700000, d:'일정/예약 등록 · 자동 알림 발송', lv:'하' }
 };
+/* ===== 모듈별 스타터 레이아웃 템플릿 =====
+   t: dash(대시보드) / form(입력폼+목록) / list(목록+검색) / check(체크시트) / scan(스캔) / doc(결재문서)
+   c: 목록 컬럼,  f: 입력 필드,  s: 통계 카드 라벨 */
+const ST_TPL = {
+  '생산 모니터링(가동현황)':   { t:'dash', s:['가동설비','정지설비','금일생산','달성률'], c:['설비','상태','금일수량','가동률'] },
+  '생산일보 · 작업실적':       { t:'form', f:['작업일자|date','작업자|text','품번|text','지시수량|number','생산수량|number','불량수량|number','비고|text'], c:['일자','작업자','품번','생산','불량'] },
+  '디스플레이알림':            { t:'form', f:['표출제목|text','표출내용|area','표출종료|date'], c:['제목','등록자','표출기간','상태'] },
+  'IoT 센서(카운터 · 온습도)': { t:'dash', s:['연결센서','금일카운트','현재온도','현재습도'], c:['센서ID','설치위치','최근값','수신시각'] },
+  '일상 · 정기점검 체크시트':  { t:'check', f:['점검일자|date','점검자|text'], k:['설비 외관 이상 유무','윤활유 잔량 확인','안전커버 체결 상태','비상정지 버튼 작동','작업장 정리정돈'] },
+  '품질검사(외관 · 치수)':     { t:'form', f:['검사일자|date','품번|text','LOT번호|text','측정값|number','규격 상/하한|text','판정|sel:합격,불합격,재검','검사자|text'], c:['일자','품번','LOT','측정값','판정'] },
+  '불량관리 · PPM 통계':       { t:'dash', s:['금월 불량','PPM','최다유형','전월대비'], c:['일자','품번','불량유형','수량','조치'] },
+  '로트(LOT) 추적':            { t:'list', c:['LOT번호','품번','투입자재','공정','출하처'], btn:'LOT 추적 조회' },
+  '시스템 상태체크 · 감시':    { t:'dash', s:['정상','경고','오류','최근점검'], c:['대상','구분','상태','최근 응답'] },
+  '자재 · 재고관리(QR)':       { t:'list', c:['품번','품명','로케이션','현재고','안전재고'], btn:'자재 등록' },
+  '발주 · 외주관리':           { t:'list', c:['발주번호','거래처','품번','발주수량','납기'], btn:'발주서 작성' },
+  '수입검사(IQC)':             { t:'form', f:['입고일자|date','거래처|text','품번|text','입고수량|number','시료수|number','판정|sel:합격,불합격,특채','검사자|text'], c:['일자','거래처','품번','수량','판정'] },
+  '바코드 · QR 입출고':        { t:'scan', f:['구분|sel:입고,출고,이동','수량|number','로케이션|text'], c:['시각','구분','품번','수량','처리자'] },
+  '재고실사 · 마감':           { t:'form', f:['실사일자|date','품번|text','전산재고|number','실사재고|number','차이사유|text'], c:['품번','전산','실사','차이','사유'] },
+  '유통기한 · 로케이션 관리':  { t:'list', c:['품번','LOT','로케이션','입고일','유통기한'], btn:'로케이션 이동' },
+  '설비 · 치공구 자산관리':    { t:'list', c:['자산번호','자산명','구분','설치위치','상태'], btn:'자산 등록' },
+  '수리 워크플로(의뢰→완료)':  { t:'form', f:['의뢰일자|date','설비명|text','고장현상|area','긴급도|sel:긴급,보통,낮음','의뢰자|text'], c:['의뢰일','설비','현상','상태','담당'] },
+  '예방보전(PM) · 검교정':     { t:'list', c:['대상','주기','최근 실시','차기 예정','잔여일'], btn:'PM 실적 등록' },
+  '전자결재 · PDF 보고서':     { t:'doc', c:['문서번호','제목','기안자','결재선','상태'] },
+  '전자 열람확인 · 회람':      { t:'doc', c:['문서번호','제목','회람대상','열람','미열람'] },
+  'KPI · 개선활동':            { t:'dash', s:['달성 KPI','미달 KPI','진행 개선','완료 개선'], c:['지표','목표','실적','달성률'] },
+  '기준정보 · 보안 마스터':    { t:'list', c:['구분','코드','명칭','사용여부','수정일'], btn:'기준정보 등록' },
+  '견적관리':                  { t:'list', c:['견적번호','거래처','금액','작성일','상태'], btn:'견적 작성' },
+  '수주 · 납기관리':           { t:'list', c:['수주번호','거래처','품번','수량','납기'], btn:'수주 등록' },
+  '출하관리 · 납품서 발행':    { t:'list', c:['출하일','거래처','품번','수량','납품서'], btn:'출하 등록' },
+  '거래처 관리':               { t:'list', c:['거래처명','대표','담당자','연락처','구분'], btn:'거래처 등록' },
+  '클레임 접수 · 이력':        { t:'form', f:['접수일자|date','거래처|text','품번|text','클레임 내용|area','조치사항|area'], c:['접수일','거래처','내용','상태'] },
+  '근태관리':                  { t:'dash', s:['금일 출근','지각','미출근','금월 연장'], c:['사원','출근','퇴근','근무시간','비고'] },
+  '작업자 배치 · 교육이력':    { t:'list', c:['사원','부서','배치공정','자격','최근교육'], btn:'배치 변경' },
+  '단가 · 외주비 정산':        { t:'list', c:['거래처','품번','단가','수량','정산금액'], btn:'정산 마감' },
+  '매출 · 매입 집계':          { t:'dash', s:['금월 매출','금월 매입','이익','전월대비'], c:['월','매출','매입','이익','이익률'] },
+  '회비 · 모임 정산':          { t:'list', c:['회원','회차','납부액','납부일','상태'], btn:'회비 등록' },
+  '일정 · 예약 · 알림 발송':   { t:'list', c:['일자','시간','일정명','대상','알림'], btn:'일정 등록' }
+};
+
 const BASE_PLATFORM = { name:'기본 플랫폼 구축', p:1500000,
   d:'클라우드 DB(Supabase) 셋업 · PIN/권한 인증 · 공통 UI 프레임 · 모바일/PC 반응형 · PWA · 알림 기반' };
 
@@ -2688,6 +2727,90 @@ function stDownloadHtml(d){
   toast('스타터 index.html이 생성되었습니다');
 }
 
+/* --- 모듈 유형별 스타터 본문 생성 --- */
+function stModBody(k, i, esc){
+  const t = ST_TPL[k];
+  const NOTE = '<div class="tip">⚙ 스타터 골격 · 화면 구성 예시입니다. 실제 저장/조회 로직은 개발 단계에서 구현됩니다.</div>';
+  if(!t){
+    return '<div class="card"><b>스타터 골격</b><br>이 화면에 '+esc(k)+' 기능을 구현하세요.</div>';
+  }
+  const P = 'm'+i;
+  const th = a => '<tr>' + a.map(c=>'<th>'+esc(c)+'</th>').join('') + '</tr>';
+  const sample = (cols, n) => {
+    let r = '';
+    for(let x=0; x<n; x++){
+      r += '<tr>' + cols.map((c,ci)=>'<td>'+(ci===0?'—':'·')+'</td>').join('') + '</tr>';
+    }
+    return r;
+  };
+  const table = (cols) => '<div class="tw"><table class="tb"><thead>'+th(cols)+'</thead><tbody>'
+      + sample(cols, 3) + '</tbody></table></div><div class="empty">데이터가 없습니다 · 개발 시 목록 연동</div>';
+
+  /* 입력 필드 렌더 */
+  const fields = (fs) => fs.map((f,fi)=>{
+    const [lb, tp] = f.split('|');
+    const id = P+'-f'+fi;
+    if(tp === 'area') return '<label class="lb">'+esc(lb)+'</label><textarea class="tin ta" id="'+id+'" placeholder="'+esc(lb)+'"></textarea>';
+    if((tp||'').indexOf('sel:') === 0){
+      const opts = tp.slice(4).split(',').map(o=>'<option>'+esc(o)+'</option>').join('');
+      return '<label class="lb">'+esc(lb)+'</label><select class="tin" id="'+id+'">'+opts+'</select>';
+    }
+    return '<label class="lb">'+esc(lb)+'</label><input class="tin" id="'+id+'" type="'+(tp||'text')+'" placeholder="'+esc(lb)+'">';
+  }).join('');
+
+  if(t.t === 'dash'){
+    const stats = '<div class="stats4">' + (t.s||[]).map(x=>
+      '<div class="stat"><div class="v">0</div><div class="k">'+esc(x)+'</div></div>').join('') + '</div>';
+    const chart = '<div class="card"><b>추이 차트</b><div class="chz">차트 영역 (개발 시 구현)</div></div>';
+    return NOTE + stats + chart + '<div class="card"><b>상세 현황</b>' + table(t.c||['항목','값']) + '</div>';
+  }
+
+  if(t.t === 'form'){
+    return NOTE
+      + '<div class="card"><b>＋ 신규 등록</b><div class="fg">' + fields(t.f||[]) + '</div>'
+      + '<button class="btn" onclick="toast(\'등록 기능을 구현하세요\')">등록</button></div>'
+      + '<div class="card"><b>최근 등록 내역</b>' + table(t.c||['항목']) + '</div>';
+  }
+
+  if(t.t === 'list'){
+    return NOTE
+      + '<div class="card"><div class="srow"><input class="tin sin" placeholder="검색어 입력">'
+      + '<button class="btn sbtn" onclick="toast(\'검색 기능을 구현하세요\')">검색</button></div>'
+      + '<div class="chips"><span class="cp on">전체</span><span class="cp">진행</span><span class="cp">완료</span></div></div>'
+      + '<div class="card"><div class="chd"><b>목록</b><button class="mini" onclick="toast(\'' + esc(t.btn||'등록') + ' 기능을 구현하세요\')">＋ ' + esc(t.btn||'등록') + '</button></div>'
+      + table(t.c||['항목']) + '</div>';
+  }
+
+  if(t.t === 'check'){
+    const head = '<div class="card"><b>점검 정보</b><div class="fg">' + fields(t.f||[]) + '</div></div>';
+    const items = (t.k||[]).map((x,xi)=>
+      '<div class="ck"><span class="cn">'+esc(x)+'</span>'
+      + '<span class="cb"><i class="ok" onclick="ckPick(this)">양호</i><i class="ng" onclick="ckPick(this)">불량</i></span></div>').join('');
+    return NOTE + head
+      + '<div class="card"><b>점검 항목</b>' + items
+      + '<div class="fg" style="margin-top:10px"><label class="lb">특이사항</label><textarea class="tin ta" placeholder="특이사항 입력"></textarea></div>'
+      + '<button class="btn" onclick="toast(\'점검 저장 기능을 구현하세요\')">점검 저장</button></div>';
+  }
+
+  if(t.t === 'scan'){
+    return NOTE
+      + '<div class="card sc"><div class="scz" onclick="toast(\'카메라 스캔 기능을 구현하세요\')">📷<br><b>QR · 바코드 스캔</b><span>탭하여 스캔 시작</span></div>'
+      + '<div class="fg"><label class="lb">품번 (스캔 결과)</label><input class="tin" placeholder="스캔 시 자동 입력">' + fields(t.f||[]) + '</div>'
+      + '<button class="btn" onclick="toast(\'처리 기능을 구현하세요\')">처리</button></div>'
+      + '<div class="card"><b>금일 처리 이력</b>' + table(t.c||['항목']) + '</div>';
+  }
+
+  if(t.t === 'doc'){
+    return NOTE
+      + '<div class="card"><div class="chd"><b>결재 대기</b><button class="mini" onclick="toast(\'기안 기능을 구현하세요\')">＋ 기안 작성</button></div>'
+      + '<div class="aline"><span class="ap">기안</span><span class="ar">›</span><span class="ap">검토</span><span class="ar">›</span><span class="ap">승인</span><span class="ar">›</span><span class="ap">완료</span></div>'
+      + table(t.c||['항목']) + '</div>'
+      + '<div class="card"><b>출력</b><br><button class="btn" onclick="toast(\'PDF 출력 기능을 구현하세요\')">🖨 PDF 출력</button></div>';
+  }
+
+  return '<div class="card"><b>스타터 골격</b><br>이 화면에 '+esc(k)+' 기능을 구현하세요.</div>';
+}
+
 function stBuildHtml(d){
   const p = stParseDesign(d.design);
   const th = ST_THEMES[p.T] || ST_THEMES.T3;
@@ -2698,10 +2821,11 @@ function stBuildHtml(d){
   if(d.scEtc) mods.push(d.scEtc);
   const SCT = '<' + '/scr' + 'ipt>';
 
-  /* 모듈 페이지 */
+  /* 모듈 페이지 — 유형별 기본 레이아웃 적용 */
   const modPages = mods.map((k,i)=>{
     const m = MODULE_PRICE[k];
-    return '<div class="page" id="pg-m'+i+'"><h2>'+esc(k)+'</h2><div class="pd">'+esc(m ? m.d : '기능 준비 중')+'</div><div class="card"><b>스타터 골격</b><br>이 화면에 '+esc(k)+' 기능을 구현하세요.</div></div>';
+    return '<div class="page" id="pg-m'+i+'"><h2>'+esc(k)+'</h2><div class="pd">'+esc(m ? m.d : '기능 준비 중')+'</div>'
+      + stModBody(k, i, esc) + '</div>';
   }).join('\n');
 
   /* 설정 페이지 (마스터 변경 + 사원 PIN 등록) */
@@ -2791,6 +2915,8 @@ function stBuildHtml(d){
     "  window.scrollTo(0,0);",
     "}",
     "var tmr; function toast(m){ var t=document.getElementById('toast'); t.textContent=m; t.classList.add('on'); clearTimeout(tmr); tmr=setTimeout(function(){t.classList.remove('on')},1800); }",
+    "function ckPick(el){ var box=el.parentNode; box.querySelectorAll('i').forEach(function(x){ x.classList.remove('on'); }); el.classList.add('on'); }",
+    "document.addEventListener('click', function(e){ var c=e.target.closest && e.target.closest('.cp'); if(!c) return; c.parentNode.querySelectorAll('.cp').forEach(function(x){ x.classList.remove('on'); }); c.classList.add('on'); });",
     "function mpSave(){",
     "  var cur=document.getElementById('set-cur').value.trim();",
     "  var nm=document.getElementById('set-m').value.trim();",
@@ -2884,6 +3010,40 @@ function stBuildHtml(d){
 '.pt2{flex-shrink:0;font-size:12.5px;font-weight:800;padding:7px 14px;border-radius:16px;background:var(--card);border:1.5px solid var(--line);color:var(--sub);cursor:pointer}',
 '.pt2.on{background:var(--pt);color:'+btnInk+';border-color:transparent}',
 '.acc{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:9px;font-weight:800;display:flex;justify-content:space-between;cursor:pointer}',
+'.tip{font-size:11.5px;color:var(--sub);background:var(--card);border:1px dashed var(--line);border-radius:10px;padding:8px 11px;margin-bottom:10px}',
+'.stats4{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}',
+'@media(min-width:560px){.stats4{grid-template-columns:repeat(4,1fr)}}',
+'.chz{height:118px;border:1px dashed var(--line);border-radius:10px;margin-top:9px;display:flex;align-items:center;justify-content:center;font-size:11.5px;color:var(--sub)}',
+'.tw{overflow-x:auto;margin-top:9px;-webkit-overflow-scrolling:touch}',
+'.tb{width:100%;border-collapse:collapse;font-size:12px;min-width:100%}',
+'.tb th{background:var(--bg);color:var(--sub);font-size:11px;font-weight:800;padding:8px 9px;text-align:left;white-space:nowrap;border-bottom:1.5px solid var(--line)}',
+'.tb td{padding:9px;border-bottom:1px solid var(--line);color:var(--sub);white-space:nowrap}',
+'.empty{text-align:center;font-size:11.5px;color:var(--sub);padding:12px 0 2px}',
+'.fg{margin-top:10px}',
+'.lb{display:block;font-size:11.5px;font-weight:700;color:var(--sub);margin:9px 0 2px}',
+'.ta{min-height:70px;resize:vertical;line-height:1.5}',
+'select.tin{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--sub) 50%),linear-gradient(135deg,var(--sub) 50%,transparent 50%);background-position:calc(100% - 16px) 50%,calc(100% - 11px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}',
+'.srow{display:flex;gap:8px;align-items:center}',
+'.sin{flex:1;max-width:none;margin:0}',
+'.sbtn{width:auto;max-width:none;margin:0;padding:12px 18px;flex-shrink:0}',
+'.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}',
+'.cp{font-size:11.5px;font-weight:800;padding:5px 12px;border-radius:14px;background:var(--bg);border:1.5px solid var(--line);color:var(--sub);cursor:pointer}',
+'.cp.on{background:var(--pt);color:'+btnInk+';border-color:transparent}',
+'.chd{display:flex;align-items:center;justify-content:space-between;gap:8px}',
+'.mini{border:1.5px solid var(--line);background:var(--bg);color:var(--pt);border-radius:9px;padding:6px 11px;font-size:11.5px;font-weight:800;font-family:inherit;cursor:pointer}',
+'.mini:active{transform:scale(.94)}',
+'.ck{display:flex;align-items:center;gap:8px;padding:11px 0;border-bottom:1px solid var(--line)}',
+'.cn{flex:1;font-size:13px;font-weight:600}',
+'.cb{display:flex;gap:5px;flex-shrink:0}',
+'.cb i{font-style:normal;font-size:11.5px;font-weight:800;padding:6px 12px;border-radius:9px;border:1.5px solid var(--line);color:var(--sub);cursor:pointer}',
+'.cb i.on{background:var(--pt);color:'+btnInk+';border-color:transparent}',
+'.cb i.ng.on{background:#e05a5a;color:#fff}',
+'.scz{border:2px dashed var(--line);border-radius:13px;padding:26px 14px;text-align:center;font-size:30px;line-height:1.35;cursor:pointer;color:var(--pt)}',
+'.scz b{display:block;font-size:14px;margin-top:6px;color:var(--ink)}',
+'.scz span{display:block;font-size:11.5px;color:var(--sub);font-weight:600}',
+'.aline{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:10px}',
+'.ap{font-size:11px;font-weight:800;padding:5px 11px;border-radius:14px;background:var(--bg);border:1.5px solid var(--line);color:var(--sub)}',
+'.ar{color:var(--sub);font-size:11px}',
 '.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}',
 '.tile{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:22px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;text-align:center}',
 '.tile b{width:34px;height:34px;border-radius:10px;background:var(--pt)}.tile span{font-size:12.5px;font-weight:800}',
