@@ -1334,29 +1334,10 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
     </div>
     <div class="fl">기타 항목 (직접 입력)</div>
     <input class="tin" id="g-task" placeholder="위 단계 외 항목이 있으면 입력 (예: IoT 센서 설치)">
-    <div class="frow" style="margin-top:10px">
-      <div>
-        <div class="fl">시작일 <b>*</b></div>
-        <input class="tin" type="date" id="g-start">
-      </div>
-      <div>
-        <div class="fl">종료일 <b>*</b></div>
-        <input class="tin" type="date" id="g-end">
-      </div>
-    </div>
-    <div class="frow" style="margin-top:10px">
-      <div>
-        <div class="fl">상태</div>
-        <select class="tin" id="g-status">
-          <option>예정</option><option>진행중</option><option>완료</option><option>지연</option><option>보류</option>
-        </select>
-      </div>
-      <div>
-        <div class="fl">진도 <span id="g-pv" style="color:var(--gold)">0%</span></div>
-        <input type="range" id="g-progress" min="0" max="100" step="5" value="0"
-          style="width:100%;margin-top:14px;accent-color:#e2b04a"
-          oninput="document.getElementById('g-pv').textContent=this.value+'%'">
-      </div>
+    <div class="fl" style="margin-top:12px">상태</div>
+    <div class="chips2" id="g-stchips">
+      <div class="chk on" data-v="진행중" onclick="gStPick(this)">△ 진행중</div>
+      <div class="chk" data-v="완료" onclick="gStPick(this)">○ 완료</div>
     </div>
     <div class="fl">메모</div>
     <input class="tin" id="g-memo" placeholder="참고사항 (선택)">
@@ -1370,9 +1351,6 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   <div class="glegend">
     <span><b style="color:#3fc783">○</b> 완료</span>
     <span><b style="color:#e2b04a">△</b> 진행중</span>
-    <span><b style="color:#ef7466">△</b> 지연</span>
-    <span><b style="color:#8b8fa3">─</b> 보류</span>
-    <span>빈칸 = 예정</span>
   </div>
   <div class="mfilter" id="g-filter"></div>
   <div id="g-list"><div class="qempty">불러오는 중...</div></div>
@@ -3752,11 +3730,6 @@ async function loadPlan(){
   }catch(e){
     list.innerHTML = '<div class="qempty">불러오기 실패 — ' + e.message + '</div>';
   }
-  if(!document.getElementById('g-start').value){
-    const today = new Date().toISOString().slice(0,10);
-    document.getElementById('g-start').value = today;
-    document.getElementById('g-end').value = today;
-  }
 }
 
 function renderPlan(){
@@ -3829,6 +3802,14 @@ async function gAlias(co){
   }
 }
 
+function gStPick(el){
+  document.querySelectorAll('#g-stchips .chk').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+}
+function gStVal(){
+  const on = document.querySelector('#g-stchips .chk.on');
+  return on ? on.dataset.v : '진행중';
+}
 function setGFilter(c){ gCompanyFilter = c; renderPlan(); }
 
 function gTasks(){
@@ -3840,15 +3821,15 @@ function gTasks(){
 async function savePlan(){
   if(!sbReady()){ toast('먼저 설정에서 서버를 연결하세요'); return; }
   const g = id => document.getElementById(id).value.trim();
+  const today = new Date().toISOString().slice(0,10);
+  const st = gStVal();
   const base = {
     company: g('g-company'),
-    start_date: g('g-start'), end_date: g('g-end'),
-    status: g('g-status'), progress: parseInt(document.getElementById('g-progress').value)||0,
+    status: st, progress: st === '완료' ? 100 : 50,
     memo: g('g-memo')
   };
   const tasks = gTasks();
-  if(!base.company || !tasks.length || !base.start_date || !base.end_date){ toast('업체명·진행단계·기간은 필수입니다'); return; }
-  if(base.end_date < base.start_date){ toast('종료일이 시작일보다 빠릅니다'); return; }
+  if(!base.company || !tasks.length){ toast('업체명·진행단계는 필수입니다'); return; }
   try{
     if(gEditId){
       if(tasks.length > 1){ toast('수정 시에는 단계를 1개만 선택하세요'); return; }
@@ -3864,7 +3845,7 @@ async function savePlan(){
       if(!fresh.length){ toast('선택한 단계는 모두 이미 등록되어 있습니다'); return; }
       const alias = (gCache.find(r=>r.company===base.company && r.display_name) || {}).display_name || '';
       if(alias) base.display_name = alias;
-      await sb('hk_progress', { method:'POST', body: fresh.map(t=>Object.assign({task:t}, base)) });
+      await sb('hk_progress', { method:'POST', body: fresh.map(t=>Object.assign({task:t, start_date:today, end_date:today}, base)) });
       toast(fresh.length + '개 항목이 저장되었습니다' + (dup ? ' (중복 ' + dup + '개 제외)' : ''));
     }
     gCancelEdit();
@@ -3884,11 +3865,8 @@ function gEdit(id){
     if(on) matched = true;
   });
   document.getElementById('g-task').value = matched ? '' : r.task;
-  document.getElementById('g-start').value = r.start_date;
-  document.getElementById('g-end').value = r.end_date;
-  document.getElementById('g-status').value = r.status;
-  document.getElementById('g-progress').value = r.progress || 0;
-  document.getElementById('g-pv').textContent = (r.progress||0) + '%';
+  document.querySelectorAll('#g-stchips .chk').forEach(c=>
+    c.classList.toggle('on', c.dataset.v === (r.status === '완료' ? '완료' : '진행중')));
   document.getElementById('g-memo').value = r.memo || '';
   document.getElementById('g-form-title').textContent = '✏ 진행항목 수정 중 (#' + id + ')';
   document.getElementById('g-save').textContent = '수정 저장';
@@ -3899,12 +3877,8 @@ function gCancelEdit(){
   gEditId = null;
   ['g-company','g-task','g-memo'].forEach(id=>document.getElementById(id).value='');
   document.querySelectorAll('#g-taskchips .chk').forEach(c=>c.classList.remove('on'));
-  const today = new Date().toISOString().slice(0,10);
-  document.getElementById('g-start').value = today;
-  document.getElementById('g-end').value = today;
-  document.getElementById('g-status').value = '예정';
-  document.getElementById('g-progress').value = 0;
-  document.getElementById('g-pv').textContent = '0%';
+  document.querySelectorAll('#g-stchips .chk').forEach(c=>
+    c.classList.toggle('on', c.dataset.v === '진행중'));
   document.getElementById('g-form-title').textContent = '✍ 진행항목 등록';
   document.getElementById('g-save').textContent = '항목 저장';
   document.getElementById('g-cancel').style.display = 'none';
