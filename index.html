@@ -464,6 +464,21 @@ select.tin option{background:#12141d}
 .bdsp.i{color:#e2b04a;border-color:rgba(226,176,74,.45)}
 .bdfoot{margin-top:18px;font-size:11.5px;color:var(--sub);text-align:center;line-height:1.7}
 @media(max-width:400px){.bdsum{grid-template-columns:1fr 1fr}}
+.smat{display:flex;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.scell{flex:1;min-width:86px;text-align:center;padding:2px 4px;border-left:1px dashed var(--line)}
+.scell:first-child{border-left:0}
+.stk{font-size:11.5px;font-weight:800;line-height:1.35;min-height:32px;display:flex;align-items:center;justify-content:center;word-break:keep-all;padding:2px 2px 6px;border-bottom:1px solid var(--line)}
+.smrk{padding:9px 0 5px;min-height:34px;display:flex;align-items:center;justify-content:center}
+.smk{font-size:20px;font-weight:900;line-height:1}
+.smk.d{color:#3fc783}
+.smk.i{color:#e2b04a}
+.smk.l{color:#ef7466}
+.smk.h{color:#8b8fa3}
+.sact{display:flex;gap:4px;justify-content:center;padding-bottom:4px}
+.sact button{border:1px solid var(--line);background:transparent;color:var(--sub);border-radius:7px;padding:3px 8px;font-size:10.5px;font-weight:800;font-family:inherit;cursor:pointer}
+.sact button.gold{color:var(--gold);border-color:rgba(226,176,74,.4)}
+.albtn{margin-left:auto;flex-shrink:0;border:1px solid rgba(226,176,74,.45);background:transparent;color:var(--gold);border-radius:9px;padding:5px 10px;font-size:11px;font-weight:800;font-family:inherit;cursor:pointer}
+.albtn:active{transform:scale(.94)}
 .gcomp{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:16px 17px;margin-bottom:14px}
 .gcomp .gh{display:flex;align-items:center;gap:9px;margin-bottom:12px}
 .gcomp .gc{font-size:15.5px;font-weight:900;letter-spacing:-.3px}
@@ -1283,7 +1298,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
 <div class="page" id="pg-plan">
   <div class="sec-label">PROGRESS TIMELINE</div>
   <h2 class="pt">업체별 진행현황</h2>
-  <div class="pd">업체별 도입 단계를 타임플랜으로 관리합니다. 항목마다 기간·상태·진도(%)를 기록하면 간트차트로 표시됩니다. 서버(Supabase)에 저장됩니다.</div>
+  <div class="pd">업체별 도입 단계를 관리합니다. 항목마다 상태·진도(%)를 기록하면 단계표로 표시되며, 진도는 '구축 진행률' 공개 화면의 진행률 계산에 사용됩니다. 서버(Supabase)에 저장됩니다.</div>
 
   <div class="dbwarn" id="g-dbwarn" style="display:none">
     ⚠️ 서버(Supabase)가 아직 연결되지 않았습니다. <b>설정 → 서버(Supabase) 연결</b>을 확인하세요.
@@ -1351,13 +1366,13 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
     </div>
   </div>
 
-  <div class="hgroup">📊 업체별 타임플랜</div>
+  <div class="hgroup">📊 업체별 진행 단계표</div>
   <div class="glegend">
-    <span><i style="background:#8fa3cf"></i>예정</span>
-    <span><i style="background:#4f8cff"></i>진행중</span>
-    <span><i style="background:#3fc783"></i>완료</span>
-    <span><i style="background:#ef7466"></i>지연</span>
-    <span><i style="background:#8b8fa3"></i>보류</span>
+    <span><b style="color:#3fc783">○</b> 완료</span>
+    <span><b style="color:#e2b04a">△</b> 진행중</span>
+    <span><b style="color:#ef7466">△</b> 지연</span>
+    <span><b style="color:#8b8fa3">─</b> 보류</span>
+    <span>빈칸 = 예정</span>
   </div>
   <div class="mfilter" id="g-filter"></div>
   <div id="g-list"><div class="qempty">불러오는 중...</div></div>
@@ -3569,7 +3584,7 @@ const CREATE_SQL = `create table if not exists hk_minutes (
   created_at timestamptz default now()
 );
 alter table hk_minutes enable row level security;
-create policy "hk_minutes_all" on hk_minutes for all using (true) with check (true);\nalter table hk_minutes add column if not exists files jsonb default \u0027[]\u0027::jsonb;\n\ncreate table if not exists hk_progress (\n  id bigint generated always as identity primary key,\n  company text not null,\n  task text not null,\n  start_date date not null,\n  end_date date not null,\n  status text default \u0027예정\u0027,\n  progress int default 0,\n  memo text default \u0027\u0027,\n  created_at timestamptz default now()\n);\nalter table hk_progress enable row level security;\ncreate policy \"hk_progress_all\" on hk_progress for all using (true) with check (true);\n\ncreate table if not exists hk_setups (\n  id bigint generated always as identity primary key,\n  company text default \u0027\u0027,\n  name text default \u0027\u0027,\n  tel text default \u0027\u0027,\n  ind text default \u0027\u0027,\n  design text default \u0027\u0027,\n  sc jsonb default \u0027[]\u0027::jsonb,\n  sc_etc text default \u0027\u0027,\n  domain text default \u0027\u0027,\n  domain_name text default \u0027\u0027,\n  memo text default \u0027\u0027,\n  created_at timestamptz default now()\n);\nalter table hk_setups enable row level security;\ncreate policy \"hk_setups_all\" on hk_setups for all using (true) with check (true);\n\ncreate table if not exists hk_quotes (\n  id bigint generated always as identity primary key,\n  qno text default \u0027\u0027,\n  to_co text default \u0027\u0027,\n  to_name text default \u0027\u0027,\n  qdate date,\n  valid text default \u0027\u0027,\n  vat text default \u0027sep\u0027,\n  due text default \u0027\u0027,\n  place text default \u0027\u0027,\n  pay text default \u0027\u0027,\n  memo text default \u0027\u0027,\n  rows jsonb default \u0027[]\u0027::jsonb,\n  tot bigint default 0,\n  created_at timestamptz default now()\n);\nalter table hk_quotes enable row level security;\ncreate policy \"hk_quotes_all\" on hk_quotes for all using (true) with check (true);\n\ncreate table if not exists hk_contracts (\n  id bigint generated always as identity primary key,\n  title text default \u0027\u0027,\n  cdate date,\n  amt bigint default 0,\n  a_co text default \u0027\u0027, a_ceo text default \u0027\u0027, a_addr text default \u0027\u0027,\n  b_co text default \u0027\u0027, b_ceo text default \u0027\u0027, b_addr text default \u0027\u0027,\n  start_date date, end_date date,\n  pay text default \u0027\u0027,\n  domain text default \u0027\u0027,\n  stab text default \u0027\u0027,\n  warranty text default \u0027\u0027,\n  etc text default \u0027\u0027,\n  created_at timestamptz default now()\n);\nalter table hk_contracts enable row level security;\ncreate policy \"hk_contracts_all\" on hk_contracts for all using (true) with check (true);\nalter table hk_contracts add column if not exists quote_id bigint;\nalter table hk_contracts add column if not exists quote_no text default \u0027\u0027;`;
+create policy "hk_minutes_all" on hk_minutes for all using (true) with check (true);\nalter table hk_minutes add column if not exists files jsonb default \u0027[]\u0027::jsonb;\n\ncreate table if not exists hk_progress (\n  id bigint generated always as identity primary key,\n  company text not null,\n  task text not null,\n  start_date date not null,\n  end_date date not null,\n  status text default \u0027예정\u0027,\n  progress int default 0,\n  memo text default \u0027\u0027,\n  created_at timestamptz default now()\n);\nalter table hk_progress enable row level security;\ncreate policy \"hk_progress_all\" on hk_progress for all using (true) with check (true);\nalter table hk_progress add column if not exists display_name text default \u0027\u0027;\n\ncreate table if not exists hk_setups (\n  id bigint generated always as identity primary key,\n  company text default \u0027\u0027,\n  name text default \u0027\u0027,\n  tel text default \u0027\u0027,\n  ind text default \u0027\u0027,\n  design text default \u0027\u0027,\n  sc jsonb default \u0027[]\u0027::jsonb,\n  sc_etc text default \u0027\u0027,\n  domain text default \u0027\u0027,\n  domain_name text default \u0027\u0027,\n  memo text default \u0027\u0027,\n  created_at timestamptz default now()\n);\nalter table hk_setups enable row level security;\ncreate policy \"hk_setups_all\" on hk_setups for all using (true) with check (true);\n\ncreate table if not exists hk_quotes (\n  id bigint generated always as identity primary key,\n  qno text default \u0027\u0027,\n  to_co text default \u0027\u0027,\n  to_name text default \u0027\u0027,\n  qdate date,\n  valid text default \u0027\u0027,\n  vat text default \u0027sep\u0027,\n  due text default \u0027\u0027,\n  place text default \u0027\u0027,\n  pay text default \u0027\u0027,\n  memo text default \u0027\u0027,\n  rows jsonb default \u0027[]\u0027::jsonb,\n  tot bigint default 0,\n  created_at timestamptz default now()\n);\nalter table hk_quotes enable row level security;\ncreate policy \"hk_quotes_all\" on hk_quotes for all using (true) with check (true);\n\ncreate table if not exists hk_contracts (\n  id bigint generated always as identity primary key,\n  title text default \u0027\u0027,\n  cdate date,\n  amt bigint default 0,\n  a_co text default \u0027\u0027, a_ceo text default \u0027\u0027, a_addr text default \u0027\u0027,\n  b_co text default \u0027\u0027, b_ceo text default \u0027\u0027, b_addr text default \u0027\u0027,\n  start_date date, end_date date,\n  pay text default \u0027\u0027,\n  domain text default \u0027\u0027,\n  stab text default \u0027\u0027,\n  warranty text default \u0027\u0027,\n  etc text default \u0027\u0027,\n  created_at timestamptz default now()\n);\nalter table hk_contracts enable row level security;\ncreate policy \"hk_contracts_all\" on hk_contracts for all using (true) with check (true);\nalter table hk_contracts add column if not exists quote_id bigint;\nalter table hk_contracts add column if not exists quote_no text default \u0027\u0027;`;
 
 function copySql(){
   if(navigator.clipboard && navigator.clipboard.writeText){
@@ -3614,7 +3629,7 @@ async function loadBoard(){
   box.innerHTML = '<div class="qempty">불러오는 중...</div>';
   let rows;
   try{
-    rows = await sb('hk_progress?select=company,task,status,progress,start_date,end_date&order=company.asc,start_date.asc');
+    rows = await sb('hk_progress?select=company,display_name,task,status,progress&order=company.asc,start_date.asc,id.asc');
   }catch(e){
     sum.innerHTML = '';
     box.innerHTML = '<div class="qempty">불러오기 실패 — ' + e.message + '</div>';
@@ -3636,7 +3651,8 @@ async function loadBoard(){
     const done = a.filter(r=>r.status==='완료').length;
     const cur = a.find(r=>r.status==='진행중') || a.find(r=>r.status!=='완료') || a[a.length-1];
     const fin = done === a.length;
-    return { co, a, rate, done, cur, fin };
+    const disp = (a.find(r=>r.display_name) || {}).display_name || co;
+    return { co, disp, a, rate, done, cur, fin };
   }).sort((x,y)=> (x.fin - y.fin) || (y.rate - x.rate));
 
   const allRate = Math.round(cos.reduce((x,c)=>x+c.rate,0) / cos.length);
@@ -3647,18 +3663,16 @@ async function loadBoard(){
   box.innerHTML = cos.map(c=>{
     const st = c.fin ? '<span class="bdst fin">구축 완료</span>'
                      : '<span class="bdst ing">진행중</span>';
-    const steps = c.a.map(r=>{
-      const cls = r.status==='완료' ? ' d' : (r.status==='진행중' ? ' i' : '');
-      const mk  = r.status==='완료' ? '✓ ' : '';
-      return '<span class="bdsp'+cls+'">'+mk+esc(r.task)+'</span>';
-    }).join('');
+    const cells = c.a.map(r=>
+      '<div class="scell"><div class="stk">'+esc(r.task)+'</div><div class="smrk">'+stepMark(r.status)+'</div></div>').join('');
     return '<div class="bdc">'
-      + '<div class="bdh"><span class="bdn">'+esc(c.co)+'</span>'+st+'</div>'
+      + '<div class="bdh"><span class="bdn">'+esc(c.disp)+'</span>'+st+'</div>'
       + '<div class="bdbar"><div class="bdfill'+(c.fin?' fin':'')+'" style="width:'+c.rate+'%"></div></div>'
       + '<div class="bdm"><span>'+(c.fin ? '전체 단계 완료' : '현재 단계 · ' + esc(c.cur ? c.cur.task : '-'))+'</span>'
       + '<b>'+c.rate+'%</b></div>'
-      + '<div class="bdstep">'+steps+'</div>'
-      + '<div class="bdm" style="margin-top:8px"><span>단계 '+c.a.length+'개 · 완료 '+c.done+'개</span><span></span></div>'
+      + '<div class="smat" style="margin-top:10px">'+cells+'</div>'
+      + '<div class="bdm" style="margin-top:6px"><span>단계 '+c.a.length+'개 · 완료 '+c.done+'개</span>'
+      + '<span><b style="color:#3fc783;font-size:11.5px">○</b> 완료 · <b style="color:#e2b04a;font-size:11.5px">△</b> 진행중</span></div>'
       + '</div>';
   }).join('');
 }
@@ -3756,53 +3770,59 @@ function renderPlan(){
   const groups = {};
   rows.forEach(r=>{ (groups[r.company] = groups[r.company] || []).push(r); });
 
-  box.innerHTML = buildGantt(groups, true);
+  box.innerHTML = buildSteps(groups, true);
 }
 
-/* --- 간트 HTML 생성 (관리자/고객 공용) --- */
-function buildGantt(groups, withActions){
+/* --- 단계 매트릭스 HTML 생성 (관리자/고객 공용) ---
+   1행: 진행항목, 2행: 표시 (완료 ○ · 진행중 △ · 지연 △빨강 · 보류 ─ · 예정 빈칸) */
+function stepMark(st){
+  if(st === '완료')   return '<span class="smk d">○</span>';
+  if(st === '진행중') return '<span class="smk i">△</span>';
+  if(st === '지연')   return '<span class="smk l">△</span>';
+  if(st === '보류')   return '<span class="smk h">─</span>';
+  return '<span class="smk"></span>';
+}
+function buildSteps(groups, withActions){
   const esc = t => (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  const fmt = d => (d||'').slice(5).replace('-','/');
-  const DAY = 86400000;
-  const todayT = new Date(new Date().toISOString().slice(0,10)).getTime();
   return Object.keys(groups).map(comp=>{
     const g = groups[comp];
-    let min = Math.min(...g.map(r=>new Date(r.start_date).getTime()));
-    let max = Math.max(...g.map(r=>new Date(r.end_date).getTime()));
-    if(max <= min) max = min + DAY;
-    const pad = Math.max((max-min)*0.04, DAY);
-    min -= pad; max += pad;
-    const span = max - min;
-    const pct = t => Math.min(100, Math.max(0, (t-min)/span*100));
     const done = g.filter(r=>r.status==='완료').length;
-    const todayIn = todayT >= min && todayT <= max;
-
-    return `<div class="gcomp">
-      <div class="gh"><span class="gc">${esc(comp)}</span>
-        <span class="gn">${g.length}개 항목 · 완료 ${done}</span>
-</div>
-      <div class="gaxis"><span>${new Date(min+pad).toISOString().slice(0,10)}</span><span>${new Date(max-pad).toISOString().slice(0,10)}</span></div>
-      ${g.map(r=>{
-        const s0 = new Date(r.start_date).getTime(), e0 = new Date(r.end_date).getTime() + DAY;
-        const left = pct(s0), width = Math.max(pct(e0)-left, 1.5);
-        return `<div class="grow">
-          <span class="gt2">${esc(r.task)}<span class="gp">${fmt(r.start_date)}~${fmt(r.end_date)}</span></span>
-          <div class="gtrack">
-            ${todayIn?`<div class="gtoday" style="left:${pct(todayT)}%"></div>`:''}
-            <div class="gbar gs-${esc(r.status)}" style="left:${left}%;width:${width}%">
-              <div class="gfill" style="width:${r.progress||0}%"></div>
-              <div class="gpct">${r.progress||0}%</div>
-            </div>
-          </div>
-          ${withActions?`<span class="gact">
+    const alias = (g.find(r=>r.display_name) || {}).display_name || '';
+    const cells = g.map(r=>`
+        <div class="scell">
+          <div class="stk">${esc(r.task)}</div>
+          <div class="smrk">${stepMark(r.status)}</div>
+          ${withActions?`<div class="sact">
             <button class="gold" onclick="gEdit(${r.id})">수정</button>
             <button onclick="gDel(${r.id})">삭제</button>
-          </span>`:''}
-        </div>${r.memo?`<div class="gmemo">💬 ${esc(r.memo)}</div>`:''}`;
-      }).join('')}
+          </div>`:''}
+        </div>`).join('');
+    const memos = withActions ? g.filter(r=>r.memo).map(r=>
+      `<div class="gmemo">💬 <b>${esc(r.task)}</b> — ${esc(r.memo)}</div>`).join('') : '';
+    return `<div class="gcomp">
+      <div class="gh"><span class="gc">${esc(comp)}</span>
+        <span class="gn">${g.length}개 항목 · 완료 ${done}${alias?' · 공개명 '+esc(alias):''}</span>
+        ${withActions?`<button class="albtn" onclick="gAlias('${esc(comp).replace(/'/g,"\\\\'")}')">🏷 공개 표시명</button>`:''}</div>
+      <div class="smat">${cells}</div>
+      ${memos}
     </div>`;
   }).join('');
 }
+/* --- 공개 표시명 설정: 구축 진행률 화면에 노출할 업체명 --- */
+async function gAlias(co){
+  const cur = (gCache.find(r=>r.company===co && r.display_name) || {}).display_name || '';
+  const v = prompt("'" + co + "'의 공개 표시명을 입력하세요.\n구축 진행률(전체 공개) 화면에 이 이름으로 표시됩니다.\n비우면 실제 업체명이 그대로 표시됩니다.", cur);
+  if(v === null) return;
+  try{
+    await sb('hk_progress?company=eq.' + encodeURIComponent(co),
+      { method:'PATCH', body:{ display_name: v.trim() }, prefer:'return=minimal' });
+    toast(v.trim() ? "공개 표시명이 '" + v.trim() + "'(으)로 설정되었습니다" : '공개 표시명이 해제되었습니다');
+    await loadPlan();
+  }catch(e){
+    toast('설정 실패 — ' + e.message + ' (설정의 테이블 생성 SQL을 다시 실행했는지 확인하세요)');
+  }
+}
+
 function setGFilter(c){ gCompanyFilter = c; renderPlan(); }
 
 function gTasks(){
@@ -3829,6 +3849,8 @@ async function savePlan(){
       await sb('hk_progress?id=eq.' + gEditId, { method:'PATCH', body: Object.assign({task:tasks[0]}, base) });
       toast('항목이 수정되었습니다');
     }else{
+      const alias = (gCache.find(r=>r.company===base.company && r.display_name) || {}).display_name || '';
+      if(alias) base.display_name = alias;
       await sb('hk_progress', { method:'POST', body: tasks.map(t=>Object.assign({task:t}, base)) });
       toast(tasks.length + '개 항목이 저장되었습니다');
     }
