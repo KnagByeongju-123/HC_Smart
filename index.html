@@ -443,6 +443,27 @@ select.tin option{background:#12141d}
   background:rgba(226,176,74,.1);border:1px solid rgba(226,176,74,.35);border-radius:9px;padding:7px 12px;cursor:pointer;text-decoration:none}
 
 /* 진행현황 타임플랜 */
+.bdsum{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:16px 0 14px}
+.bdsum .bs{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px 10px;text-align:center}
+.bdsum .bv{font-size:21px;font-weight:900;color:var(--gold);letter-spacing:-.5px}
+.bdsum .bk{font-size:10.5px;color:var(--sub);font-weight:700;margin-top:3px}
+.bdc{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:15px 17px;margin-bottom:11px}
+.bdh{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.bdn{font-size:15px;font-weight:900;letter-spacing:-.3px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bdst{flex-shrink:0;font-size:10.5px;font-weight:800;padding:4px 10px;border-radius:11px;border:1px solid var(--line);color:var(--sub)}
+.bdst.ing{color:#e2b04a;border-color:rgba(226,176,74,.45)}
+.bdst.fin{color:#4fbf87;border-color:rgba(79,191,135,.45)}
+.bdbar{height:11px;background:#12141d;border-radius:6px;overflow:hidden;border:1px solid #232838}
+.bdfill{height:100%;background:linear-gradient(90deg,#c9932f,#e2b04a);border-radius:5px;transition:width .5s}
+.bdfill.fin{background:linear-gradient(90deg,#3d9970,#4fbf87)}
+.bdm{display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:11.5px;color:var(--sub)}
+.bdm b{color:var(--gold);font-size:13px}
+.bdstep{margin-top:11px;display:flex;flex-wrap:wrap;gap:5px}
+.bdsp{font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:10px;background:var(--bg);border:1px solid var(--line);color:var(--sub)}
+.bdsp.d{color:#4fbf87;border-color:rgba(79,191,135,.35)}
+.bdsp.i{color:#e2b04a;border-color:rgba(226,176,74,.45)}
+.bdfoot{margin-top:18px;font-size:11.5px;color:var(--sub);text-align:center;line-height:1.7}
+@media(max-width:400px){.bdsum{grid-template-columns:1fr 1fr}}
 .gcomp{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:16px 17px;margin-bottom:14px}
 .gcomp .gh{display:flex;align-items:center;gap:9px;margin-bottom:12px}
 .gcomp .gc{font-size:15.5px;font-weight:900;letter-spacing:-.3px}
@@ -552,6 +573,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   <div class="mi" data-p="links" onclick="go('links')"><span class="ic">🔗</span>실사용 링크</div>
   <div class="mi" data-p="design" onclick="go('design')"><span class="ic">🛠️</span>맞춤세팅</div>
   <div class="mi" data-p="inquiry" onclick="go('inquiry')"><span class="ic">📮</span>문의하기</div>
+  <div class="mi" data-p="board" onclick="go('board')"><span class="ic">📈</span>구축 진행률</div>
   <div class="mi" data-p="quote" onclick="go('quote')"><span class="ic">📄</span>견적서</div>
   <div class="mi" data-p="contract" onclick="go('contract')"><span class="ic">📜</span>계약서</div>
   <div class="mi" data-p="plan" onclick="go('plan')"><span class="ic">📊</span>진행현황</div>
@@ -1247,6 +1269,17 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
 </div>
 
 <!-- ==================== 진행현황 타임플랜 (관리자 전용) ==================== -->
+<!-- ==================== 구축 진행률 (전체 공개) ==================== -->
+<div class="page" id="pg-board">
+  <div class="sec-label">PROJECT BOARD</div>
+  <h2 class="pt">구축 진행률</h2>
+  <div class="pd">HC_Smart가 진행 중인 프로젝트의 도입 단계별 진행률입니다. 상세 일정과 내부 메모는 표시되지 않습니다.</div>
+
+  <div class="bdsum" id="bd-sum"></div>
+  <div id="bd-list"><div class="qempty">불러오는 중...</div></div>
+  <div class="bdfoot">진행률은 담당자가 갱신하는 즉시 반영됩니다 · 문의 (055) 714-7768</div>
+</div>
+
 <div class="page" id="pg-plan">
   <div class="sec-label">PROGRESS TIMELINE</div>
   <h2 class="pt">업체별 진행현황</h2>
@@ -1652,7 +1685,7 @@ function getTopic(){ return localStorage.getItem(LS_TOPIC) || 'HC_Smart'; }
 
 /* ===== 역할(권한) ===== */
 let role = null; /* 'guest' | 'admin' */
-const PAGE_PERM = { intro:['guest','admin'], links:['admin'], design:['guest','admin'], inquiry:['guest','admin'], plan:['admin'], progress:['admin'], quote:['admin'], contract:['admin'], settings:['admin'] };
+const PAGE_PERM = { intro:['guest','admin'], links:['admin'], design:['guest','admin'], inquiry:['guest','admin'], board:['guest','admin'], plan:['admin'], progress:['admin'], quote:['admin'], contract:['admin'], settings:['admin'] };
 
 function applyRole(){
   document.getElementById('rolebadge').textContent = role === 'admin' ? '관리자' : 'Guest';
@@ -1741,6 +1774,7 @@ function go(p){
   if(p === 'settings') loadSettings();
   if(p === 'inquiry') renderInq();
   if(p === 'progress') loadMinutes();
+  if(p === 'board') loadBoard();
   if(p === 'plan') loadPlan();
 }
 
@@ -3568,6 +3602,67 @@ async function testSb(){
 /* ===== 진행현황 타임플랜 ===== */
 let gEditId = null, gCompanyFilter = '전체', gCache = [];
 
+/* ===== 구축 진행률 보드 (Guest 공개) ===== */
+async function loadBoard(){
+  const box = document.getElementById('bd-list');
+  const sum = document.getElementById('bd-sum');
+  if(!sbReady()){
+    sum.innerHTML = '';
+    box.innerHTML = '<div class="qempty">서버에 연결할 수 없습니다</div>';
+    return;
+  }
+  box.innerHTML = '<div class="qempty">불러오는 중...</div>';
+  let rows;
+  try{
+    rows = await sb('hk_progress?select=company,task,status,progress,start_date,end_date&order=company.asc,start_date.asc');
+  }catch(e){
+    sum.innerHTML = '';
+    box.innerHTML = '<div class="qempty">불러오기 실패 — ' + e.message + '</div>';
+    return;
+  }
+  if(!rows || !rows.length){
+    sum.innerHTML = '';
+    box.innerHTML = '<div class="qempty">진행 중인 프로젝트가 없습니다</div>';
+    return;
+  }
+
+  const esc = t => (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const g = {};
+  rows.forEach(r=>{ (g[r.company] = g[r.company] || []).push(r); });
+
+  const cos = Object.keys(g).map(co=>{
+    const a = g[co];
+    const rate = Math.round(a.reduce((x,r)=>x+(r.progress||0),0) / a.length);
+    const done = a.filter(r=>r.status==='완료').length;
+    const cur = a.find(r=>r.status==='진행중') || a.find(r=>r.status!=='완료') || a[a.length-1];
+    const fin = done === a.length;
+    return { co, a, rate, done, cur, fin };
+  }).sort((x,y)=> (x.fin - y.fin) || (y.rate - x.rate));
+
+  const allRate = Math.round(cos.reduce((x,c)=>x+c.rate,0) / cos.length);
+  document.getElementById('bd-sum').innerHTML =
+    [['진행 프로젝트', cos.filter(c=>!c.fin).length],['구축 완료', cos.filter(c=>c.fin).length],['평균 진행률', allRate+'%']]
+      .map(x=>'<div class="bs"><div class="bv">'+x[1]+'</div><div class="bk">'+x[0]+'</div></div>').join('');
+
+  box.innerHTML = cos.map(c=>{
+    const st = c.fin ? '<span class="bdst fin">구축 완료</span>'
+                     : '<span class="bdst ing">진행중</span>';
+    const steps = c.a.map(r=>{
+      const cls = r.status==='완료' ? ' d' : (r.status==='진행중' ? ' i' : '');
+      const mk  = r.status==='완료' ? '✓ ' : '';
+      return '<span class="bdsp'+cls+'">'+mk+esc(r.task)+'</span>';
+    }).join('');
+    return '<div class="bdc">'
+      + '<div class="bdh"><span class="bdn">'+esc(c.co)+'</span>'+st+'</div>'
+      + '<div class="bdbar"><div class="bdfill'+(c.fin?' fin':'')+'" style="width:'+c.rate+'%"></div></div>'
+      + '<div class="bdm"><span>'+(c.fin ? '전체 단계 완료' : '현재 단계 · ' + esc(c.cur ? c.cur.task : '-'))+'</span>'
+      + '<b>'+c.rate+'%</b></div>'
+      + '<div class="bdstep">'+steps+'</div>'
+      + '<div class="bdm" style="margin-top:8px"><span>단계 '+c.a.length+'개 · 완료 '+c.done+'개</span><span></span></div>'
+      + '</div>';
+  }).join('');
+}
+
 /* --- 업체명: 맞춤세팅/기존 진행현황에서 선택 --- */
 async function gPickCompany(){
   const box = document.getElementById('g-setup-pick');
@@ -3661,11 +3756,16 @@ function renderPlan(){
   const groups = {};
   rows.forEach(r=>{ (groups[r.company] = groups[r.company] || []).push(r); });
 
+  box.innerHTML = buildGantt(groups, true);
+}
+
+/* --- 간트 HTML 생성 (관리자/고객 공용) --- */
+function buildGantt(groups, withActions){
+  const esc = t => (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const fmt = d => (d||'').slice(5).replace('-','/');
   const DAY = 86400000;
   const todayT = new Date(new Date().toISOString().slice(0,10)).getTime();
-
-  box.innerHTML = Object.keys(groups).map(comp=>{
+  return Object.keys(groups).map(comp=>{
     const g = groups[comp];
     let min = Math.min(...g.map(r=>new Date(r.start_date).getTime()));
     let max = Math.max(...g.map(r=>new Date(r.end_date).getTime()));
@@ -3679,7 +3779,8 @@ function renderPlan(){
 
     return `<div class="gcomp">
       <div class="gh"><span class="gc">${esc(comp)}</span>
-        <span class="gn">${g.length}개 항목 · 완료 ${done}</span></div>
+        <span class="gn">${g.length}개 항목 · 완료 ${done}</span>
+</div>
       <div class="gaxis"><span>${new Date(min+pad).toISOString().slice(0,10)}</span><span>${new Date(max-pad).toISOString().slice(0,10)}</span></div>
       ${g.map(r=>{
         const s0 = new Date(r.start_date).getTime(), e0 = new Date(r.end_date).getTime() + DAY;
@@ -3693,10 +3794,10 @@ function renderPlan(){
               <div class="gpct">${r.progress||0}%</div>
             </div>
           </div>
-          <span class="gact">
+          ${withActions?`<span class="gact">
             <button class="gold" onclick="gEdit(${r.id})">수정</button>
             <button onclick="gDel(${r.id})">삭제</button>
-          </span>
+          </span>`:''}
         </div>${r.memo?`<div class="gmemo">💬 ${esc(r.memo)}</div>`:''}`;
       }).join('')}
     </div>`;
