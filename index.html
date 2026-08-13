@@ -1261,8 +1261,12 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
     <div class="frow">
       <div>
         <div class="fl">업체명 <b>*</b></div>
-        <input class="tin" id="g-company" placeholder="예) HC_Smart" list="g-company-list">
+        <div style="display:flex;gap:7px;align-items:center">
+          <input class="tin" id="g-company" placeholder="직접 입력 또는 우측 버튼으로 선택" list="g-company-list" style="flex:1">
+          <button class="qi-btn g" style="flex-shrink:0;padding:11px 13px;white-space:nowrap" onclick="gPickCompany()">📥 불러오기</button>
+        </div>
         <datalist id="g-company-list"></datalist>
+        <div id="g-setup-pick" style="display:none;margin-top:9px"></div>
       </div>
     </div>
     <div class="fl" style="margin-top:12px">진행 단계 <b>*</b> <span style="font-weight:600;color:var(--sub)">— 일반적인 전산개발 순서입니다. 해당 단계를 선택하세요 (신규 등록 시 여러 개 선택하면 한 번에 등록됩니다)</span></div>
@@ -2395,7 +2399,7 @@ ${q.memo ? '<div class="memo"><div class="mt">비고</div>'+esc(q.memo)+'</div>'
 }
 
 /* ===== 저장된 맞춤세팅 → 견적 생성 ===== */
-async function fetchSetups(){
+async function fetchSetups(serverOnly){
   if(sbReady()){
     try{
       const rows = await sb('hk_setups?select=*&order=created_at.desc&limit=30');
@@ -2407,9 +2411,11 @@ async function fetchSetups(){
         memo: r.memo || '', at: r.created_at, src: 'server'
       }));
     }catch(e){
+      if(serverOnly){ toast('서버 조회 실패 — ' + e.message); return []; }
       toast('서버 조회 실패 — 이 기기의 저장분을 표시합니다');
     }
   }
+  if(serverOnly) return [];
   return getSetups();
 }
 
@@ -3561,6 +3567,59 @@ async function testSb(){
 
 /* ===== 진행현황 타임플랜 ===== */
 let gEditId = null, gCompanyFilter = '전체', gCache = [];
+
+/* --- 업체명: 맞춤세팅/기존 진행현황에서 선택 --- */
+async function gPickCompany(){
+  const box = document.getElementById('g-setup-pick');
+  if(box.style.display === 'block'){ box.style.display = 'none'; return; }
+  box.style.display = 'block';
+  box.innerHTML = '<div class="qempty">불러오는 중...</div>';
+  const esc = t => (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+
+  if(!sbReady()){
+    box.innerHTML = '<div class="qempty">서버(Supabase)가 연결되지 않았습니다 — 설정에서 연결하세요</div>'
+      + '<button class="qi-btn" style="width:100%;padding:9px;margin-top:8px" onclick="document.getElementById(\'g-setup-pick\').style.display=\'none\'">닫기</button>';
+    return;
+  }
+  let setups = [];
+  try{ setups = await fetchSetups(true); }catch(e){}
+  const planCos = [...new Set((gCache||[]).map(r=>r.company).filter(Boolean))];
+  const setupCos = setups.map(d=>d.company).filter(Boolean);
+  const onlyPlan = planCos.filter(c => !setupCos.includes(c));
+
+  if(!setups.length && !onlyPlan.length){
+    box.innerHTML = '<div class="qempty">서버에 저장된 맞춤세팅이 없습니다 — 맞춤세팅에서 저장·발송을 먼저 하세요</div>'
+      + '<button class="qi-btn" style="width:100%;padding:9px;margin-top:8px" onclick="document.getElementById(\'g-setup-pick\').style.display=\'none\'">닫기</button>';
+    return;
+  }
+
+  let h = '';
+  if(setups.length){
+    h += '<div class="fl" style="margin:0 0 7px">서버 저장 맞춤세팅 (' + setups.length + '건)</div>';
+    h += setups.map(d=>{
+      const co = d.company || '(업체명 미입력)';
+      const dz = ['T','L','M','B'].map(k=>d.design && d.design[k]).filter(Boolean).join('+');
+      return '<div class="qt-item" style="cursor:pointer" onclick="gSetCompany(\'' + esc(co).replace(/'/g,"\\'") + '\')">'
+        + '<div class="qi-b"><div class="qi-t">' + esc(co) + '</div>'
+        + '<div class="qi-s">' + new Date(d.at).toLocaleDateString('ko-KR') + ' · 모듈 ' + ((d.sc||[]).length) + '개'
+        + (dz ? ' · ' + esc(dz) : '') + '</div></div>'
+        + '<button class="qi-btn g" onclick="event.stopPropagation();gSetCompany(\'' + esc(co).replace(/'/g,"\\'") + '\')">선택</button></div>';
+    }).join('');
+  }
+  if(onlyPlan.length){
+    h += '<div class="fl" style="margin:12px 0 7px">기존 진행현황 업체</div>';
+    h += '<div class="chips2">' + onlyPlan.map(c =>
+      '<div class="chk" onclick="gSetCompany(\'' + esc(c).replace(/'/g,"\\'") + '\')">' + esc(c) + '</div>').join('') + '</div>';
+  }
+  h += '<button class="qi-btn" style="width:100%;padding:9px;margin-top:9px" onclick="document.getElementById(\'g-setup-pick\').style.display=\'none\'">닫기</button>';
+  box.innerHTML = h;
+}
+
+function gSetCompany(co){
+  document.getElementById('g-company').value = co;
+  document.getElementById('g-setup-pick').style.display = 'none';
+  toast(co + ' 선택됨');
+}
 
 async function loadPlan(){
   const warn = document.getElementById('g-dbwarn');
