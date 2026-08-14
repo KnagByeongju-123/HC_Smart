@@ -586,6 +586,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   <div class="mi" data-p="plan" onclick="go('plan')"><span class="ic">📊</span>진행현황</div>
   <div class="mi" data-p="flow" onclick="openFlow()"><span class="ic">🔀</span>업무 flow</div>
   <div class="mi" data-p="progress" onclick="go('progress')"><span class="ic">📑</span>회의록</div>
+  <div class="mi" data-p="clientdb" onclick="go('clientdb')"><span class="ic">🗂️</span>업체DB</div>
   <div class="mi" data-p="settings" onclick="go('settings')"><span class="ic">⚙️</span>설정</div>
   <div class="mi" onclick="logout()"><span class="ic">🚪</span>로그아웃</div>
   <div class="foot">HC_Smart · 저비용 클라우드 스마트팩토리<br>기존 시스템 무교체 · 모듈형 도입</div>
@@ -1568,6 +1569,17 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   <div id="ct-list"><div class="qempty">불러오는 중...</div></div>
 </div>
 
+<!-- ==================== 업체DB (관리자 전용) ==================== -->
+<div class="page" id="pg-clientdb">
+  <div class="sec-label">CLIENT DATABASE</div>
+  <h2 class="pt">업체DB</h2>
+  <div class="pd">업체별 기본정보·담당자·계정 정보를 서버(Supabase)에 저장하고 어느 기기에서나 조회합니다.</div>
+  <div class="dbwarn" id="cdb-dbwarn" style="display:none">
+    ⚠️ 서버(Supabase)가 아직 연결되지 않았습니다. <b>설정 → 서버(Supabase) 연결</b>을 확인하세요.
+  </div>
+  <div id="cdb-root"></div>
+</div>
+
 <!-- ==================== 설정 ==================== -->
 <div class="page" id="pg-settings">
   <div class="sec-label">ADMIN SETTINGS</div>
@@ -1670,7 +1682,7 @@ function getTopic(){ return localStorage.getItem(LS_TOPIC) || 'HC_Smart'; }
 
 /* ===== 역할(권한) ===== */
 let role = null; /* 'guest' | 'admin' */
-const PAGE_PERM = { intro:['guest','admin'], links:['admin'], design:['guest','admin'], inquiry:['guest','admin'], board:['guest','admin'], plan:['admin'], progress:['admin'], flow:['admin'], quote:['admin'], contract:['admin'], settings:['admin'] };
+const PAGE_PERM = { intro:['guest','admin'], links:['admin'], design:['guest','admin'], inquiry:['guest','admin'], board:['guest','admin'], plan:['admin'], progress:['admin'], flow:['admin'], quote:['admin'], contract:['admin'], clientdb:['admin'], settings:['admin'] };
 
 function applyRole(){
   document.getElementById('rolebadge').textContent = role === 'admin' ? '관리자' : 'Guest';
@@ -1764,6 +1776,7 @@ function go(p){
   }
   go0(p);
   if(p === 'settings') loadSettings();
+  if(p === 'clientdb') cdbOpen();
   if(p === 'inquiry') renderInq();
   if(p === 'progress') loadMinutes();
   if(p === 'board') loadBoard();
@@ -4078,5 +4091,6 @@ function toast(m){
   clearTimeout(tmr); tmr = setTimeout(()=>t.classList.remove('on'), 1800);
 }
 </script>
+<script src="clientdb.js"></script>
 </body>
 </html>
