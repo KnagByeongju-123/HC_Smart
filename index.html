@@ -1710,17 +1710,7 @@ function applyRole(){
 /* ===== L4 스플래시 → 로그인 ===== */
 function closeSplash(){
   document.getElementById('splash').classList.add('hide');
-  if(role) return;
-  const s = loadSess();
-  if(s && s.r === 'admin'){
-    role = 'admin';
-    document.getElementById('login').classList.remove('on');
-    applyRole(); go0('intro');
-    const d = Math.max(1, Math.ceil((s.e - Date.now())/86400000));
-    setTimeout(function(){ toast('관리자 로그인 유지 중 · 남은 기간 '+d+'일'); }, 400);
-    return;
-  }
-  document.getElementById('login').classList.add('on');
+  if(!role) document.getElementById('login').classList.add('on');
 }
 setTimeout(closeSplash, 3000);
 
@@ -4192,6 +4182,16 @@ function toast(m){
   t.textContent = m; t.classList.add('on');
   clearTimeout(tmr); tmr = setTimeout(()=>t.classList.remove('on'), 1800);
 }
+/* ===== 세션 자동 복원 (모든 선언 완료 후 · 스크립트 최하단) ===== */
+(function(){
+  const s = loadSess();
+  if(!s || s.r !== 'admin') return;
+  role = 'admin';
+  document.getElementById('login').classList.remove('on');
+  applyRole(); go0('intro');
+  const d = Math.max(1, Math.ceil((s.e - Date.now())/86400000));
+  setTimeout(function(){ toast('관리자 로그인 유지 중 · 남은 기간 '+d+'일'); }, 400);
+})();
 </script>
 </body>
 </html>
