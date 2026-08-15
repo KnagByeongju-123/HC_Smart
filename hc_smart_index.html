@@ -4125,6 +4125,8 @@ function toast(m){
   const s = loadSess();
   if(!s || s.r !== 'admin') return;
   role = 'admin';
+  const sp = document.getElementById('splash');
+  if(sp) sp.classList.add('hide');            /* 스플래시 대기 없이 즉시 진입 */
   document.getElementById('login').classList.remove('on');
   applyRole(); go0('intro');
   const d = Math.max(1, Math.ceil((s.e - Date.now())/86400000));
