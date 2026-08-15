@@ -1186,6 +1186,16 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
         <div class="chk" data-v="회비 · 모임 정산"><span class="ci">👥</span>회비·모임 정산</div>
         <div class="chk" data-v="일정 · 예약 · 알림 발송"><span class="ci">🔔</span>일정·예약·알림</div>
       </div>
+      <div class="fl">금형 · 수주제작</div>
+      <div class="chips2" id="g-sc8">
+        <div class="chk" data-v="금형 공정관리(신작 · 수리)"><span class="ci">🗜️</span>금형 공정관리(신작·수리)</div>
+        <div class="chk" data-v="제작계획 · 공정일정(캘린더)"><span class="ci">📆</span>제작계획·공정일정</div>
+        <div class="chk" data-v="Tryout(T/O) 작업일지"><span class="ci">🔧</span>Tryout(T/O) 일지</div>
+        <div class="chk" data-v="출력물 점검표(SQ 산출물)"><span class="ci">📑</span>출력물 점검표(SQ)</div>
+        <div class="chk" data-v="부적합 시정조치(NCR)"><span class="ci">🚨</span>부적합 시정조치(NCR)</div>
+        <div class="chk" data-v="설계변경(ECN · 4M)"><span class="ci">📝</span>설계변경(ECN·4M)</div>
+        <div class="chk" data-v="업무현황 공유(코멘트 · 확인)"><span class="ci">🗂️</span>업무현황 공유</div>
+      </div>
       <div class="fl">기타 필요 기능 (직접 입력)</div>
       <input class="tin" id="f-sc-etc" placeholder="예) 출하관리, 근태연동, 다국어 UI ...">
     </div>
@@ -1680,6 +1690,21 @@ const LS_PIN = 'hk_admin_pin', LS_TOPIC = 'hk_ntfy_topic';
 function getPin(){ return localStorage.getItem(LS_PIN) || '2580'; }
 function getTopic(){ return localStorage.getItem(LS_TOPIC) || 'HC_Smart'; }
 
+/* ===== 로그인 세션 유지 (PIN 입력 후 7일 · 로그아웃 시 즉시 해제) ===== */
+const LS_SESS = 'hk_sess', SESS_DAYS = 7;
+function saveSess(r){
+  try{ localStorage.setItem(LS_SESS, JSON.stringify({ r:r, e: Date.now() + SESS_DAYS*86400000 })); }catch(e){}
+}
+function loadSess(){
+  try{
+    const s = JSON.parse(localStorage.getItem(LS_SESS) || 'null');
+    if(s && s.r && s.e > Date.now()) return s;
+    localStorage.removeItem(LS_SESS);
+  }catch(e){}
+  return null;
+}
+function clearSess(){ try{ localStorage.removeItem(LS_SESS); }catch(e){} }
+
 /* ===== 역할(권한) ===== */
 let role = null; /* 'guest' | 'admin' */
 const PAGE_PERM = { intro:['guest','admin'], links:['admin'], design:['guest','admin'], inquiry:['guest','admin'], board:['guest','admin'], plan:['admin'], progress:['admin'], flow:['admin'], quote:['admin'], contract:['admin'], clientdb:['admin'], settings:['admin'] };
@@ -1707,7 +1732,17 @@ function openFlow(){
 /* ===== L4 스플래시 → 로그인 ===== */
 function closeSplash(){
   document.getElementById('splash').classList.add('hide');
-  if(!role) document.getElementById('login').classList.add('on');
+  if(role) return;
+  const s = loadSess();
+  if(s && s.r === 'admin'){
+    role = 'admin';
+    document.getElementById('login').classList.remove('on');
+    applyRole(); go0('intro');
+    const d = Math.max(1, Math.ceil((s.e - Date.now())/86400000));
+    setTimeout(function(){ toast('관리자 로그인 유지 중 · 남은 기간 '+d+'일'); }, 400);
+    return;
+  }
+  document.getElementById('login').classList.add('on');
 }
 closeSplash(); /* 즉시 진입 (스플래시는 장식용이었음) */
 
@@ -1733,8 +1768,9 @@ function loginAdmin(){
     inp.value = '';
     box.classList.remove('on');
     document.getElementById('login').classList.remove('on');
+    saveSess('admin');
     applyRole(); go0('intro');
-    toast('관리자로 로그인했습니다');
+    toast('관리자로 로그인했습니다 (로그아웃 전까지 7일 유지)');
   }else{
     box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake');
     inp.value = ''; inp.focus();
@@ -1743,6 +1779,7 @@ function loginAdmin(){
 }
 function logout(){
   role = null;
+  clearSess();
   toggleDrawer(false);
   go0('intro');
   document.getElementById('login').classList.add('on');
@@ -1874,7 +1911,7 @@ function collectSetup(){
     company: v('f-company'), name: v('f-name'), tel: v('f-tel'),
     ind: pickedIn('g-ind').concat(v('f-ind-etc') ? [v('f-ind-etc')] : []),
     design: { T: sel.T, L: sel.L, M: sel.M, B: sel.B },
-    sc: ['g-sc1','g-sc2','g-sc3','g-sc4','g-sc5','g-sc6','g-sc7'].flatMap(pickedIn),
+    sc: ['g-sc1','g-sc2','g-sc3','g-sc4','g-sc5','g-sc6','g-sc7','g-sc8'].flatMap(pickedIn),
     scEtc: v('f-sc-etc'),
     domain: pickedIn('g-domain')[0] || '무료 기본주소 사용',
     domainName: v('f-domain'),
@@ -2020,7 +2057,7 @@ function buildReq(){
   lines.push('- 메인화면: ' + (sel.M ? sel.M+' '+names[sel.M] : '(미선택)'));
   lines.push('- 게시판: ' + (sel.B ? sel.B+' '+names[sel.B] : '없음'));
   lines.push('');
-  const sc = ['g-sc1','g-sc2','g-sc3','g-sc4','g-sc5','g-sc6','g-sc7'].flatMap(pickedIn);
+  const sc = ['g-sc1','g-sc2','g-sc3','g-sc4','g-sc5','g-sc6','g-sc7','g-sc8'].flatMap(pickedIn);
   if(v('f-sc-etc')) sc.push(v('f-sc-etc'));
   lines.push('■ 전산화 범위');
   lines.push(sc.length ? sc.map(x=>'- '+x).join('\n') : '- (미선택)');
