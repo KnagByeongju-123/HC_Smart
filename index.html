@@ -41,6 +41,14 @@ a{color:inherit;text-decoration:none}
 #splash h1{position:relative;z-index:1;font-size:30px;font-weight:900;letter-spacing:-.5px;animation:fadeup .9s .25s both}
 #splash .sl{position:relative;z-index:1;font-size:13.5px;color:var(--sub);animation:fadeup .9s .45s both}
 @keyframes fadeup{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+#splash .pbar{position:relative;z-index:1;width:160px;height:4px;border-radius:2px;background:var(--line);
+  overflow:hidden;margin-top:8px;animation:fadeup .9s .6s both}
+#splash .pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold2),var(--gold));
+  border-radius:2px;animation:load 2s .7s ease-out forwards}
+@keyframes load{to{width:100%}}
+#splash .skip{position:relative;z-index:1;margin-top:14px;font-size:12px;color:var(--sub);
+  border:1px solid var(--line);border-radius:16px;padding:6px 18px;cursor:pointer;background:none;font-family:inherit}
+
 
 /* ============ 로그인 선택 ============ */
 #login{position:fixed;inset:0;z-index:900;background:var(--bg);display:none;
@@ -107,7 +115,7 @@ header .hb{margin-left:auto;font-size:11px;font-weight:800;color:var(--gold);
 #drawer .dlogo .n{font-size:15.5px;font-weight:900}
 #drawer .dlogo .s{font-size:11px;color:var(--sub)}
 #drawer .mi{display:flex;align-items:center;gap:11px;font-size:14px;font-weight:700;color:var(--sub);
-  padding:8px 12px;border-radius:11px;cursor:pointer;transition:.15s;margin-bottom:2px}
+  padding:12px 12px;border-radius:11px;cursor:pointer;transition:.15s}
 #drawer .mi .ic{font-size:16px;width:22px;text-align:center}
 #drawer .mi.on{background:rgba(226,176,74,.13);color:var(--gold)}
 #drawer .mi:not(.on):hover{background:rgba(255,255,255,.04);color:var(--ink)}
@@ -288,6 +296,7 @@ h2.pt{font-size:25px;font-weight:900;letter-spacing:-.6px;margin:6px 0 6px}
 .gban{padding:3px 7px;font-size:6px;font-weight:700;color:var(--sb);
   background:color-mix(in srgb,var(--sb) 14%,transparent);border-bottom:1px solid var(--ln)}
 
+
 /* 게시판 목업 */
 .brow{background:var(--c);border:1px solid var(--ln);border-radius:6px;padding:5px 7px;display:flex;align-items:center;gap:4px}
 .brow .bt{font-size:7.5px;font-weight:800;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -323,6 +332,7 @@ h2.pt{font-size:25px;font-weight:900;letter-spacing:-.6px;margin:6px 0 6px}
   font-weight:700;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.on{opacity:1}
 
+
 /* ============ 견적서 ============ */
 .qt-row{background:#161925;border:1.5px solid #4a5268;border-radius:12px;padding:10px;margin-bottom:8px}
 .qt-row .r1{display:flex;gap:8px;align-items:center;margin-bottom:8px}
@@ -351,9 +361,9 @@ h2.pt{font-size:25px;font-weight:900;letter-spacing:-.6px;margin:6px 0 6px}
 .frm .fl{font-size:12.5px;font-weight:800;color:var(--sub);margin:12px 0 6px;letter-spacing:.3px}
 .frm .fl:first-child{margin-top:0}
 .frm .fl b{color:var(--gold)}
-.tin{width:100%;padding:12px 14px;border-radius:11px;background:#161925;border:1.5px solid #6d7896;
+.tin{width:100%;padding:12px 14px;border-radius:11px;background:#161925;border:1.5px solid #4a5268;
   color:var(--ink);font-size:14px;font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s}
-.tin:hover{border-color:#8a94b0}
+.tin:hover{border-color:#4d5570}
 .tin:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(226,176,74,.18)}
 .tin::placeholder{color:#6a7086}
 input.tin[type=date]{color-scheme:dark;cursor:pointer;position:relative}
@@ -536,6 +546,8 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   <div class="logo">HC</div>
   <h1 class="gold-txt">HC_Smart</h1>
   <div class="sl">현장에서 태어난 스마트 시스템 사업부</div>
+  <div class="pbar"><i></i></div>
+  <button class="skip" onclick="closeSplash()">바로 시작 →</button>
 </div>
 
 <!-- ============ 로그인 선택 ============ -->
@@ -580,13 +592,11 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   <div class="mi" data-p="links" onclick="go('links')"><span class="ic">🔗</span>실사용 링크</div>
   <div class="mi" data-p="design" onclick="go('design')"><span class="ic">🛠️</span>맞춤세팅</div>
   <div class="mi" data-p="inquiry" onclick="go('inquiry')"><span class="ic">📮</span>문의하기</div>
-  <div class="mi" data-p="board" onclick="go('board')"><span class="ic">📈</span>진행현황보기</div>
+  <div class="mi" data-p="board" onclick="go('board')"><span class="ic">📈</span>구축 진행률</div>
   <div class="mi" data-p="quote" onclick="go('quote')"><span class="ic">📄</span>견적서</div>
   <div class="mi" data-p="contract" onclick="go('contract')"><span class="ic">📜</span>계약서</div>
   <div class="mi" data-p="plan" onclick="go('plan')"><span class="ic">📊</span>진행현황</div>
-  <div class="mi" data-p="flow" onclick="openFlow()"><span class="ic">🔀</span>업무 flow</div>
   <div class="mi" data-p="progress" onclick="go('progress')"><span class="ic">📑</span>회의록</div>
-  <div class="mi" data-p="clientdb" onclick="go('clientdb')"><span class="ic">🗂️</span>업체DB</div>
   <div class="mi" data-p="settings" onclick="go('settings')"><span class="ic">⚙️</span>설정</div>
   <div class="mi" onclick="logout()"><span class="ic">🚪</span>로그아웃</div>
   <div class="foot">HC_Smart · 저비용 클라우드 스마트팩토리<br>기존 시스템 무교체 · 모듈형 도입</div>
@@ -721,13 +731,11 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
 
   <div class="dtabs" id="dtabs">
     <span class="dtab on" data-t="1" onclick="dgo(1)">① 기본정보</span>
-    <span class="dtab" data-t="2" onclick="dgo(2)">② 색상 테마</span>
-    <span class="dtab" data-t="3" onclick="dgo(3)">③ 인증 진입</span>
-    <span class="dtab" data-t="4" onclick="dgo(4)">④ 메뉴 배치</span>
-    <span class="dtab" data-t="5" onclick="dgo(5)">⑤ 전산화 범위</span>
-    <span class="dtab" data-t="6" onclick="dgo(6)">⑥ 도메인·요청</span>
-    <span class="dtab" data-t="7" onclick="dgo(7)">⑦ 예상 비용</span>
-    <span class="dtab" data-t="8" id="dtab-admin" style="display:none" onclick="dgo(8)">🧩 스타터</span>
+    <span class="dtab" data-t="2" onclick="dgo(2)">② 디자인</span>
+    <span class="dtab" data-t="3" onclick="dgo(3)">③ 전산화 범위</span>
+    <span class="dtab" data-t="4" onclick="dgo(4)">④ 도메인·요청</span>
+    <span class="dtab" data-t="5" onclick="dgo(5)">⑤ 예상 비용</span>
+    <span class="dtab" data-t="6" id="dtab-admin" style="display:none" onclick="dgo(6)">🧩 스타터</span>
   </div>
 
   <!-- ---------- ① 업체 정보 ---------- -->
@@ -768,7 +776,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
       <div class="fl">기타 업종 (직접 입력)</div>
       <input class="tin" id="f-ind-etc" placeholder="예) 목재가공, 농산물 유통 ...">
     </div>
-  <div class="dnav"><button class="copy-btn" style="flex:1.4" onclick="dgo(2)">② 색상 테마 →</button></div>
+  <div class="dnav"><button class="copy-btn" style="flex:1.4" onclick="dgo(2)">② 디자인 선택 →</button></div>
   </div>
 
   <!-- ---------- 1. 색상 테마 ---------- -->
@@ -832,11 +840,10 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
       </div>
 
     </div>
-  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(1)">← 기본정보</button><button class="copy-btn" style="flex:1.4" onclick="dgo(3)">③ 인증 진입 →</button></div>
   </div>
 
   <!-- ---------- ③-2 첫화면 ---------- -->
-  <div class="dsec" data-dtab="3">
+  <div class="dsec" data-dtab="2">
     <div class="dh"><span class="no">3-2</span><h3>디자인 · 첫화면 유형 (인증·진입)</h3></div>
     <div class="dd">앱 실행 직후 만나는 화면 (색상은 예시)</div>
     <div class="dgrid" data-g="L">
@@ -918,11 +925,10 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
       </div>
 
     </div>
-  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(2)">← 색상 테마</button><button class="copy-btn" style="flex:1.4" onclick="dgo(4)">④ 메뉴 배치 →</button></div>
   </div>
 
   <!-- ---------- 3. 메인화면 ---------- -->
-  <div class="dsec" data-dtab="4">
+  <div class="dsec" data-dtab="2">
     <div class="dh"><span class="no">3-3</span><h3>디자인 · 메인화면 유형 (메뉴·배치)</h3></div>
     <div class="dd">주 메뉴 위치와 콘텐츠 배치 방식 (색상은 예시)</div>
     <div class="dgrid" data-g="M">
@@ -1048,7 +1054,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   </div>
 
   <!-- ---------- 3-4. 게시판 ---------- -->
-  <div class="dsec" data-dtab="4">
+  <div class="dsec" data-dtab="2">
     <div class="dh"><span class="no">3-4</span><h3>디자인 · 게시판 (선택)</h3></div>
     <div class="dd">공지·자료 공유용 게시판이 필요하면 유형을 선택하세요 (선택 항목을 다시 누르면 해제)</div>
     <div class="dgrid" data-g="B">
@@ -1123,11 +1129,11 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
       </div>
 
     </div>
-  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(3)">← 인증 진입</button><button class="copy-btn" style="flex:1.4" onclick="dgo(5)">⑤ 전산화 범위 →</button></div>
+  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(1)">← 기본정보</button><button class="copy-btn" style="flex:1.4" onclick="dgo(3)">③ 전산화 범위 →</button></div>
   </div>
 
   <!-- ---------- ④ 전산화 범위 ---------- -->
-  <div class="dsec" data-dtab="5">
+  <div class="dsec" data-dtab="3">
     <div class="dh"><span class="no">4</span><h3>전산화 범위</h3></div>
     <div class="dd">도입을 원하는 업무 모듈을 모두 선택하세요 (복수 선택 가능 · 이후 단계 확장 가능)</div>
     <div class="frm">
@@ -1137,7 +1143,6 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
         <div class="chk" data-v="생산일보 · 작업실적"><span class="ci">📝</span>생산일보 · 작업실적</div>
         <div class="chk" data-v="디스플레이알림"><span class="ci">🔔</span>디스플레이알림</div>
         <div class="chk" data-v="IoT 센서(카운터 · 온습도)"><span class="ci">📡</span>IoT 센서(카운터·온습도)</div>
-        <div class="chk" data-v="디지털 트윈(3D 공장뷰)"><span class="ci">🏗️</span>디지털 트윈(3D 공장뷰)</div>
       </div>
       <div class="fl">품질 · 점검</div>
       <div class="chips2" id="g-sc2">
@@ -1186,24 +1191,14 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
         <div class="chk" data-v="회비 · 모임 정산"><span class="ci">👥</span>회비·모임 정산</div>
         <div class="chk" data-v="일정 · 예약 · 알림 발송"><span class="ci">🔔</span>일정·예약·알림</div>
       </div>
-      <div class="fl">금형 · 수주제작</div>
-      <div class="chips2" id="g-sc8">
-        <div class="chk" data-v="금형 공정관리(신작 · 수리)"><span class="ci">🗜️</span>금형 공정관리(신작·수리)</div>
-        <div class="chk" data-v="제작계획 · 공정일정(캘린더)"><span class="ci">📆</span>제작계획·공정일정</div>
-        <div class="chk" data-v="Tryout(T/O) 작업일지"><span class="ci">🔧</span>Tryout(T/O) 일지</div>
-        <div class="chk" data-v="출력물 점검표(SQ 산출물)"><span class="ci">📑</span>출력물 점검표(SQ)</div>
-        <div class="chk" data-v="부적합 시정조치(NCR)"><span class="ci">🚨</span>부적합 시정조치(NCR)</div>
-        <div class="chk" data-v="설계변경(ECN · 4M)"><span class="ci">📝</span>설계변경(ECN·4M)</div>
-        <div class="chk" data-v="업무현황 공유(코멘트 · 확인)"><span class="ci">🗂️</span>업무현황 공유</div>
-      </div>
       <div class="fl">기타 필요 기능 (직접 입력)</div>
       <input class="tin" id="f-sc-etc" placeholder="예) 출하관리, 근태연동, 다국어 UI ...">
     </div>
-  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(4)">← 메뉴 배치</button><button class="copy-btn" style="flex:1.4" onclick="dgo(6)">⑥ 도메인·요청 →</button></div>
+  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(2)">← 디자인</button><button class="copy-btn" style="flex:1.4" onclick="dgo(4)">④ 도메인·요청 →</button></div>
   </div>
 
   <!-- ---------- ⑤ 도메인 ---------- -->
-  <div class="dsec" data-dtab="6">
+  <div class="dsec" data-dtab="4">
     <div class="dh"><span class="no">5</span><h3>도메인 (접속 주소)</h3></div>
     <div class="dd">시스템 접속 주소 방식을 선택하세요 (1개 선택)</div>
     <div class="frm">
@@ -1219,17 +1214,17 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   </div>
 
   <!-- ---------- ⑥ 추가 요청 ---------- -->
-  <div class="dsec" data-dtab="6">
+  <div class="dsec" data-dtab="4">
     <div class="dh"><span class="no">6</span><h3>추가 요청사항</h3></div>
     <div class="dd">기존 시스템(MES/ERP) 유무, 사용 인원, 일정 등 참고사항을 자유롭게 적어주세요</div>
     <div class="frm">
       <textarea class="tin" id="f-memo" placeholder="예) 기존 Oracle MES 사용 중, 현장 인원 30명, 스마트폰 위주 사용 희망 ..."></textarea>
     </div>
-  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(5)">← 전산화 범위</button><button class="copy-btn" style="flex:1.4" onclick="dgo(7)">⑦ 예상 비용 확인 →</button></div>
+  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(3)">← 전산화 범위</button><button class="copy-btn" style="flex:1.4" onclick="dgo(5)">⑤ 예상 비용 확인 →</button></div>
   </div>
 
   <!-- ---------- ⑦ 예상 비용 ---------- -->
-  <div class="dsec" data-dtab="7">
+  <div class="dsec" data-dtab="5">
     <div class="dh"><span class="no">7</span><h3>예상 비용 (자동 산정)</h3></div>
     <div class="dd">선택한 모듈·도메인 기준가가 실시간으로 합산됩니다. 기준가이며 협의 후 확정됩니다.</div>
     <div class="qt-sum" style="margin:0 0 10px">
@@ -1238,16 +1233,18 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
       <div class="sr" style="padding-top:6px"><span style="font-size:11.5px">※ IoT 하드웨어·도메인 등록비는 실비 별도 · '협의' 항목은 합계 미포함</span><b></b></div>
     </div>
     <button class="copy-btn" style="width:100%;margin-bottom:10px;background:var(--card);border:1.5px solid rgba(226,176,74,.5);color:var(--gold)" onclick="stPreviewSelf()">👁 내 선택 조합 미리보기</button>
-  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(6)">← 도메인·요청</button></div>
+  <div class="dnav"><button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="dgo(4)">← 도메인·요청</button></div>
   </div>
 
   <!-- ---------- ⑧ 스타터 페이지 (관리자) ---------- -->
-  <div class="dsec" data-dtab="8" id="setup-admin-tools">
+  <div class="dsec" data-dtab="6" id="setup-admin-tools">
     <div class="dh"><span class="no">8</span><h3>스타터 페이지 생성 <span style="font-size:12px;font-weight:400;color:var(--sub)">관리자 전용</span></h3></div>
-    <div class="dd">저장된 맞춤세팅을 선택하면 테마·첫화면·메뉴 골격이 적용된 기본 index.html을 만들 수 있습니다. 개발 지시문은 제작 사양 보드에서 확정 사양 기준으로 복사하세요.</div>
+    <div class="dd">저장된 맞춤세팅을 선택하면 테마·첫화면·메뉴 골격이 적용된 기본 index.html을 만들거나, Claude용 개발 지시문을 복사할 수 있습니다.</div>
     <div class="frm">
-      <button class="copy-btn" style="width:100%;background:var(--card);border:1.5px solid rgba(226,176,74,.5);color:var(--gold)" onclick="stPick()">🧩 스타터 HTML 생성</button>
-      <button class="copy-btn" style="width:100%;margin-top:8px;background:var(--card);border:1.5px solid rgba(79,140,255,.55);color:#8ab2ff" onclick="window.open('spec.html','_blank')">📐 제작 사양 보드 (제작회의 · 세부항목 편집 → 견적 반영)</button>
+      <div style="display:flex;gap:8px">
+        <button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid rgba(226,176,74,.5);color:var(--gold)" onclick="stPick('html')">🧩 스타터 HTML 생성</button>
+        <button class="copy-btn" style="flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--sub)" onclick="stPick('prompt')">🤖 개발 지시문 복사</button>
+      </div>
       <div id="st-pick" style="display:none;margin-top:10px"></div>
     </div>
   </div>
@@ -1294,7 +1291,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
 <!-- ==================== 구축 진행률 (전체 공개) ==================== -->
 <div class="page" id="pg-board">
   <div class="sec-label">PROJECT BOARD</div>
-  <h2 class="pt">진행현황보기</h2>
+  <h2 class="pt">구축 진행률</h2>
   <div class="pd">HC_Smart가 진행 중인 프로젝트의 도입 단계별 진행률입니다. 상세 일정과 내부 메모는 표시되지 않습니다.</div>
 
   <div class="bdsum" id="bd-sum"></div>
@@ -1579,17 +1576,6 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   <div id="ct-list"><div class="qempty">불러오는 중...</div></div>
 </div>
 
-<!-- ==================== 업체DB (관리자 전용) ==================== -->
-<div class="page" id="pg-clientdb">
-  <div class="sec-label">CLIENT DATABASE</div>
-  <h2 class="pt">업체DB</h2>
-  <div class="pd">업체별 기본정보·담당자·계정 정보를 서버(Supabase)에 저장하고 어느 기기에서나 조회합니다.</div>
-  <div class="dbwarn" id="cdb-dbwarn" style="display:none">
-    ⚠️ 서버(Supabase)가 아직 연결되지 않았습니다. <b>설정 → 서버(Supabase) 연결</b>을 확인하세요.
-  </div>
-  <div id="cdb-root"></div>
-</div>
-
 <!-- ==================== 설정 ==================== -->
 <div class="page" id="pg-settings">
   <div class="sec-label">ADMIN SETTINGS</div>
@@ -1683,7 +1669,6 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
 
 <div class="toast" id="toast">요청서가 복사되었습니다</div>
 
-<script src="modules.js"></script>
 <script>
 /* ===== 저장소 (localStorage) ===== */
 const LS_PIN = 'hk_admin_pin', LS_TOPIC = 'hk_ntfy_topic';
@@ -1707,7 +1692,7 @@ function clearSess(){ try{ localStorage.removeItem(LS_SESS); }catch(e){} }
 
 /* ===== 역할(권한) ===== */
 let role = null; /* 'guest' | 'admin' */
-const PAGE_PERM = { intro:['guest','admin'], links:['admin'], design:['guest','admin'], inquiry:['guest','admin'], board:['guest','admin'], plan:['admin'], progress:['admin'], flow:['admin'], quote:['admin'], contract:['admin'], clientdb:['admin'], settings:['admin'] };
+const PAGE_PERM = { intro:['guest','admin'], links:['admin'], design:['guest','admin'], inquiry:['guest','admin'], board:['guest','admin'], plan:['admin'], progress:['admin'], quote:['admin'], contract:['admin'], settings:['admin'] };
 
 function applyRole(){
   document.getElementById('rolebadge').textContent = role === 'admin' ? '관리자' : 'Guest';
@@ -1720,13 +1705,6 @@ function applyRole(){
     const ok = PAGE_PERM[m.dataset.p].includes(role);
     m.classList.toggle('lock', !ok);
   });
-}
-
-/* ===== 업무 flow (별도 페이지 · 새 창) ===== */
-function openFlow(){
-  if(role !== 'admin'){ toast('관리자 로그인 후 이용할 수 있습니다'); return; }
-  toggleDrawer(false);
-  window.open('flow.html', '_blank');
 }
 
 /* ===== L4 스플래시 → 로그인 ===== */
@@ -1744,7 +1722,7 @@ function closeSplash(){
   }
   document.getElementById('login').classList.add('on');
 }
-closeSplash(); /* 즉시 진입 (스플래시는 장식용이었음) */
+setTimeout(closeSplash, 3000);
 
 /* ===== 로그인 ===== */
 function loginGuest(){
@@ -1813,7 +1791,6 @@ function go(p){
   }
   go0(p);
   if(p === 'settings') loadSettings();
-  if(p === 'clientdb') cdbOpen();
   if(p === 'inquiry') renderInq();
   if(p === 'progress') loadMinutes();
   if(p === 'board') loadBoard();
@@ -1867,7 +1844,7 @@ document.querySelectorAll('#g-domain .chk').forEach(c=>{
 /* ===== 맞춤세팅 탭 ===== */
 function dgo(n){
   n = String(n);
-  if(n === '8' && role !== 'admin'){ toast('관리자 전용 탭입니다'); return; }
+  if(n === '6' && role !== 'admin'){ toast('관리자 전용 탭입니다'); return; }
   document.querySelectorAll('#pg-design .dsec').forEach(d=>d.classList.toggle('on', d.dataset.dtab === n));
   document.querySelectorAll('#dtabs .dtab').forEach(c=>c.classList.toggle('on', c.dataset.t === n));
   window.scrollTo({top:0});
@@ -1901,6 +1878,84 @@ function renderEstimate(){
   document.getElementById('est-tot').textContent = tot.toLocaleString('ko-KR')+'원';
 }
 
+/* ===== 모듈별 기준가 (난이도 산정 · 견적서에서 수정 가능) ===== */
+const MODULE_PRICE = {
+  '생산 모니터링(가동현황)':        { p:1800000, d:'실시간 가동현황 보드 · 설비별 상태 · 시간대별 실적 집계', lv:'상' },
+  '생산일보 · 작업실적':            { p:1200000, d:'작업자 실적 입력 · 일보 자동 집계 · 관리자 승인', lv:'중' },
+  '디스플레이알림':                 { p: 600000, d:'현장 대형 디스플레이 호출 · 공지 표출', lv:'하' },
+  'IoT 센서(카운터 · 온습도)':      { p:2000000, d:'ESP32 컨트롤러 연동 · 생산카운트/온습도 수집 · 이상 알림 (HW 실비 별도)', lv:'상' },
+  '일상 · 정기점검 체크시트':       { p:1000000, d:'모바일 체크시트 · 사진 첨부 · 미실시 알림', lv:'중' },
+  '품질검사(외관 · 치수)':          { p:1400000, d:'검사 기준서 연동 · 측정값 입력 · 성적서 PDF 출력', lv:'중상' },
+  '불량관리 · PPM 통계':            { p:1200000, d:'불량 등록 · 유형별 집계 · PPM 추이 차트', lv:'중' },
+  '로트(LOT) 추적':                 { p:1800000, d:'자재→공정→출하 LOT 연결 · 정/역방향 추적', lv:'상' },
+  '시스템 상태체크 · 감시':         { p: 600000, d:'연동/센서 상태 감시 · 이상 시 알림 발송', lv:'하' },
+  '자재 · 재고관리(QR)':            { p:1600000, d:'QR 라벨 발행 · 입출고 스캔 · 재고 현황/부족 알림', lv:'상' },
+  '발주 · 외주관리':                { p:1200000, d:'발주서 발행 · 입고 대비 · 외주 진행 관리', lv:'중' },
+  '수입검사(IQC)':                  { p:1000000, d:'입고 검사 등록 · 합/불 판정 · 성적 이력', lv:'중' },
+  '바코드 · QR 입출고':             { p:1000000, d:'스마트폰 카메라 스캔 입출고 처리', lv:'중' },
+  '재고실사 · 마감':                { p: 900000, d:'실사 입력 · 전산 대비 차이 분석 · 월 마감', lv:'중' },
+  '유통기한 · 로케이션 관리':       { p: 900000, d:'유통기한 경고 · 창고 위치(로케이션) 관리', lv:'중' },
+  '설비 · 치공구 자산관리':         { p:1000000, d:'자산 대장 · QR 부착 · 이력 관리', lv:'중' },
+  '수리 워크플로(의뢰→완료)':       { p:1100000, d:'수리 의뢰→접수→완료 흐름 · 알림 · 이력', lv:'중' },
+  '예방보전(PM) · 검교정':          { p:1300000, d:'PM 주기 스케줄 · 검교정 만료 알림 · 실적 기록', lv:'중상' },
+  '전자결재 · PDF 보고서':          { p:1400000, d:'단계 결재선 · 서명 · PDF 자동 생성/보관', lv:'중상' },
+  '전자 열람확인 · 회람':           { p: 700000, d:'문서 회람 · 열람 확인(날인 대체) 기록', lv:'하' },
+  'KPI · 개선활동':                 { p:1000000, d:'KPI 대시보드 · 개선활동 등록/추적', lv:'중' },
+  '기준정보 · 보안 마스터':         { p: 800000, d:'품목/거래처/사용자 마스터 · 권한 관리', lv:'중' },
+  '견적관리':                       { p: 900000, d:'견적 작성 · 표준 양식 출력 · 이력 관리', lv:'중' },
+  '수주 · 납기관리':                { p:1100000, d:'수주 등록 · 납기 캘린더 · 지연 알림', lv:'중' },
+  '출하관리 · 납품서 발행':         { p:1100000, d:'출하 등록 · 거래명세서/납품서 출력', lv:'중' },
+  '거래처 관리':                    { p: 600000, d:'거래처 대장 · 담당자/이력 관리', lv:'하' },
+  '클레임 접수 · 이력':             { p: 700000, d:'클레임 접수 · 조치 이력 · 재발 방지 기록', lv:'하' },
+  '근태관리':                       { p:1000000, d:'출퇴근 기록 · 월별 집계', lv:'중' },
+  '작업자 배치 · 교육이력':         { p: 900000, d:'배치 현황 · 교육/자격 이력 관리', lv:'중' },
+  '단가 · 외주비 정산':             { p:1300000, d:'단가 마스터 · 외주비 자동 정산 · 명세 출력', lv:'중상' },
+  '매출 · 매입 집계':               { p:1100000, d:'월별 매출/매입 집계 · 차트 리포트', lv:'중' },
+  '회비 · 모임 정산':               { p: 600000, d:'회비 납부 관리 · 모임 정산', lv:'하' },
+  '일정 · 예약 · 알림 발송':        { p: 700000, d:'일정/예약 등록 · 자동 알림 발송', lv:'하' }
+};
+/* ===== 모듈별 스타터 레이아웃 템플릿 =====
+   t: dash(대시보드) / form(입력폼+목록) / list(목록+검색) / check(체크시트) / scan(스캔) / doc(결재문서)
+   c: 목록 컬럼,  f: 입력 필드,  s: 통계 카드 라벨 */
+const ST_TPL = {
+  '생산 모니터링(가동현황)':   { t:'dash', s:['가동설비','정지설비','금일생산','달성률'], c:['설비','상태','금일수량','가동률'] },
+  '생산일보 · 작업실적':       { t:'form', f:['작업일자|date','작업자|text','품번|text','지시수량|number','생산수량|number','불량수량|number','비고|text'], c:['일자','작업자','품번','생산','불량'] },
+  '디스플레이알림':            { t:'form', f:['표출제목|text','표출내용|area','표출종료|date'], c:['제목','등록자','표출기간','상태'] },
+  'IoT 센서(카운터 · 온습도)': { t:'dash', s:['연결센서','금일카운트','현재온도','현재습도'], c:['센서ID','설치위치','최근값','수신시각'] },
+  '일상 · 정기점검 체크시트':  { t:'check', f:['점검일자|date','점검자|text'], k:['설비 외관 이상 유무','윤활유 잔량 확인','안전커버 체결 상태','비상정지 버튼 작동','작업장 정리정돈'] },
+  '품질검사(외관 · 치수)':     { t:'form', f:['검사일자|date','품번|text','LOT번호|text','측정값|number','규격 상/하한|text','판정|sel:합격,불합격,재검','검사자|text'], c:['일자','품번','LOT','측정값','판정'] },
+  '불량관리 · PPM 통계':       { t:'dash', s:['금월 불량','PPM','최다유형','전월대비'], c:['일자','품번','불량유형','수량','조치'] },
+  '로트(LOT) 추적':            { t:'list', c:['LOT번호','품번','투입자재','공정','출하처'], btn:'LOT 추적 조회' },
+  '시스템 상태체크 · 감시':    { t:'dash', s:['정상','경고','오류','최근점검'], c:['대상','구분','상태','최근 응답'] },
+  '자재 · 재고관리(QR)':       { t:'list', c:['품번','품명','로케이션','현재고','안전재고'], btn:'자재 등록' },
+  '발주 · 외주관리':           { t:'list', c:['발주번호','거래처','품번','발주수량','납기'], btn:'발주서 작성' },
+  '수입검사(IQC)':             { t:'form', f:['입고일자|date','거래처|text','품번|text','입고수량|number','시료수|number','판정|sel:합격,불합격,특채','검사자|text'], c:['일자','거래처','품번','수량','판정'] },
+  '바코드 · QR 입출고':        { t:'scan', f:['구분|sel:입고,출고,이동','수량|number','로케이션|text'], c:['시각','구분','품번','수량','처리자'] },
+  '재고실사 · 마감':           { t:'form', f:['실사일자|date','품번|text','전산재고|number','실사재고|number','차이사유|text'], c:['품번','전산','실사','차이','사유'] },
+  '유통기한 · 로케이션 관리':  { t:'list', c:['품번','LOT','로케이션','입고일','유통기한'], btn:'로케이션 이동' },
+  '설비 · 치공구 자산관리':    { t:'list', c:['자산번호','자산명','구분','설치위치','상태'], btn:'자산 등록' },
+  '수리 워크플로(의뢰→완료)':  { t:'form', f:['의뢰일자|date','설비명|text','고장현상|area','긴급도|sel:긴급,보통,낮음','의뢰자|text'], c:['의뢰일','설비','현상','상태','담당'] },
+  '예방보전(PM) · 검교정':     { t:'list', c:['대상','주기','최근 실시','차기 예정','잔여일'], btn:'PM 실적 등록' },
+  '전자결재 · PDF 보고서':     { t:'doc', c:['문서번호','제목','기안자','결재선','상태'] },
+  '전자 열람확인 · 회람':      { t:'doc', c:['문서번호','제목','회람대상','열람','미열람'] },
+  'KPI · 개선활동':            { t:'dash', s:['달성 KPI','미달 KPI','진행 개선','완료 개선'], c:['지표','목표','실적','달성률'] },
+  '기준정보 · 보안 마스터':    { t:'list', c:['구분','코드','명칭','사용여부','수정일'], btn:'기준정보 등록' },
+  '견적관리':                  { t:'list', c:['견적번호','거래처','금액','작성일','상태'], btn:'견적 작성' },
+  '수주 · 납기관리':           { t:'list', c:['수주번호','거래처','품번','수량','납기'], btn:'수주 등록' },
+  '출하관리 · 납품서 발행':    { t:'list', c:['출하일','거래처','품번','수량','납품서'], btn:'출하 등록' },
+  '거래처 관리':               { t:'list', c:['거래처명','대표','담당자','연락처','구분'], btn:'거래처 등록' },
+  '클레임 접수 · 이력':        { t:'form', f:['접수일자|date','거래처|text','품번|text','클레임 내용|area','조치사항|area'], c:['접수일','거래처','내용','상태'] },
+  '근태관리':                  { t:'dash', s:['금일 출근','지각','미출근','금월 연장'], c:['사원','출근','퇴근','근무시간','비고'] },
+  '작업자 배치 · 교육이력':    { t:'list', c:['사원','부서','배치공정','자격','최근교육'], btn:'배치 변경' },
+  '단가 · 외주비 정산':        { t:'list', c:['거래처','품번','단가','수량','정산금액'], btn:'정산 마감' },
+  '매출 · 매입 집계':          { t:'dash', s:['금월 매출','금월 매입','이익','전월대비'], c:['월','매출','매입','이익','이익률'] },
+  '회비 · 모임 정산':          { t:'list', c:['회원','회차','납부액','납부일','상태'], btn:'회비 등록' },
+  '일정 · 예약 · 알림 발송':   { t:'list', c:['일자','시간','일정명','대상','알림'], btn:'일정 등록' }
+};
+
+const BASE_PLATFORM = { name:'기본 플랫폼 구축', p:1500000,
+  d:'클라우드 DB(Supabase) 셋업 · PIN/권한 인증 · 공통 UI 프레임 · 모바일/PC 반응형 · PWA · 알림 기반' };
+
 /* ===== 맞춤세팅 저장소 ===== */
 const LS_SETUPS = 'hk_setups';
 function getSetups(){ try{ return JSON.parse(localStorage.getItem(LS_SETUPS)) || []; }catch(e){ return []; } }
@@ -1911,7 +1966,7 @@ function collectSetup(){
     company: v('f-company'), name: v('f-name'), tel: v('f-tel'),
     ind: pickedIn('g-ind').concat(v('f-ind-etc') ? [v('f-ind-etc')] : []),
     design: { T: sel.T, L: sel.L, M: sel.M, B: sel.B },
-    sc: ['g-sc1','g-sc2','g-sc3','g-sc4','g-sc5','g-sc6','g-sc7','g-sc8'].flatMap(pickedIn),
+    sc: ['g-sc1','g-sc2','g-sc3','g-sc4','g-sc5','g-sc6','g-sc7'].flatMap(pickedIn),
     scEtc: v('f-sc-etc'),
     domain: pickedIn('g-domain')[0] || '무료 기본주소 사용',
     domainName: v('f-domain'),
@@ -1985,40 +2040,14 @@ function buildQuoteRows(d){
   return rows;
 }
 
-/* ===== 제작 사양(spec.html에서 저장) 조회 · 사양 기반 견적 행 ===== */
-async function fetchSpecFor(company){
-  if(!company) return null;
-  if(sbReady()){
-    try{
-      const r = await sb('hk_specs?company=eq.' + encodeURIComponent(company) + '&select=data&limit=1');
-      if(r && r.length && r[0].data && r[0].data.mods) return r[0].data;
-    }catch(e){}
-  }
-  try{
-    const loc = JSON.parse(localStorage.getItem('hk_specs_local')) || {};
-    if(loc[company] && loc[company].mods) return loc[company];
-  }catch(e){}
-  return null;
-}
-function buildQuoteRowsFromSpec(sp){
-  const one = m => {
-    const lines = (m.items||[]).filter(it=>it.st!=='out').flatMap(it=>
-      ['· ' + it.t + (it.st==='ask' ? ' (협의)' : '')]
-      .concat((it.ch||[]).filter(c=>c.st!=='out').map(c=>'  - ' + c.t + (c.st==='ask' ? ' (협의)' : ''))));
-    return { name: m.name, spec: m.lv ? '난이도 ' + m.lv : '', detail: lines.join('\n'), qty:1, price: +m.price||0 };
-  };
-  return [one(sp.base)].concat((sp.mods||[]).map(one));
-}
-
 /* 현재 화면 기준 (실시간 예상비용용) */
 function buildQuoteFromSetup(){
   return buildQuoteRows(collectSetup());
 }
 
-/* 세팅 데이터를 견적서 폼에 적용 (제작 사양이 저장돼 있으면 사양 우선) */
-async function applySetupToQuote(d){
-  const sp = await fetchSpecFor(d.company);
-  const rows = sp ? buildQuoteRowsFromSpec(sp) : buildQuoteRows(d);
+/* 세팅 데이터를 견적서 폼에 적용 */
+function applySetupToQuote(d){
+  const rows = buildQuoteRows(d);
   if(rows.length <= 1 && !d.company) return false;
   document.getElementById('qt-to').value = d.company || '';
   document.getElementById('qt-to-name').value = d.name || '';
@@ -2031,11 +2060,11 @@ async function applySetupToQuote(d){
   rows.forEach(r=>qtAddRow(r));
   qtCalc();
   if(typeof qtEditId !== 'undefined') qtEditId = null; /* 새 견적 모드 */
-  return sp ? 'spec' : true;
+  return true;
 }
 
-async function setupToQuote(){
-  return await applySetupToQuote(collectSetup());
+function setupToQuote(){
+  return applySetupToQuote(collectSetup());
 }
 
 function buildReq(){
@@ -2057,7 +2086,7 @@ function buildReq(){
   lines.push('- 메인화면: ' + (sel.M ? sel.M+' '+names[sel.M] : '(미선택)'));
   lines.push('- 게시판: ' + (sel.B ? sel.B+' '+names[sel.B] : '없음'));
   lines.push('');
-  const sc = ['g-sc1','g-sc2','g-sc3','g-sc4','g-sc5','g-sc6','g-sc7','g-sc8'].flatMap(pickedIn);
+  const sc = ['g-sc1','g-sc2','g-sc3','g-sc4','g-sc5','g-sc6','g-sc7'].flatMap(pickedIn);
   if(v('f-sc-etc')) sc.push(v('f-sc-etc'));
   lines.push('■ 전산화 범위');
   lines.push(sc.length ? sc.map(x=>'- '+x).join('\n') : '- (미선택)');
@@ -2094,7 +2123,7 @@ async function saveReq(){
 
   /* 0) 맞춤세팅 저장(서버+로컬) + 견적서 초안 자동 생성 */
   await saveSetup();
-  const made = await setupToQuote();
+  const made = setupToQuote();
 
   /* 1) ntfy 발송 */
   let sent = false;
@@ -2467,12 +2496,12 @@ async function qtPickSetup(){
   box.style.display = 'block';
 }
 
-async function qtApplySetup(i){
+function qtApplySetup(i){
   const d = window._qtSetups[i];
   if(!d) return;
-  const res = await applySetupToQuote(d);
+  applySetupToQuote(d);
   document.getElementById('qt-setup-pick').style.display = 'none';
-  toast(res === 'spec' ? '제작 사양(확정본) 기준 견적이 생성되었습니다 — 수정 가능' : '맞춤세팅 기준 견적이 생성되었습니다 — 수정 가능');
+  toast('맞춤세팅 기준 견적이 생성되었습니다 — 수정 가능');
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
@@ -2633,16 +2662,16 @@ function stParseDesign(x){
 }
 function stDesignStr(d){ const p = stParseDesign(d.design); return p.T+'+'+p.L+'+'+p.M; }
 
-async function stPick(){
+async function stPick(mode){
   if(role !== 'admin'){ toast('관리자 전용 기능입니다'); return; }
   const box = document.getElementById('st-pick');
   box.style.display = 'block';
   box.innerHTML = '<div class="qempty">불러오는 중...</div>';
   const list = await fetchSetups();
   if(!list.length){ box.style.display='none'; toast('저장된 맞춤세팅이 없습니다'); return; }
-  window._stList = list;
+  window._stList = list; window._stMode = mode;
   const esc = t => (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
-  box.innerHTML = '<div class="fl" style="margin:0 0 8px">스타터 HTML을 만들 세팅 선택</div>' +
+  box.innerHTML = '<div class="fl" style="margin:0 0 8px">' + (mode==='html' ? '스타터 HTML을 만들 세팅 선택' : '지시문을 만들 세팅 선택') + '</div>' +
     list.map((d,i)=>'\n    <div class="qt-item" style="cursor:pointer" onclick="stRun('+i+')">\n      <div class="qi-b">\n        <div class="qi-t">'+(esc(d.company) || '(업체명 미입력)')+'</div>\n        <div class="qi-s">'+new Date(d.at).toLocaleDateString('ko-KR')+' · '+esc(stDesignStr(d))+' · 모듈 '+((d.sc||[]).length)+'개</div>\n      </div>\n      <button class="qi-btn g" onclick="event.stopPropagation();stRun('+i+')">선택</button>\n    </div>').join('') +
     '<button class="qi-btn" style="width:100%;padding:9px" onclick="document.getElementById(&quot;st-pick&quot;).style.display=&quot;none&quot;">닫기</button>';
 }
@@ -2651,13 +2680,14 @@ function stRun(i){
   const d = window._stList[i];
   if(!d) return;
   document.getElementById('st-pick').style.display = 'none';
-  stPreview(d);
+  if(window._stMode === 'prompt') stCopyPrompt(d);
+  else stPreview(d);
 }
 
 /* 현재 화면 선택 기준 미리보기 (Guest 허용 · 다운로드는 관리자만) */
 function stPreviewSelf(){
   const d = collectSetup();
-  if(!d.sc.length){ toast('⑤ 전산화 범위에서 모듈을 1개 이상 선택하세요'); return; }
+  if(!d.sc.length){ toast('③ 전산화 범위에서 모듈을 1개 이상 선택하세요'); return; }
   stPreview(d);
 }
 
@@ -2705,6 +2735,40 @@ function stPrevDl(){
 }
 
 /* --- Claude 개발 지시문 --- */
+function stCopyPrompt(d){
+  const p = stParseDesign(d.design);
+  const th = ST_THEMES[p.T] || ST_THEMES.T3;
+  const L = [];
+  L.push('아래 사양으로 모바일 우선 단일 index.html 웹앱을 만들어줘.');
+  L.push('');
+  L.push('[기본]');
+  L.push('- 업체명: ' + (d.company || '(미정)'));
+  if(d.ind && d.ind.length) L.push('- 업종: ' + d.ind.join(', '));
+  L.push('- 배포: GitHub Pages (외부 파일 없이 index.html 하나, 빌드 도구 금지)');
+  L.push('');
+  L.push('[디자인 ' + p.T + '+' + p.L + '+' + p.M + ']');
+  L.push('- 색상테마 ' + p.T + ' ' + th.n + ': 배경 ' + th.bg + ' / 카드 ' + th.card + ' / 라인 ' + th.line + ' / 글자 ' + th.ink + ' / 보조 ' + th.sub + ' / 포인트 ' + th.pt + ' / 액센트 ' + th.ac);
+  L.push('- 첫화면 ' + p.L + ': ' + (ST_LOCK[p.L] || ST_LOCK.L1));
+  L.push('- 메인화면 ' + p.M + ': ' + (ST_MAIN[p.M] || ST_MAIN.M2));
+  L.push('- 폰트 Pretendard(CDN), :active scale(0.97) 터치 피드백, safe-area 대응');
+  L.push('');
+  L.push('[기능 모듈 — 각 모듈을 메뉴/페이지로 구성]');
+  (d.sc || []).forEach(k=>{
+    const m = MODULE_PRICE[k];
+    L.push('- ' + k + (m ? ': ' + m.d : ''));
+  });
+  if(d.scEtc) L.push('- ' + d.scEtc + ' (협의 항목)');
+  L.push('');
+  L.push('[도메인/기타]');
+  L.push('- 도메인: ' + (d.domain || '무료 기본주소') + (d.domainName ? ' (' + d.domainName + ')' : ''));
+  if(d.memo) L.push('- 참고: ' + d.memo);
+  L.push('- 데이터 저장이 필요한 화면은 Supabase REST(fetch 직접 호출) 방식, 테이블 생성 SQL은 별도 제시');
+  const txt = L.join('\n');
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(()=>toast('개발 지시문이 복사되었습니다 — Claude에 붙여넣으세요'), ()=>toast('복사 실패'));
+  }else{ toast('복사를 지원하지 않는 브라우저입니다'); }
+}
+
 /* --- 스타터 HTML 다운로드 --- */
 function stDownloadHtml(d){
   const html = stBuildHtml(d);
@@ -2854,7 +2918,7 @@ function stBuildHtml(d){
   let lockHtml = '', lockJs = '';
   if(p.L === 'L4'){
     lockHtml = '<div id="splash" class="lock" style="z-index:110"><div class="logo">'+esc(co.charAt(0))+'</div><div class="lt">'+esc(co)+'</div><div class="ls">시스템을 준비하고 있습니다</div></div>' + pinLockHtml;
-    lockJs = "setTimeout(function(){document.getElementById('splash').classList.add('hide')}, 600);\n" + pinCore;
+    lockJs = "setTimeout(function(){document.getElementById('splash').classList.add('hide')}, 2200);\n" + pinCore;
   }else if(p.L === 'L5'){
     lockHtml = ''; lockJs = "var role='guest';";
   }else if(p.L === 'L3'){
@@ -3060,6 +3124,7 @@ SCT,
 '</html>'
   ].join('\n');
 }
+
 
 /* ===== 계약서 ===== */
 function ctInit(){
@@ -4128,6 +4193,5 @@ function toast(m){
   clearTimeout(tmr); tmr = setTimeout(()=>t.classList.remove('on'), 1800);
 }
 </script>
-<script src="clientdb.js"></script>
 </body>
 </html>

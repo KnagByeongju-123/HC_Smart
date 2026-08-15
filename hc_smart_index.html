@@ -1690,6 +1690,21 @@ const LS_PIN = 'hk_admin_pin', LS_TOPIC = 'hk_ntfy_topic';
 function getPin(){ return localStorage.getItem(LS_PIN) || '2580'; }
 function getTopic(){ return localStorage.getItem(LS_TOPIC) || 'HC_Smart'; }
 
+/* ===== 로그인 세션 유지 (PIN 입력 후 7일 · 로그아웃 시 즉시 해제) ===== */
+const LS_SESS = 'hk_sess', SESS_DAYS = 7;
+function saveSess(r){
+  try{ localStorage.setItem(LS_SESS, JSON.stringify({ r:r, e: Date.now() + SESS_DAYS*86400000 })); }catch(e){}
+}
+function loadSess(){
+  try{
+    const s = JSON.parse(localStorage.getItem(LS_SESS) || 'null');
+    if(s && s.r && s.e > Date.now()) return s;
+    localStorage.removeItem(LS_SESS);
+  }catch(e){}
+  return null;
+}
+function clearSess(){ try{ localStorage.removeItem(LS_SESS); }catch(e){} }
+
 /* ===== 역할(권한) ===== */
 let role = null; /* 'guest' | 'admin' */
 const PAGE_PERM = { intro:['guest','admin'], links:['admin'], design:['guest','admin'], inquiry:['guest','admin'], board:['guest','admin'], plan:['admin'], progress:['admin'], flow:['admin'], quote:['admin'], contract:['admin'], clientdb:['admin'], settings:['admin'] };
@@ -1717,7 +1732,17 @@ function openFlow(){
 /* ===== L4 스플래시 → 로그인 ===== */
 function closeSplash(){
   document.getElementById('splash').classList.add('hide');
-  if(!role) document.getElementById('login').classList.add('on');
+  if(role) return;
+  const s = loadSess();
+  if(s && s.r === 'admin'){
+    role = 'admin';
+    document.getElementById('login').classList.remove('on');
+    applyRole(); go0('intro');
+    const d = Math.max(1, Math.ceil((s.e - Date.now())/86400000));
+    setTimeout(function(){ toast('관리자 로그인 유지 중 · 남은 기간 '+d+'일'); }, 400);
+    return;
+  }
+  document.getElementById('login').classList.add('on');
 }
 closeSplash(); /* 즉시 진입 (스플래시는 장식용이었음) */
 
@@ -1743,8 +1768,9 @@ function loginAdmin(){
     inp.value = '';
     box.classList.remove('on');
     document.getElementById('login').classList.remove('on');
+    saveSess('admin');
     applyRole(); go0('intro');
-    toast('관리자로 로그인했습니다');
+    toast('관리자로 로그인했습니다 (로그아웃 전까지 7일 유지)');
   }else{
     box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake');
     inp.value = ''; inp.focus();
@@ -1753,6 +1779,7 @@ function loginAdmin(){
 }
 function logout(){
   role = null;
+  clearSess();
   toggleDrawer(false);
   go0('intro');
   document.getElementById('login').classList.add('on');
