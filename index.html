@@ -41,11 +41,6 @@ a{color:inherit;text-decoration:none}
 #splash h1{position:relative;z-index:1;font-size:30px;font-weight:900;letter-spacing:-.5px;animation:fadeup .9s .25s both}
 #splash .sl{position:relative;z-index:1;font-size:13.5px;color:var(--sub);animation:fadeup .9s .45s both}
 @keyframes fadeup{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-#splash .pbar{position:relative;z-index:1;width:160px;height:4px;border-radius:2px;background:var(--line);
-  overflow:hidden;margin-top:8px;animation:fadeup .9s .6s both}
-#splash .pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold2),var(--gold));
-  border-radius:2px;animation:load 2s .7s ease-out forwards}
-@keyframes load{to{width:100%}}
 #splash .skip{position:relative;z-index:1;margin-top:14px;font-size:12px;color:var(--sub);
   border:1px solid var(--line);border-radius:16px;padding:6px 18px;cursor:pointer;background:none;font-family:inherit}
 
@@ -546,7 +541,6 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
   <div class="logo">HC</div>
   <h1 class="gold-txt">HC_Smart</h1>
   <div class="sl">현장에서 태어난 스마트 시스템 사업부</div>
-  <div class="pbar"><i></i></div>
   <button class="skip" onclick="closeSplash()">바로 시작 →</button>
 </div>
 
@@ -1143,6 +1137,7 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
         <div class="chk" data-v="생산일보 · 작업실적"><span class="ci">📝</span>생산일보 · 작업실적</div>
         <div class="chk" data-v="디스플레이알림"><span class="ci">🔔</span>디스플레이알림</div>
         <div class="chk" data-v="IoT 센서(카운터 · 온습도)"><span class="ci">📡</span>IoT 센서(카운터·온습도)</div>
+        <div class="chk" data-v="디지털 트윈(3D 공장뷰)"><span class="ci">🏗️</span>디지털 트윈(3D 공장뷰)</div>
       </div>
       <div class="fl">품질 · 점검</div>
       <div class="chips2" id="g-sc2">
@@ -1190,6 +1185,16 @@ footer{text-align:center;padding:30px 0 40px;font-size:11px;color:rgba(255,255,2
         <div class="chk" data-v="매출 · 매입 집계"><span class="ci">📈</span>매출·매입 집계</div>
         <div class="chk" data-v="회비 · 모임 정산"><span class="ci">👥</span>회비·모임 정산</div>
         <div class="chk" data-v="일정 · 예약 · 알림 발송"><span class="ci">🔔</span>일정·예약·알림</div>
+      </div>
+      <div class="fl">금형 · 수주제작</div>
+      <div class="chips2" id="g-sc8">
+        <div class="chk" data-v="금형 공정관리(신작 · 수리)"><span class="ci">🗜️</span>금형 공정관리(신작·수리)</div>
+        <div class="chk" data-v="제작계획 · 공정일정(캘린더)"><span class="ci">📆</span>제작계획·공정일정</div>
+        <div class="chk" data-v="Tryout(T/O) 작업일지"><span class="ci">🔧</span>Tryout(T/O) 일지</div>
+        <div class="chk" data-v="출력물 점검표(SQ 산출물)"><span class="ci">📑</span>출력물 점검표(SQ)</div>
+        <div class="chk" data-v="부적합 시정조치(NCR)"><span class="ci">🚨</span>부적합 시정조치(NCR)</div>
+        <div class="chk" data-v="설계변경(ECN · 4M)"><span class="ci">📝</span>설계변경(ECN·4M)</div>
+        <div class="chk" data-v="업무현황 공유(코멘트 · 확인)"><span class="ci">🗂️</span>업무현황 공유</div>
       </div>
       <div class="fl">기타 필요 기능 (직접 입력)</div>
       <input class="tin" id="f-sc-etc" placeholder="예) 출하관리, 근태연동, 다국어 UI ...">
@@ -1712,7 +1717,7 @@ function closeSplash(){
   document.getElementById('splash').classList.add('hide');
   if(!role) document.getElementById('login').classList.add('on');
 }
-setTimeout(closeSplash, 3000);
+setTimeout(closeSplash, 1500);
 
 /* ===== 로그인 ===== */
 function loginGuest(){
@@ -1956,7 +1961,7 @@ function collectSetup(){
     company: v('f-company'), name: v('f-name'), tel: v('f-tel'),
     ind: pickedIn('g-ind').concat(v('f-ind-etc') ? [v('f-ind-etc')] : []),
     design: { T: sel.T, L: sel.L, M: sel.M, B: sel.B },
-    sc: ['g-sc1','g-sc2','g-sc3','g-sc4','g-sc5','g-sc6','g-sc7'].flatMap(pickedIn),
+    sc: ['g-sc1','g-sc2','g-sc3','g-sc4','g-sc5','g-sc6','g-sc7','g-sc8'].flatMap(pickedIn),
     scEtc: v('f-sc-etc'),
     domain: pickedIn('g-domain')[0] || '무료 기본주소 사용',
     domainName: v('f-domain'),
@@ -2076,7 +2081,7 @@ function buildReq(){
   lines.push('- 메인화면: ' + (sel.M ? sel.M+' '+names[sel.M] : '(미선택)'));
   lines.push('- 게시판: ' + (sel.B ? sel.B+' '+names[sel.B] : '없음'));
   lines.push('');
-  const sc = ['g-sc1','g-sc2','g-sc3','g-sc4','g-sc5','g-sc6','g-sc7'].flatMap(pickedIn);
+  const sc = ['g-sc1','g-sc2','g-sc3','g-sc4','g-sc5','g-sc6','g-sc7','g-sc8'].flatMap(pickedIn);
   if(v('f-sc-etc')) sc.push(v('f-sc-etc'));
   lines.push('■ 전산화 범위');
   lines.push(sc.length ? sc.map(x=>'- '+x).join('\n') : '- (미선택)');
