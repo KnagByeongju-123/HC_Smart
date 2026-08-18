@@ -3657,9 +3657,18 @@ async function gPickCompany(){
     }).join('');
   }
   if(onlyPlan.length){
-    h += '<div class="fl" style="margin:12px 0 7px">기존 진행현황 업체</div>';
-    h += '<div class="chips2">' + onlyPlan.map(c =>
-      '<div class="chk" onclick="gSetCompany(\'' + esc(c).replace(/'/g,"\\'") + '\')">' + esc(c) + '</div>').join('') + '</div>';
+    window._gPlanCos = onlyPlan;
+    h += '<div class="fl" style="margin:12px 0 7px">기존 진행현황 업체 (' + onlyPlan.length + '개)</div>';
+    h += onlyPlan.map((c,i)=>{
+      const arg = esc(c).replace(/'/g,"\\'");
+      const cnt = (gCache||[]).filter(r=>r.company===c).length;
+      return '<div class="qt-item" style="cursor:pointer" onclick="gSetCompany(\'' + arg + '\')">'
+        + '<div class="qi-b"><div class="qi-t">' + esc(c) + '</div>'
+        + '<div class="qi-s">진행항목 ' + cnt + '건</div></div>'
+        + '<button class="qi-btn g" onclick="event.stopPropagation();gSetCompany(\'' + arg + '\')">선택</button>'
+        + '<button class="qi-btn" style="color:#ff8080;border-color:rgba(255,128,128,.45)" onclick="event.stopPropagation();gDelPlanCo(' + i + ')">삭제</button>'
+        + '</div>';
+    }).join('');
   }
   h += '<button class="qi-btn" style="width:100%;padding:9px;margin-top:9px" onclick="document.getElementById(\'g-setup-pick\').style.display=\'none\'">닫기</button>';
   box.innerHTML = h;
@@ -3669,6 +3678,24 @@ function gSetCompany(co){
   document.getElementById('g-company').value = co;
   document.getElementById('g-setup-pick').style.display = 'none';
   toast(co + ' 선택됨');
+}
+
+/* --- 기존 진행현황 업체 삭제 (해당 업체의 진행항목 전체) --- */
+async function gDelPlanCo(i){
+  const co = (window._gPlanCos || [])[i];
+  if(!co) return;
+  if(!sbReady()){ toast('먼저 설정에서 서버를 연결하세요'); return; }
+  const cnt = (gCache||[]).filter(r=>r.company===co).length;
+  if(!confirm("'" + co + "' 업체의 진행현황을 삭제합니다.\n\n· 진행항목 " + cnt + "건\n\n서버에서 영구 삭제되며 복구할 수 없습니다. 계속할까요?")) return;
+  try{
+    await sb('hk_progress?company=eq.' + encodeURIComponent(co), { method:'DELETE', prefer:'return=minimal' });
+  }catch(e){ toast('삭제 실패 — ' + e.message); return; }
+  toast("'" + co + "' 진행현황 " + cnt + '건이 삭제되었습니다');
+  if(gCompanyFilter === co) gCompanyFilter = '';
+  await loadPlan();
+  const box = document.getElementById('g-setup-pick');
+  if(box) box.style.display = 'none';
+  await gPickCompany();   /* 목록 새로고침 */
 }
 
 /* --- 맞춤세팅 1건 삭제 (id 기준 · 업체명 없는 항목도 삭제 가능) --- */
